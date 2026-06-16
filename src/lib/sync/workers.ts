@@ -124,7 +124,7 @@ async function runPushOnce() {
           attempts,
           next_attempt_at: backoff(attempts),
           last_error: msg,
-        });
+        } as Partial<typeof r>);
       }
       useSyncStore.getState().setError(msg);
       useSyncStore.getState().setStatus("error");

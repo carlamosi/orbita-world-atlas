@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useSyncStore } from "@/lib/sync/useSyncStore";
-import { forceSync } from "@/lib/sync/workers";
+import { forceSync, forceFullResync } from "@/lib/sync/workers";
 import { db } from "@/lib/db/orbita-db";
 
 export const Route = createFileRoute("/_authenticated/account/sync")({

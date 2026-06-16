@@ -390,4 +390,3 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-COUNTRY_BY_ISO3; // referenced via callsites; keep import warm

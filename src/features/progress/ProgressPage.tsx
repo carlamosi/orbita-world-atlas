@@ -339,4 +339,3 @@ function relTime(ts: number): string {
   return `${d}d ago`;
 }
 
-defByKey; // keep import referenced for future deep-link unlock pages

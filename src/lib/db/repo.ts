@@ -11,6 +11,8 @@ import {
 } from "./orbita-db";
 import { evaluateUnlocks, type UnlockEvalInput } from "@/lib/unlocks";
 import { dateKey } from "@/lib/streak";
+import { enqueue } from "@/lib/sync/queue";
+import { newOpId } from "@/lib/sync/clientId";
 
 /* ───────────────────────── country progress ───────────────────────── */
 
@@ -51,17 +53,37 @@ export async function updateSkillProgress(
 ): Promise<void> {
   if (!isBrowser()) return;
   try {
+    let nextRow: CountryProgressRow | null = null;
     await db().transaction("rw", db().countryProgress, async () => {
       const prev = await db().countryProgress.get(iso3);
       const skills = { ...(prev?.skills ?? {}) };
       skills[skill] = mutator(skills[skill]);
+      const skill_versions = { ...(prev?.skill_versions ?? {}) };
+      skill_versions[skill] = (skill_versions[skill] ?? 0) + 1;
       const next: CountryProgressRow = {
         iso3,
         skills,
+        skill_versions,
         lastSeenAt: Math.max(prev?.lastSeenAt ?? 0, skills[skill]!.lastSeenAt),
+        updated_at: Date.now(),
+        dirty: 1,
       };
       await db().countryProgress.put(next);
+      nextRow = next;
     });
+    if (nextRow) {
+      const row = nextRow as CountryProgressRow;
+      enqueue({
+        entity: "country_progress",
+        op: "upsert",
+        payload: {
+          country_code: row.iso3,
+          skills: row.skills,
+          skill_versions: row.skill_versions ?? {},
+          last_seen_at: new Date(row.lastSeenAt).toISOString(),
+        },
+      });
+    }
   } catch (e) {
     console.warn("[orbita-db] updateSkillProgress failed", e);
   }

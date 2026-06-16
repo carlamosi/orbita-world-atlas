@@ -1,18 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import { lazy, Suspense } from "react";
+
+const ExplorerPage = lazy(() => import("@/features/explorer/ExplorerPage"));
 
 export const Route = createFileRoute("/explorer")({
+  ssr: false,
   head: () => ({
     meta: [
       { title: "Explorer — Orbita" },
-      { name: "description", content: "Browse the living atlas: globe, borders, and country detail panel." },
+      {
+        name: "description",
+        content: "Browse the living atlas: spin the globe, pick a country, see your mastery in real time.",
+      },
     ],
   }),
   component: () => (
-    <StubPage
-      path="/explorer"
-      title="The living atlas"
-      blurb="Globe + country detail, confidence heatmaps, border visualization, and cinematic POV transitions. Landing in the next phase."
-    />
+    <Suspense fallback={null}>
+      <ExplorerPage />
+    </Suspense>
   ),
 });

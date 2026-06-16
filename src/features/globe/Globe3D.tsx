@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
 import type { Country } from "@/types/country";
 
+export type GlobeQuality = "high" | "medium" | "static";
+
 interface Globe3DProps {
   countries: readonly Country[];
   highlightIso3?: string | null;
@@ -9,10 +11,13 @@ interface Globe3DProps {
   onCountryClick?: (iso3: string) => void;
   pointOfView?: { lat: number; lng: number; altitude?: number };
   size?: number;
+  /**
+   * Mid-device degradation lever. The Explorer layout uses "medium" while
+   * the panel is open and "static" if the user has reduced-motion. Single-
+   * focus modes stay on "high".
+   */
+  quality?: GlobeQuality;
 }
-
-// Convert ISO_A3 -> a synthetic "country point" using centroid coordinates.
-// We use points (not polygons) for performance and zero-fetch — perfect for the vertical slice.
 
 export default function Globe3D({
   countries,
@@ -21,6 +26,7 @@ export default function Globe3D({
   onCountryClick,
   pointOfView,
   size,
+  quality = "high",
 }: Globe3DProps) {
   const ref = useRef<GlobeMethods | undefined>(undefined);
   const [dim, setDim] = useState({ w: 600, h: 600 });
@@ -37,15 +43,27 @@ export default function Globe3D({
     return () => ro.disconnect();
   }, []);
 
-  // Initial cinematic settings
+  // Detect reduced motion → force "static" regardless of prop.
+  const effectiveQuality: GlobeQuality =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+      ? "static"
+      : quality;
+
+  // Cinematic controls — vary by quality.
   useEffect(() => {
     const g = ref.current;
     if (!g) return;
-    g.controls().autoRotate = true;
-    g.controls().autoRotateSpeed = 0.35;
-    g.controls().enableZoom = false;
+    const controls = g.controls();
+    controls.enableZoom = false;
+    if (effectiveQuality === "static") {
+      controls.autoRotate = false;
+    } else {
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = effectiveQuality === "medium" ? 0.18 : 0.35;
+    }
     g.pointOfView({ lat: 20, lng: 0, altitude: 2.4 }, 0);
-  }, []);
+  }, [effectiveQuality]);
 
   // Animate POV when requested
   useEffect(() => {
@@ -53,11 +71,21 @@ export default function Globe3D({
     ref.current.controls().autoRotate = false;
     ref.current.pointOfView(
       { lat: pointOfView.lat, lng: pointOfView.lng, altitude: pointOfView.altitude ?? 1.8 },
-      1400,
+      effectiveQuality === "static" ? 0 : 1400,
     );
-  }, [pointOfView]);
+  }, [pointOfView, effectiveQuality]);
 
-  const points = countries.map((c) => {
+  // Down-sample point cloud in medium/static to ease GPU pressure on mid-tier devices.
+  const downsampled =
+    effectiveQuality === "high"
+      ? countries
+      : countries.filter((c, i) => {
+          if (c.iso3 === highlightIso3 || c.iso3 === revealIso3) return true;
+          // Always keep the largest 60% of countries by area; sparsify the rest.
+          return i % (effectiveQuality === "static" ? 3 : 2) === 0;
+        });
+
+  const points = downsampled.map((c) => {
     const isHighlight = c.iso3 === highlightIso3;
     const isReveal = c.iso3 === revealIso3;
     return {
@@ -95,10 +123,10 @@ export default function Globe3D({
         height={dim.h}
         backgroundColor="rgba(0,0,0,0)"
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
-        bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+        bumpImageUrl={effectiveQuality === "static" ? undefined : "//unpkg.com/three-globe/example/img/earth-topology.png"}
         showAtmosphere
         atmosphereColor="#6C63FF"
-        atmosphereAltitude={0.22}
+        atmosphereAltitude={effectiveQuality === "static" ? 0.16 : 0.22}
         pointsData={points}
         pointLat={(d: object) => (d as { lat: number }).lat}
         pointLng={(d: object) => (d as { lng: number }).lng}

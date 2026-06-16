@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import { lazy, Suspense } from "react";
+
+const ProgressPage = lazy(() => import("@/features/progress/ProgressPage"));
 
 export const Route = createFileRoute("/progress")({
-  head: () => ({ meta: [{ title: "Progress — Orbita" }] }),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Progress — Orbita" },
+      { name: "description", content: "Confidence heatmaps, streaks, weak spots, and per-continent mastery." },
+    ],
+  }),
   component: () => (
-    <StubPage
-      path="/progress"
-      title="Mastery dashboard"
-      blurb="Confidence heatmaps, streaks, weak spots, and regional progress — sourced from your real sessions."
-    />
+    <Suspense fallback={null}>
+      <ProgressPage />
+    </Suspense>
   ),
 });

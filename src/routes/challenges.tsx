@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import { lazy, Suspense } from "react";
+
+const ChallengesPage = lazy(() => import("@/features/challenges/ChallengesPage"));
 
 export const Route = createFileRoute("/challenges")({
-  head: () => ({ meta: [{ title: "Challenges — Orbita" }] }),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Challenges — Orbita" },
+      { name: "description", content: "Daily and weekly orbit runs — deterministic question sets, your best score." },
+    ],
+  }),
   component: () => (
-    <StubPage
-      path="/challenges"
-      title="The 195, and beyond"
-      blurb="Continent Speedruns, Perfect Continent, Blind Mode, Flag Master, Speed Demon — with atmospheric unlock animations."
-    />
+    <Suspense fallback={null}>
+      <ChallengesPage />
+    </Suspense>
   ),
 });

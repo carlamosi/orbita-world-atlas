@@ -1,13 +1,12 @@
 import { create, type StoreApi, type UseBoundStore } from "zustand";
 import type { Country } from "@/types/country";
-import { selectQuestions } from "@/lib/mastery";
+import { confidenceAfter, selectQuestions } from "@/lib/mastery";
 import {
-  recordSession,
-  upsertProgress,
+  recordSessionEnd,
+  updateSkillProgress,
   type GameMode,
   type Skill,
 } from "@/lib/db/repo";
-import { confidenceAfter } from "@/lib/mastery";
 
 export type AnswerState = "idle" | "correct" | "wrong" | "revealed";
 export const QUESTIONS_PER_SESSION = 20;
@@ -40,6 +39,12 @@ interface CreateOpts {
   questions?: number;
 }
 
+/**
+ * Shared turn-based session engine for Find / Name / Flags / Capitals and
+ * Weekly Challenge. Speed Round does NOT extend this — it uses its own
+ * runtime store (see `src/features/speed/speedRuntimeStore.ts`) because
+ * timer ticks and combo decay have very different re-render constraints.
+ */
 export function createSessionStore({
   mode,
   skill,
@@ -103,23 +108,12 @@ export function createSessionStore({
           correct: s.correct + 1,
           answerState: "correct",
         });
-        upsertProgress(target.iso3, skill, (prev) => ({
-          ...confidenceAfter(prev, true, s.hintUsed),
-          iso3: target.iso3,
-          skill,
-        }));
       } else {
-        set({
-          combo: 0,
-          wrong: s.wrong + 1,
-          answerState: "wrong",
-        });
-        upsertProgress(target.iso3, skill, (prev) => ({
-          ...confidenceAfter(prev, false, s.hintUsed),
-          iso3: target.iso3,
-          skill,
-        }));
+        set({ combo: 0, wrong: s.wrong + 1, answerState: "wrong" });
       }
+      updateSkillProgress(target.iso3, skill, (prev) =>
+        confidenceAfter(prev, isCorrect, s.hintUsed),
+      );
     },
 
     reveal() {
@@ -137,7 +131,7 @@ export function createSessionStore({
       if (nextIndex >= s.queue.length) {
         const endedAt = Date.now();
         set({ endedAt, answerState: "idle" });
-        recordSession({
+        recordSessionEnd({
           mode,
           skill,
           score: s.score,

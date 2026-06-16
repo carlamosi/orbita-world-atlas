@@ -1,13 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import { lazy, Suspense } from "react";
+
+const SpeedPage = lazy(() => import("@/features/speed/SpeedPage"));
 
 export const Route = createFileRoute("/speed")({
-  head: () => ({ meta: [{ title: "Speed Round — Orbita" }] }),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Speed Round — Orbita" },
+      { name: "description", content: "Sixty seconds. Mixed-skill rapid fire. Build combos for ×5 multipliers." },
+    ],
+  }),
   component: () => (
-    <StubPage
-      path="/speed"
-      title="60-second orbital sprint"
-      blurb="SVG timer, QPM metrics, personal records, and continent filters. Pure reflex."
-    />
+    <Suspense fallback={null}>
+      <SpeedPage />
+    </Suspense>
   ),
 });

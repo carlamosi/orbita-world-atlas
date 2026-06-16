@@ -21,16 +21,18 @@ const PushSchema = z.object({
   mutations: z.array(MutationSchema).max(100),
 });
 
-export const syncPush = createServerFn({ method: "POST" })
+// Server-fn returns must be statically-known serializable types.
+// We return a JSON string and parse on the client.
+const _syncPush = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => PushSchema.parse(d))
-  .handler(async ({ data, context }): Promise<unknown> => {
+  .handler(async ({ data, context }): Promise<string> => {
     const { supabase } = context;
     const { data: out, error } = await supabase.rpc("sync_push", {
       _mutations: data.mutations as never,
     });
     if (error) throw new Error(error.message);
-    return out as unknown;
+    return JSON.stringify(out ?? {});
   });
 
 const PullSchema = z.object({
@@ -38,17 +40,31 @@ const PullSchema = z.object({
   limit: z.number().int().min(1).max(1000).optional(),
 });
 
-export const syncPull = createServerFn({ method: "POST" })
+const _syncPull = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => PullSchema.parse(d))
-  .handler(async ({ data, context }): Promise<unknown> => {
+  .handler(async ({ data, context }): Promise<string> => {
     const { supabase } = context;
     const { data: out, error } = await supabase.rpc("sync_pull", {
       _cursors: data.cursors as never,
       _limit: data.limit ?? 500,
     });
     if (error) throw new Error(error.message);
-    return out as unknown;
+    return JSON.stringify(out ?? {});
   });
+
+export async function syncPush(args: {
+  data: { mutations: unknown[] };
+}): Promise<PushResult> {
+  const json = await _syncPush({ data: args.data as never });
+  return JSON.parse(json) as PushResult;
+}
+
+export async function syncPull(args: {
+  data: { cursors: Record<string, string | null>; limit?: number };
+}): Promise<PullResult> {
+  const json = await _syncPull({ data: args.data as never });
+  return JSON.parse(json) as PullResult;
+}
 
 export type { PushResult, PullResult };

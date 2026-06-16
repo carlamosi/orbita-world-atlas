@@ -93,6 +93,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Orbita — Master every corner of the world" },
+      { name: "description", content: "Orbita is a cinematic geography mastery platform for immersive world learning." },
+      { property: "og:description", content: "Orbita is a cinematic geography mastery platform for immersive world learning." },
+      { name: "twitter:description", content: "Orbita is a cinematic geography mastery platform for immersive world learning." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fe58fc7b-2ae5-46e1-a1fe-5f3774573e05/id-preview-8574e703--5a8151b1-20df-4a18-b0bf-c85e4802cce9.lovable.app-1781638547317.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/fe58fc7b-2ae5-46e1-a1fe-5f3774573e05/id-preview-8574e703--5a8151b1-20df-4a18-b0bf-c85e4802cce9.lovable.app-1781638547317.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

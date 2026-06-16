@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import NamePage from "@/features/name/NamePage";
 
 export const Route = createFileRoute("/name")({
-  head: () => ({ meta: [{ title: "Name It — Orbita" }] }),
-  component: () => (
-    <StubPage
-      path="/name"
-      title="Name the mystery country"
-      blurb="A country zooms in from orbit. Type its name. Easy and Hard variants with keyboard-first interaction."
-    />
-  ),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Name It — Orbita" },
+      { name: "description", content: "Name the mystery country zoomed in from orbit." },
+    ],
+  }),
+  component: NamePage,
 });

@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import FlagsPage from "@/features/flags/FlagsPage";
 
 export const Route = createFileRoute("/flags")({
-  head: () => ({ meta: [{ title: "Flags — Orbita" }] }),
-  component: () => (
-    <StubPage
-      path="/flags"
-      title="Flag mastery"
-      blurb="Flag → Country and Country → Flag, with cinematic transitions and adaptive difficulty."
-    />
-  ),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Flags — Orbita" },
+      { name: "description", content: "Master every flag, both directions." },
+    ],
+  }),
+  component: FlagsPage,
 });

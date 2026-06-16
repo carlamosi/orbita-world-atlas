@@ -262,4 +262,17 @@ export function forceSync() {
   void runPushOnce();
 }
 
+/** Clear all pull cursors then trigger a fresh full pull. */
+export async function forceFullResync() {
+  try {
+    for (const k of CURSOR_KEYS) {
+      await db().sync_meta.delete(`cursor_${k}`).catch(() => {});
+    }
+  } catch {
+    // ignore
+  }
+  void runPullOnce();
+  void runPushOnce();
+}
+
 export { refreshQueued };

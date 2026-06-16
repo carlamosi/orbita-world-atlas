@@ -11,6 +11,8 @@ import {
 } from "./orbita-db";
 import { evaluateUnlocks, type UnlockEvalInput } from "@/lib/unlocks";
 import { dateKey } from "@/lib/streak";
+import { enqueue } from "@/lib/sync/queue";
+import { newOpId } from "@/lib/sync/clientId";
 
 /* ───────────────────────── country progress ───────────────────────── */
 
@@ -51,17 +53,37 @@ export async function updateSkillProgress(
 ): Promise<void> {
   if (!isBrowser()) return;
   try {
+    let nextRow: CountryProgressRow | null = null;
     await db().transaction("rw", db().countryProgress, async () => {
       const prev = await db().countryProgress.get(iso3);
       const skills = { ...(prev?.skills ?? {}) };
       skills[skill] = mutator(skills[skill]);
+      const skill_versions = { ...(prev?.skill_versions ?? {}) };
+      skill_versions[skill] = (skill_versions[skill] ?? 0) + 1;
       const next: CountryProgressRow = {
         iso3,
         skills,
+        skill_versions,
         lastSeenAt: Math.max(prev?.lastSeenAt ?? 0, skills[skill]!.lastSeenAt),
+        updated_at: Date.now(),
+        dirty: 1,
       };
       await db().countryProgress.put(next);
+      nextRow = next;
     });
+    if (nextRow) {
+      const row = nextRow as CountryProgressRow;
+      enqueue({
+        entity: "country_progress",
+        op: "upsert",
+        payload: {
+          country_code: row.iso3,
+          skills: row.skills,
+          skill_versions: row.skill_versions ?? {},
+          last_seen_at: new Date(row.lastSeenAt).toISOString(),
+        },
+      });
+    }
   } catch (e) {
     console.warn("[orbita-db] updateSkillProgress failed", e);
   }
@@ -114,8 +136,56 @@ export async function getAllSessions(): Promise<GameSessionRow[]> {
 export async function recordSessionEnd(row: Omit<GameSessionRow, "id">) {
   if (!isBrowser()) return;
   try {
-    await db().gameSessions.add(row);
-    await reEvaluateUnlocks();
+    const op_id = newOpId();
+    const withId: Omit<GameSessionRow, "id"> = {
+      ...row,
+      op_id,
+      updated_at: Date.now(),
+      dirty: 1,
+    };
+    await db().gameSessions.add(withId);
+    enqueue({
+      op_id,
+      entity: "sessions_log",
+      op: "insert",
+      payload: {
+        mode: row.mode,
+        skill: row.skill,
+        score: row.score,
+        total_questions: row.totalQuestions,
+        correct: row.correct,
+        wrong: row.wrong,
+        best_combo: row.bestCombo,
+        duration_ms: row.durationMs,
+        period_key: row.periodKey,
+        meta: row.meta,
+        started_at: new Date(row.createdAt - row.durationMs).toISOString(),
+        ended_at: new Date(row.createdAt).toISOString(),
+      },
+    });
+    const deltas = await reEvaluateUnlocks();
+    for (const u of deltas) {
+      enqueue({
+        entity: "unlocks",
+        op: "upsert",
+        payload: {
+          key: u.key,
+          progress: u.progress,
+          unlocked_at: u.unlockedAt ? new Date(u.unlockedAt).toISOString() : null,
+        },
+      });
+    }
+    // Daily streak signal
+    const k = dateKey(row.createdAt);
+    enqueue({
+      entity: "daily_streak",
+      op: "upsert",
+      payload: {
+        date_key: k,
+        count: 1,
+        last_active_at: new Date(row.createdAt).toISOString(),
+      },
+    });
   } catch (e) {
     console.warn("[orbita-db] recordSessionEnd failed", e);
   }

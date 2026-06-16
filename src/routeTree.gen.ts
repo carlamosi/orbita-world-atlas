@@ -17,7 +17,11 @@ import { Route as FindRouteImport } from './routes/find'
 import { Route as ExplorerRouteImport } from './routes/explorer'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CapitalsRouteImport } from './routes/capitals'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
+import { Route as AuthenticatedAccountSyncRouteImport } from './routes/_authenticated/account.sync'
 
 const SpeedRoute = SpeedRouteImport.update({
   id: '/speed',
@@ -59,14 +63,35 @@ const CapitalsRoute = CapitalsRouteImport.update({
   path: '/capitals',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAccountRoute = AuthenticatedAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAccountSyncRoute =
+  AuthenticatedAccountSyncRouteImport.update({
+    id: '/sync',
+    path: '/sync',
+    getParentRoute: () => AuthenticatedAccountRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
@@ -75,9 +100,12 @@ export interface FileRoutesByFullPath {
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
   '/speed': typeof SpeedRoute
+  '/account': typeof AuthenticatedAccountRouteWithChildren
+  '/account/sync': typeof AuthenticatedAccountSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
@@ -86,10 +114,14 @@ export interface FileRoutesByTo {
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
   '/speed': typeof SpeedRoute
+  '/account': typeof AuthenticatedAccountRouteWithChildren
+  '/account/sync': typeof AuthenticatedAccountSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
@@ -98,11 +130,14 @@ export interface FileRoutesById {
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
   '/speed': typeof SpeedRoute
+  '/_authenticated/account': typeof AuthenticatedAccountRouteWithChildren
+  '/_authenticated/account/sync': typeof AuthenticatedAccountSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/capitals'
     | '/challenges'
     | '/explorer'
@@ -111,9 +146,12 @@ export interface FileRouteTypes {
     | '/name'
     | '/progress'
     | '/speed'
+    | '/account'
+    | '/account/sync'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/capitals'
     | '/challenges'
     | '/explorer'
@@ -122,9 +160,13 @@ export interface FileRouteTypes {
     | '/name'
     | '/progress'
     | '/speed'
+    | '/account'
+    | '/account/sync'
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/capitals'
     | '/challenges'
     | '/explorer'
@@ -133,10 +175,14 @@ export interface FileRouteTypes {
     | '/name'
     | '/progress'
     | '/speed'
+    | '/_authenticated/account'
+    | '/_authenticated/account/sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
   CapitalsRoute: typeof CapitalsRoute
   ChallengesRoute: typeof ChallengesRoute
   ExplorerRoute: typeof ExplorerRoute
@@ -205,6 +251,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CapitalsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -212,11 +272,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/account': {
+      id: '/_authenticated/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AuthenticatedAccountRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/account/sync': {
+      id: '/_authenticated/account/sync'
+      path: '/sync'
+      fullPath: '/account/sync'
+      preLoaderRoute: typeof AuthenticatedAccountSyncRouteImport
+      parentRoute: typeof AuthenticatedAccountRoute
+    }
   }
 }
 
+interface AuthenticatedAccountRouteChildren {
+  AuthenticatedAccountSyncRoute: typeof AuthenticatedAccountSyncRoute
+}
+
+const AuthenticatedAccountRouteChildren: AuthenticatedAccountRouteChildren = {
+  AuthenticatedAccountSyncRoute: AuthenticatedAccountSyncRoute,
+}
+
+const AuthenticatedAccountRouteWithChildren =
+  AuthenticatedAccountRoute._addFileChildren(AuthenticatedAccountRouteChildren)
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAccountRoute: typeof AuthenticatedAccountRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAccountRoute: AuthenticatedAccountRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
   CapitalsRoute: CapitalsRoute,
   ChallengesRoute: ChallengesRoute,
   ExplorerRoute: ExplorerRoute,

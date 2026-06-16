@@ -130,6 +130,38 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    let mounted = true;
+    void import("@/lib/sync/workers").then(({ startSyncWorkers }) => {
+      if (!mounted) return;
+      startSyncWorkers();
+    });
+    void Promise.all([
+      import("@/integrations/supabase/client"),
+      import("@/lib/db/dbProvider"),
+      import("@/lib/sync/useSyncStore"),
+    ]).then(([{ supabase }, { swap }, { useSyncStore }]) => {
+      if (!mounted) return;
+      supabase.auth.getSession().then(({ data }) => {
+        const uid = data.session?.user.id ?? null;
+        useSyncStore.getState().setSignedIn(!!uid);
+        void swap(uid);
+      });
+      const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+        if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED")
+          return;
+        const uid = session?.user.id ?? null;
+        useSyncStore.getState().setSignedIn(!!uid);
+        void swap(uid);
+        if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+      });
+      return () => sub.subscription.unsubscribe();
+    });
+    return () => {
+      mounted = false;
+    };
+  }, [queryClient]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AppShell>

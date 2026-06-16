@@ -78,17 +78,17 @@ async function runPushOnce() {
               status: "dead",
               last_error: reason,
               attempts,
-            });
+            } as Partial<typeof r>);
           } else {
             await db().outbox.update(r.id!, {
               status: "pending",
               attempts,
               next_attempt_at: backoff(attempts),
               last_error: reason,
-            });
+            } as Partial<typeof r>);
           }
         } else {
-          await db().outbox.update(r.id!, { status: "pending" });
+          await db().outbox.update(r.id!, { status: "pending" } as Partial<typeof r>);
         }
       }
       // apply canonical patches (country_progress only at the moment)

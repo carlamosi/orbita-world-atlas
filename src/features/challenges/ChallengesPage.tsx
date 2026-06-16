@@ -12,7 +12,7 @@ import { recordSessionEnd, updateSkillProgress } from "@/lib/db/repo";
 import { confidenceAfter } from "@/lib/mastery";
 import { dateKey, weekKey } from "@/lib/streak";
 import type { Country } from "@/types/country";
-import { COUNTRY_BY_ISO3, pickRandomCountries } from "@/lib/countries";
+import { pickRandomCountries } from "@/lib/countries";
 
 type Active = {
   set: ChallengeSet;

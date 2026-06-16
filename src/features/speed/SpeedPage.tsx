@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSpeedRuntime, type SpeedMode } from "./speedRuntimeStore";
 import { Button } from "@/components/ui/orbita-button";
@@ -398,6 +398,3 @@ function Stat({ label, value }: { label: string; value: string | number }) {
     </div>
   );
 }
-// keep AnimatePresence import used
-void AnimatePresence;
-useMemo;

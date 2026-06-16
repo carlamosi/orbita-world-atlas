@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { spring } from "@/lib/motion";
 import { dateKey, currentStreak, longestStreak } from "@/lib/streak";
-import { DEFINITIONS, defByKey } from "@/lib/unlocks";
+import { DEFINITIONS } from "@/lib/unlocks";
 import { cn } from "@/lib/utils";
 
 const CONTINENTS = ["Africa", "Americas", "Asia", "Europe", "Oceania"] as const;

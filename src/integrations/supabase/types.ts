@@ -14,16 +14,257 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      challenge_attempts: {
+        Row: {
+          client_id: string | null
+          correct: boolean
+          id: string
+          kind: string
+          ms: number
+          op_id: string
+          period_key: string
+          question_index: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          correct: boolean
+          id?: string
+          kind: string
+          ms?: number
+          op_id: string
+          period_key: string
+          question_index: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          correct?: boolean
+          id?: string
+          kind?: string
+          ms?: number
+          op_id?: string
+          period_key?: string
+          question_index?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      country_progress: {
+        Row: {
+          client_id: string | null
+          country_code: string
+          last_seen_at: string | null
+          skill_versions: Json
+          skills: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          country_code: string
+          last_seen_at?: string | null
+          skill_versions?: Json
+          skills?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          country_code?: string
+          last_seen_at?: string | null
+          skill_versions?: Json
+          skills?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_streak: {
+        Row: {
+          client_id: string | null
+          count: number
+          date_key: string
+          last_active_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          count?: number
+          date_key: string
+          last_active_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          count?: number
+          date_key?: string
+          last_active_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_flag: string | null
+          client_id: string | null
+          created_at: string
+          display_name: string | null
+          id: string
+          updated_at: string
+        }
+        Insert: {
+          avatar_flag?: string | null
+          client_id?: string | null
+          created_at?: string
+          display_name?: string | null
+          id: string
+          updated_at?: string
+        }
+        Update: {
+          avatar_flag?: string | null
+          client_id?: string | null
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      sessions_log: {
+        Row: {
+          best_combo: number
+          client_id: string | null
+          correct: number
+          duration_ms: number
+          ended_at: string | null
+          id: string
+          meta: Json | null
+          mode: string
+          op_id: string
+          period_key: string | null
+          score: number
+          skill: string | null
+          started_at: string | null
+          total_questions: number
+          updated_at: string
+          user_id: string
+          wrong: number
+        }
+        Insert: {
+          best_combo?: number
+          client_id?: string | null
+          correct?: number
+          duration_ms?: number
+          ended_at?: string | null
+          id?: string
+          meta?: Json | null
+          mode: string
+          op_id: string
+          period_key?: string | null
+          score?: number
+          skill?: string | null
+          started_at?: string | null
+          total_questions?: number
+          updated_at?: string
+          user_id: string
+          wrong?: number
+        }
+        Update: {
+          best_combo?: number
+          client_id?: string | null
+          correct?: number
+          duration_ms?: number
+          ended_at?: string | null
+          id?: string
+          meta?: Json | null
+          mode?: string
+          op_id?: string
+          period_key?: string | null
+          score?: number
+          skill?: string | null
+          started_at?: string | null
+          total_questions?: number
+          updated_at?: string
+          user_id?: string
+          wrong?: number
+        }
+        Relationships: []
+      }
+      unlocks: {
+        Row: {
+          client_id: string | null
+          key: string
+          meta: Json | null
+          progress: number
+          unlocked_at: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          client_id?: string | null
+          key: string
+          meta?: Json | null
+          progress?: number
+          unlocked_at?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          client_id?: string | null
+          key?: string
+          meta?: Json | null
+          progress?: number
+          unlocked_at?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      sync_pull: { Args: { _cursors: Json; _limit?: number }; Returns: Json }
+      sync_push: { Args: { _mutations: Json }; Returns: Json }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +391,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const

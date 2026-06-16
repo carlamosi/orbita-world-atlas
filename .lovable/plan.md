@@ -1,113 +1,58 @@
-# Orbita — Phase 2 Plan (Persistence + Shared Engine + Quiz Modes)
+# ORBITA — Phase 3 (shipped)
 
-Phase 1 delivered the foundation, Home, Globe3D, and Find Country. Phase 2 hardens the gameplay loop into a reusable engine, adds local persistence + adaptive mastery, and ships the three answer-based modes: Name Country, Flag Quiz, and Capital Quiz. Speed Round, Explorer, Progress, Challenges, and PWA remain deferred to Phase 3+.
+## Architectural tightening applied per feedback
 
-## Goals
+1. **Decoupled real-time runtime from session engine**
+   - `src/features/engine/useSession.ts` — turn-based engine (Find / Name / Flags / Capitals / Weekly Challenge).
+   - `src/features/speed/speedRuntimeStore.ts` — isolated Speed Round runtime: 4Hz tick, combo, lives, mid-run queue top-up. Subscribes are scoped (TimerRing only re-renders on tick) so HUD/options don't churn.
+   - Both share the **pure** question engine in `src/lib/mastery.ts` (`selectQuestions`, `selectMixedQuestions`) and persist through the same repo.
 
-1. A shared `useSession` engine so every mode is ~150 lines of UI, not duplicated state.
-2. Dexie (IndexedDB) layer with versioned migrations writing `country_progress` and `game_sessions`.
-3. Adaptive mastery v1 — confidence per country per skill, decay over time, weak-country prioritization in question selection.
-4. Name Country, Flag Quiz, Capital Quiz — production-quality, cinematic, keyboard-first.
-5. Replace `/find` with the shared engine so all four modes share behavior, scoring, and persistence.
-6. Quality + a11y pass across all modes.
+2. **Structured per-skill confidence**
+   - Dexie v2 migration aggregates legacy `iso3::skill` rows into one row per country:
+     ```ts
+     interface CountryProgressRow {
+       iso3: string;
+       skills: { name?: SkillStat; flag?: SkillStat; capital?: SkillStat; location?: SkillStat };
+       lastSeenAt: number;
+     }
+     ```
+   - Adding a new skill = new key in `skills`, no migration.
 
-## 1. Persistence layer (Dexie)
+3. **Unlocks: pure evaluator, repo-owned, idempotent**
+   - `src/lib/unlocks.ts` exposes a pure `evaluateUnlocks(state)` returning delta rows.
+   - Invoked only from `repo.recordSessionEnd` (and `reEvaluateUnlocks`). UI never recomputes.
+   - 11 achievements defined: milestones, region masters, streaks, speed, perfectionist.
 
-`src/lib/db/orbita-db.ts` — a versioned Dexie database.
+4. **PWA: manifest-only, Dexie excluded by design**
+   - `public/manifest.webmanifest` + apple-touch-icon + theme-color.
+   - **No service worker** — per Lovable PWA skill, app-shell SW would risk shadowing IndexedDB as the source-of-truth offline state.
+   - Dexie continues to provide true offline gameplay; flag CDN is preconnected, not cached.
 
-Stores:
-- `countryProgress` — per `iso3 × skill` (`location | name | flag | capital`): confidence 0–1, lastSeenAt, timesRight, timesWrong, streak.
-- `gameSessions` — id, mode, score, accuracy, durationMs, totalQuestions, bestCombo, createdAt.
-- `meta` — single row: schemaVersion, deviceTier, lastOpenedAt.
+5. **Globe degradation**
+   - `Globe3D` gains a `quality: 'high' | 'medium' | 'static'` prop.
+   - Medium: 0.18 autoRotate, half point density, bump map kept.
+   - Static: no autoRotate, no bump map, third-density points.
+   - Reduced-motion media query forces `static` regardless of prop.
+   - Explorer uses `medium`; single-focus modes use `high`.
 
-Versioning: every schema change bumps `db.version(n)` with an explicit `upgrade()`. v1 ships in this phase; the migration handler scaffold lives in `src/lib/db/migrations.ts` ready for v2.
+## Files
 
-Reads/writes are wrapped in `src/lib/db/repo.ts` — pure async functions. No component imports Dexie directly.
+- New: `src/features/speed/{SpeedPage,speedRuntimeStore}.tsx/ts`
+- New: `src/features/explorer/ExplorerPage.tsx`
+- New: `src/features/progress/ProgressPage.tsx`
+- New: `src/features/challenges/ChallengesPage.tsx`
+- New: `src/lib/{unlocks,streak,challenges}.ts`
+- New: `public/manifest.webmanifest`
+- Refactored: `src/lib/db/orbita-db.ts` (v2 schema + upgrade), `src/lib/db/repo.ts` (new write composer, unlock evaluator hook, live-query helpers), `src/lib/mastery.ts` (mixed-skill, injectable RNG)
+- Refactored: `src/features/engine/useSession.ts` (uses new `updateSkillProgress` + `recordSessionEnd`)
+- Refactored: `src/features/globe/Globe3D.tsx` (quality prop)
+- Wired: `src/routes/{speed,explorer,progress,challenges}.tsx` → real pages
+- Updated: `src/routes/__root.tsx` (manifest link, flagcdn preconnect)
 
-## 2. Adaptive mastery v1
+## Phase 4 hand-off (Supabase)
 
-`src/lib/mastery.ts`:
-- `confidenceAfter(prev, correct, hintUsed)` — bayesian-ish update; correct nudges toward 1, wrong toward 0, decay applied based on time-since-last-seen.
-- `decay(prev, daysSince)` — exponential, slow.
-- `selectQuestions(skill, n, opts)` — weighted random over weak countries (low confidence + long unseen), with continent filter, difficulty bias, and no immediate repeats.
-
-The Find store is refactored to call `selectQuestions("location", 20)` instead of `pickRandomCountries`. All four modes use the same selector with their own skill key.
-
-## 3. Shared session engine
-
-`src/features/engine/useSession.ts` — a Zustand factory `createSessionStore(skill, generator)` returns a hook with:
-- `queue`, `index`, `score`, `combo`, `bestCombo`, `correct`, `wrong`, `answerState`, `hintUsed`, `startedAt`, `endedAt`
-- `start()`, `submit(answer)`, `useHint()`, `next()`, `reveal()`, `current()`
-
-`submit` calls a mode-supplied `judge(prompt, answer)` (returns `correct | wrong`). On `endedAt`, the engine writes the session + per-country progress to Dexie.
-
-Shared UI: `SessionHud` (score/combo/right/wrong), `SessionEnd` (modal with stats + replay/home), `Prompt` (top glass card), `FeedbackBar` (bottom correct/wrong panel). All four modes import these.
-
-`/find` is refactored onto this engine — proves the abstraction before three more modes use it.
-
-## 4. Name Country mode (`/name`)
-
-`ssr: false`. Uses `Globe3D` zoomed in on a mystery country, no label.
-
-- **Easy**: 4-option multiple choice glass buttons under the globe.
-- **Hard**: text input with fuzzy match (Levenshtein ≤ 2, alt-spellings from dataset).
-- Keyboard: 1–4 picks options in Easy; Enter submits in Hard; Esc skips.
-- Reveal animation: country glows, capital pulses, name + flag appear in a glass card.
-
-## 5. Flag Quiz (`/flags`)
-
-Two sub-modes via a top tab switcher (persisted to `meta`):
-- **Flag → Country**: 4-option choice over country names.
-- **Country → Flag**: 6-flag grid, pick the right flag.
-
-Flags: `https://flagcdn.com/w320/{iso2}.png` (CDN, no bundle cost). `<img loading="lazy" decoding="async">` with a glass placeholder. Correct answer triggers a brief confetti burst (CSS particles, respects reduced-motion). No globe on this page — keeps the page light and focused.
-
-## 6. Capital Quiz (`/capitals`)
-
-Three sub-modes:
-- **Country → Capital**: 4-option.
-- **Capital → Country**: 4-option.
-- **Globe Locator**: globe shown, click the country whose capital is named. Reuses the Find interaction.
-
-Filters: continent (All / Africa / Americas / Asia / Europe / Oceania), persisted to `meta`.
-
-## 7. Home + Navbar updates
-
-- Mode cards on Home now link to live modes, not stubs — hover shows a small "confidence ring" from Dexie if any progress exists for that skill.
-- Navbar shows a subtle dot on the active route + a session-in-progress indicator if a mode is mid-session (engine flag).
-
-## 8. Quality pass
-
-- Reduced-motion variant for every animation.
-- Keyboard nav across mode tabs, options, and replays.
-- Focus-visible rings using `--cyan`.
-- Mobile QA at 375px: globe canvas height capped to `60dvh`, HUD reflows to a compact bottom sheet.
-- 60fps target maintained on desktop; mid-tier phone target 30fps (globe DPR capped at 1.5).
-
-## Out of scope this phase (Phase 3+)
-
-- Speed Round (different timing/UX shape — gets its own phase).
-- Explorer split-screen.
-- Progress dashboard (data is being captured now; visualization lands with Explorer).
-- Challenges + unlocks.
-- PWA / offline manifest.
-- Supabase Cloud auth & sync (Phase 4).
-
-## Build order
-
-1. Dexie schema + repo + Zod-validated meta row.
-2. Mastery selector + confidence update functions (with unit-style runtime smoke test).
-3. Shared session engine + `SessionHud` / `SessionEnd` / `Prompt` / `FeedbackBar` primitives.
-4. Refactor `/find` onto the engine; verify behavior parity with Phase 1.
-5. `/name` — Easy then Hard variants.
-6. `/flags` — Flag→Country, Country→Flag, confetti.
-7. `/capitals` — three sub-modes + continent filter UI.
-8. Home cards: hover confidence ring from Dexie.
-9. A11y + reduced-motion + mobile pass.
-
-## Notes
-
-- All new game routes use `ssr: false` (consistent with `/find`).
-- Flag images come from `flagcdn.com` so no bundle bloat; we keep the dataset's `flagCode` (lowercase iso2).
-- Dexie writes are fire-and-forget from the engine; failures only log — gameplay never blocks on storage.
-- The engine is intentionally backend-agnostic so Phase 4 can swap the Dexie writer for a Supabase-syncing one with no UI changes.
+The architecture is now sync-friendly:
+- Single write surface (`repo.ts`) — straightforward to mirror to Supabase.
+- Idempotent unlock evaluator — runs identically on client or server.
+- Per-country progress rows map 1:1 to a future `country_progress` Supabase table.
+- Deterministic challenge sets (mulberry32 + date/week seed) give comparable scores without server state.

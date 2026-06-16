@@ -136,8 +136,56 @@ export async function getAllSessions(): Promise<GameSessionRow[]> {
 export async function recordSessionEnd(row: Omit<GameSessionRow, "id">) {
   if (!isBrowser()) return;
   try {
-    await db().gameSessions.add(row);
-    await reEvaluateUnlocks();
+    const op_id = newOpId();
+    const withId: Omit<GameSessionRow, "id"> = {
+      ...row,
+      op_id,
+      updated_at: Date.now(),
+      dirty: 1,
+    };
+    await db().gameSessions.add(withId);
+    enqueue({
+      op_id,
+      entity: "sessions_log",
+      op: "insert",
+      payload: {
+        mode: row.mode,
+        skill: row.skill,
+        score: row.score,
+        total_questions: row.totalQuestions,
+        correct: row.correct,
+        wrong: row.wrong,
+        best_combo: row.bestCombo,
+        duration_ms: row.durationMs,
+        period_key: row.periodKey,
+        meta: row.meta,
+        started_at: new Date(row.createdAt - row.durationMs).toISOString(),
+        ended_at: new Date(row.createdAt).toISOString(),
+      },
+    });
+    const deltas = await reEvaluateUnlocks();
+    for (const u of deltas) {
+      enqueue({
+        entity: "unlocks",
+        op: "upsert",
+        payload: {
+          key: u.key,
+          progress: u.progress,
+          unlocked_at: u.unlockedAt ? new Date(u.unlockedAt).toISOString() : null,
+        },
+      });
+    }
+    // Daily streak signal
+    const k = dateKey(row.createdAt);
+    enqueue({
+      entity: "daily_streak",
+      op: "upsert",
+      payload: {
+        date_key: k,
+        count: 1,
+        last_active_at: new Date(row.createdAt).toISOString(),
+      },
+    });
   } catch (e) {
     console.warn("[orbita-db] recordSessionEnd failed", e);
   }

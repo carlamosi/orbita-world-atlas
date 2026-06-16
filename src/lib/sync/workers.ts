@@ -5,7 +5,7 @@
 import { db } from "@/lib/db/orbita-db";
 import { syncPush, syncPull } from "./sync.functions";
 import { useSyncStore } from "./useSyncStore";
-import type { Mutation, SyncEntity } from "./types";
+import type { Mutation, PullResult, PushResult, SyncEntity } from "./types";
 
 const MAX_ATTEMPTS = 10;
 const BATCH = 50;

@@ -24,13 +24,13 @@ const PushSchema = z.object({
 export const syncPush = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => PushSchema.parse(d))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<unknown> => {
     const { supabase } = context;
     const { data: out, error } = await supabase.rpc("sync_push", {
       _mutations: data.mutations as never,
     });
     if (error) throw new Error(error.message);
-    return out as unknown as PushResult;
+    return out as unknown;
   });
 
 const PullSchema = z.object({
@@ -41,12 +41,14 @@ const PullSchema = z.object({
 export const syncPull = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: unknown) => PullSchema.parse(d))
-  .handler(async ({ data, context }) => {
+  .handler(async ({ data, context }): Promise<unknown> => {
     const { supabase } = context;
     const { data: out, error } = await supabase.rpc("sync_pull", {
       _cursors: data.cursors as never,
       _limit: data.limit ?? 500,
     });
     if (error) throw new Error(error.message);
-    return out as unknown as PullResult;
+    return out as unknown;
   });
+
+export type { PushResult, PullResult };

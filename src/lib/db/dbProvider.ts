@@ -46,23 +46,83 @@ export async function ensureDb(): Promise<OrbitaDB> {
 export async function swap(userId: string | null): Promise<OrbitaDB> {
   const next = `orbita-${userId ?? "local"}`;
   if (state.current && state.name === next) return state.current;
-  if (state.current) {
+
+  const prev = state.current;
+  const prevName = state.name;
+  const nextDb = createOrbitaDb(next);
+
+  // Anonymous → signed-in promotion: if local has data and the per-user DB
+  // is empty, copy rows across and enqueue them to the cloud.
+  if (userId && prev && prevName === "orbita-local") {
     try {
-      state.current.close();
-    } catch {
-      // ignore
+      await mergeLocalIntoUserDb(prev, nextDb);
+    } catch (e) {
+      console.warn("[dbProvider] merge skipped:", e);
     }
   }
+
+  if (prev) {
+    try { prev.close(); } catch { /* ignore */ }
+  }
+
   state.name = next;
-  state.current = createOrbitaDb(next);
+  state.current = nextDb;
   for (const l of state.listeners) {
-    try {
-      l(state.current);
-    } catch {
-      // ignore
-    }
+    try { l(state.current); } catch { /* ignore */ }
   }
   return state.current;
+}
+
+async function mergeLocalIntoUserDb(local: OrbitaDB, target: OrbitaDB) {
+  const [progress, unlocks, sessions] = await Promise.all([
+    local.countryProgress.toArray().catch(() => []),
+    local.unlocks.toArray().catch(() => []),
+    local.gameSessions.toArray().catch(() => []),
+  ]);
+  const targetCount = await target.countryProgress.count().catch(() => 0);
+  if (targetCount > 0) return;
+  const { getClientId, newOpId } = await import("@/lib/sync/clientId");
+  const cid = getClientId();
+  const now = Date.now();
+
+  if (progress.length) await target.countryProgress.bulkPut(progress).catch(() => {});
+  if (unlocks.length) await target.unlocks.bulkPut(unlocks).catch(() => {});
+  if (sessions.length) await target.gameSessions.bulkPut(sessions).catch(() => {});
+
+  const rows = [
+    ...progress.map((r) => ({
+      op_id: newOpId(),
+      entity: "country_progress" as const,
+      op: "upsert" as const,
+      payload: {
+        country_code: r.iso3,
+        skills: r.skills,
+        skill_versions: r.skill_versions ?? {},
+        last_seen_at: new Date(r.lastSeenAt || now).toISOString(),
+        client_id: cid,
+      },
+      created_at: now,
+      attempts: 0,
+      next_attempt_at: now,
+      status: "pending" as const,
+    })),
+    ...unlocks.map((u) => ({
+      op_id: newOpId(),
+      entity: "unlocks" as const,
+      op: "upsert" as const,
+      payload: {
+        key: u.key,
+        progress: u.progress,
+        unlocked_at: u.unlockedAt ? new Date(u.unlockedAt).toISOString() : null,
+        client_id: cid,
+      },
+      created_at: now,
+      attempts: 0,
+      next_attempt_at: now,
+      status: "pending" as const,
+    })),
+  ];
+  if (rows.length) await target.outbox.bulkPut(rows).catch(() => {});
 }
 
 export function onSwap(fn: Listener): () => void {

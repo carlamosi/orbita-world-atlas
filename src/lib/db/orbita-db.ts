@@ -193,29 +193,17 @@ export function createOrbitaDb(name: string): OrbitaDB {
  * local DB synchronously so repo code can keep its non-async API; auth-aware
  * swaps later replace the singleton via dbProvider.swap().
  */
-let _bootDb: OrbitaDB | null = null;
+import { getCurrent, setCurrent } from "./dbProvider";
+
 export function db(): OrbitaDB {
   if (typeof window === "undefined") {
     throw new Error("Orbita DB is browser-only");
   }
-  // Try provider first (post-swap path)
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const provider = require("./dbProvider") as typeof import("./dbProvider");
-    try {
-      return provider.getDbSync();
-    } catch {
-      // not initialised; fall through
-    }
-    if (!_bootDb) {
-      _bootDb = createOrbitaDb("orbita-local");
-      void provider.ensureDb();
-    }
-    return _bootDb;
-  } catch {
-    if (!_bootDb) _bootDb = createOrbitaDb("orbita-local");
-    return _bootDb;
-  }
+  const cur = getCurrent();
+  if (cur) return cur;
+  const fresh = createOrbitaDb("orbita-local");
+  setCurrent(fresh, "orbita-local");
+  return fresh;
 }
 
 export function isBrowser() {

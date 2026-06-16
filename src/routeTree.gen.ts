@@ -9,8 +9,56 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SpeedRouteImport } from './routes/speed'
+import { Route as ProgressRouteImport } from './routes/progress'
+import { Route as NameRouteImport } from './routes/name'
+import { Route as FlagsRouteImport } from './routes/flags'
+import { Route as FindRouteImport } from './routes/find'
+import { Route as ExplorerRouteImport } from './routes/explorer'
+import { Route as ChallengesRouteImport } from './routes/challenges'
+import { Route as CapitalsRouteImport } from './routes/capitals'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SpeedRoute = SpeedRouteImport.update({
+  id: '/speed',
+  path: '/speed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgressRoute = ProgressRouteImport.update({
+  id: '/progress',
+  path: '/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NameRoute = NameRouteImport.update({
+  id: '/name',
+  path: '/name',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FlagsRoute = FlagsRouteImport.update({
+  id: '/flags',
+  path: '/flags',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindRoute = FindRouteImport.update({
+  id: '/find',
+  path: '/find',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExplorerRoute = ExplorerRouteImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CapitalsRoute = CapitalsRouteImport.update({
+  id: '/capitals',
+  path: '/capitals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +67,144 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/capitals': typeof CapitalsRoute
+  '/challenges': typeof ChallengesRoute
+  '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
+  '/flags': typeof FlagsRoute
+  '/name': typeof NameRoute
+  '/progress': typeof ProgressRoute
+  '/speed': typeof SpeedRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/capitals': typeof CapitalsRoute
+  '/challenges': typeof ChallengesRoute
+  '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
+  '/flags': typeof FlagsRoute
+  '/name': typeof NameRoute
+  '/progress': typeof ProgressRoute
+  '/speed': typeof SpeedRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/capitals': typeof CapitalsRoute
+  '/challenges': typeof ChallengesRoute
+  '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
+  '/flags': typeof FlagsRoute
+  '/name': typeof NameRoute
+  '/progress': typeof ProgressRoute
+  '/speed': typeof SpeedRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/capitals'
+    | '/challenges'
+    | '/explorer'
+    | '/find'
+    | '/flags'
+    | '/name'
+    | '/progress'
+    | '/speed'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/capitals'
+    | '/challenges'
+    | '/explorer'
+    | '/find'
+    | '/flags'
+    | '/name'
+    | '/progress'
+    | '/speed'
+  id:
+    | '__root__'
+    | '/'
+    | '/capitals'
+    | '/challenges'
+    | '/explorer'
+    | '/find'
+    | '/flags'
+    | '/name'
+    | '/progress'
+    | '/speed'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CapitalsRoute: typeof CapitalsRoute
+  ChallengesRoute: typeof ChallengesRoute
+  ExplorerRoute: typeof ExplorerRoute
+  FindRoute: typeof FindRoute
+  FlagsRoute: typeof FlagsRoute
+  NameRoute: typeof NameRoute
+  ProgressRoute: typeof ProgressRoute
+  SpeedRoute: typeof SpeedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/speed': {
+      id: '/speed'
+      path: '/speed'
+      fullPath: '/speed'
+      preLoaderRoute: typeof SpeedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/progress': {
+      id: '/progress'
+      path: '/progress'
+      fullPath: '/progress'
+      preLoaderRoute: typeof ProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/name': {
+      id: '/name'
+      path: '/name'
+      fullPath: '/name'
+      preLoaderRoute: typeof NameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/flags': {
+      id: '/flags'
+      path: '/flags'
+      fullPath: '/flags'
+      preLoaderRoute: typeof FlagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find': {
+      id: '/find'
+      path: '/find'
+      fullPath: '/find'
+      preLoaderRoute: typeof FindRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/explorer': {
+      id: '/explorer'
+      path: '/explorer'
+      fullPath: '/explorer'
+      preLoaderRoute: typeof ExplorerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/capitals': {
+      id: '/capitals'
+      path: '/capitals'
+      fullPath: '/capitals'
+      preLoaderRoute: typeof CapitalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +217,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CapitalsRoute: CapitalsRoute,
+  ChallengesRoute: ChallengesRoute,
+  ExplorerRoute: ExplorerRoute,
+  FindRoute: FindRoute,
+  FlagsRoute: FlagsRoute,
+  NameRoute: NameRoute,
+  ProgressRoute: ProgressRoute,
+  SpeedRoute: SpeedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

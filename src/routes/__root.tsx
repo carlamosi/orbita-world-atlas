@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Navbar } from "@/components/layout/Navbar";
+import { Starfield } from "@/components/atmosphere/Starfield";
 
 function NotFoundComponent() {
   return (
@@ -76,20 +78,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
+      { name: "theme-color", content: "#050508" },
+      { title: "Orbita — Master every corner of the world" },
+      {
+        name: "description",
+        content:
+          "Orbita is a cinematic geography mastery platform. 195 countries, every capital, every flag — explored from orbit.",
+      },
+      { property: "og:title", content: "Orbita — Master every corner of the world" },
+      {
+        property: "og:description",
+        content: "A cinematic, immersive way to learn the world. 195 countries from orbit.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: appCss,
+        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap",
       },
     ],
   }),
@@ -101,7 +112,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
       </head>
@@ -118,8 +129,36 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <AppShell>
+        <Outlet />
+      </AppShell>
     </QueryClientProvider>
+  );
+}
+
+function AppShell({ children }: { children: ReactNode }) {
+  return (
+    <div className="relative min-h-dvh overflow-x-clip">
+      {/* Atmosphere layers (fixed, behind content) */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10">
+        <Starfield density={140} />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 60% 50% at 50% 0%, rgba(108,99,255,0.18), transparent 60%), radial-gradient(ellipse 50% 40% at 80% 100%, rgba(0,212,255,0.12), transparent 60%)",
+          }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.6) 100%)",
+          }}
+        />
+      </div>
+      <Navbar />
+      {children}
+    </div>
   );
 }

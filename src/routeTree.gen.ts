@@ -13,6 +13,7 @@ import { Route as SpeedRouteImport } from './routes/speed'
 import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as NameRouteImport } from './routes/name'
 import { Route as FlagsRouteImport } from './routes/flags'
+import { Route as FindRouteImport } from './routes/find'
 import { Route as ExplorerRouteImport } from './routes/explorer'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CapitalsRouteImport } from './routes/capitals'
@@ -36,6 +37,11 @@ const NameRoute = NameRouteImport.update({
 const FlagsRoute = FlagsRouteImport.update({
   id: '/flags',
   path: '/flags',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FindRoute = FindRouteImport.update({
+  id: '/find',
+  path: '/find',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ExplorerRoute = ExplorerRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
   '/flags': typeof FlagsRoute
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
   '/flags': typeof FlagsRoute
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/capitals': typeof CapitalsRoute
   '/challenges': typeof ChallengesRoute
   '/explorer': typeof ExplorerRoute
+  '/find': typeof FindRoute
   '/flags': typeof FlagsRoute
   '/name': typeof NameRoute
   '/progress': typeof ProgressRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/capitals'
     | '/challenges'
     | '/explorer'
+    | '/find'
     | '/flags'
     | '/name'
     | '/progress'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/capitals'
     | '/challenges'
     | '/explorer'
+    | '/find'
     | '/flags'
     | '/name'
     | '/progress'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/capitals'
     | '/challenges'
     | '/explorer'
+    | '/find'
     | '/flags'
     | '/name'
     | '/progress'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   CapitalsRoute: typeof CapitalsRoute
   ChallengesRoute: typeof ChallengesRoute
   ExplorerRoute: typeof ExplorerRoute
+  FindRoute: typeof FindRoute
   FlagsRoute: typeof FlagsRoute
   NameRoute: typeof NameRoute
   ProgressRoute: typeof ProgressRoute
@@ -162,6 +175,13 @@ declare module '@tanstack/react-router' {
       path: '/flags'
       fullPath: '/flags'
       preLoaderRoute: typeof FlagsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/find': {
+      id: '/find'
+      path: '/find'
+      fullPath: '/find'
+      preLoaderRoute: typeof FindRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/explorer': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   CapitalsRoute: CapitalsRoute,
   ChallengesRoute: ChallengesRoute,
   ExplorerRoute: ExplorerRoute,
+  FindRoute: FindRoute,
   FlagsRoute: FlagsRoute,
   NameRoute: NameRoute,
   ProgressRoute: ProgressRoute,

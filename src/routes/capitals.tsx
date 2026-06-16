@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { StubPage } from "@/components/layout/StubPage";
+import CapitalsPage from "@/features/capitals/CapitalsPage";
 
 export const Route = createFileRoute("/capitals")({
-  head: () => ({ meta: [{ title: "Capitals — Orbita" }] }),
-  component: () => (
-    <StubPage
-      path="/capitals"
-      title="The seats of power"
-      blurb="Country → Capital, Capital → Country, and Globe Locator. Shared answer engine across modes."
-    />
-  ),
+  ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Capitals — Orbita" },
+      { name: "description", content: "Match the world's seats of power." },
+    ],
+  }),
+  component: CapitalsPage,
 });

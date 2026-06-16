@@ -1,6 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { SyncPill } from "@/features/sync/SyncPill";
+import { AccountMenu } from "@/features/sync/AccountMenu";
 
 const NAV = [
   { to: "/explorer", label: "Explorer" },
@@ -89,18 +91,14 @@ export function Navbar() {
           })}
         </div>
         <div className="ml-auto flex items-center gap-2">
-          <Link
-            to="/find"
-            className="hidden sm:inline-flex items-center text-[13px] text-white/80 hover:text-white px-3 py-1.5"
-          >
-            Play
-          </Link>
+          <SyncPill />
           <Link
             to="/explorer"
-            className="inline-flex items-center text-[13px] font-medium text-white rounded-full px-4 py-1.5 bg-white/10 border border-white/15 hover:bg-white/15"
+            className="hidden sm:inline-flex items-center text-[13px] font-medium text-white rounded-full px-4 py-1.5 bg-white/10 border border-white/15 hover:bg-white/15"
           >
             Explore
           </Link>
+          <AccountMenu />
         </div>
       </motion.nav>
     </header>

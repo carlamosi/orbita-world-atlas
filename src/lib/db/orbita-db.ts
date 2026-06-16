@@ -1,30 +1,25 @@
 import Dexie, { type Table } from "dexie";
+import { ensureDb, getDbSync } from "./dbProvider";
 
 /**
- * ORBITA local-first store (Dexie v2).
+ * ORBITA local-first store (Dexie v3 with sync support).
  *
- * Architectural notes for Phase 3:
+ * v3 additions over v2:
+ * - countryProgress gains `skill_versions` (per-skill monotonic counters)
+ * - gameSessions gains `op_id` (uuid for exactly-once cloud insert)
+ * - new tables: `outbox` (sync queue) and `sync_meta` (cursors/client_id)
+ * - new table: `challengeAttempts` (append-only per question)
  *
- * - countryProgress is now **one row per country**, with a nested `skills`
- *   object. This makes adding new skills (e.g. anthems, currencies) a
- *   non-migration change and prepares the schema for future ML-style
- *   weighting (decay curves, per-skill priors) without flattening pain.
- *
- * - Unlocks live in their own table. They are **idempotent** — the pure
- *   evaluator in `src/lib/unlocks.ts` decides what is unlocked from current
- *   state and the repo just upserts. The UI never recomputes them.
- *
- * - PWA caching MUST exclude IndexedDB. IndexedDB *is* the source of truth
- *   offline; cache headers on assets must not be allowed to shadow it.
- *   See public/manifest.webmanifest and the (manifest-only) installability
- *   wiring in __root.tsx.
+ * The DB is opened via dbProvider so it can be swapped per signed-in user
+ * (DB name: `orbita-${userId ?? 'local'}`). Existing repo code that calls
+ * `db()` keeps working because db() delegates to the provider.
  */
 
 export type Skill = "location" | "name" | "flag" | "capital";
 export const ALL_SKILLS: readonly Skill[] = ["location", "name", "flag", "capital"];
 
 export interface SkillStat {
-  confidence: number; // 0..1
+  confidence: number;
   timesRight: number;
   timesWrong: number;
   streak: number;
@@ -32,9 +27,13 @@ export interface SkillStat {
 }
 
 export interface CountryProgressRow {
-  iso3: string; // primary key
+  iso3: string;
   skills: Partial<Record<Skill, SkillStat>>;
+  /** monotonic counters per skill, bumped on every local mutation */
+  skill_versions?: Partial<Record<Skill, number>>;
   lastSeenAt: number;
+  updated_at?: number;
+  dirty?: 0 | 1;
 }
 
 export type GameMode =
@@ -48,6 +47,7 @@ export type GameMode =
 
 export interface GameSessionRow {
   id?: number;
+  op_id?: string;
   mode: GameMode;
   skill: Skill | "mixed";
   score: number;
@@ -57,14 +57,26 @@ export interface GameSessionRow {
   bestCombo: number;
   durationMs: number;
   createdAt: number;
-  // For challenges & speed
-  periodKey?: string; // "YYYY-MM-DD" or "YYYY-Www"
+  periodKey?: string;
   meta?: Record<string, number | string>;
+  updated_at?: number;
+  dirty?: 0 | 1;
+}
+
+export interface ChallengeAttemptRow {
+  id?: number;
+  op_id: string;
+  kind: "daily" | "weekly";
+  periodKey: string;
+  questionIndex: number;
+  correct: boolean;
+  ms: number;
+  createdAt: number;
 }
 
 export interface UnlockRow {
-  key: string; // stable id, e.g. "streak_7"
-  progress: number; // 0..1
+  key: string;
+  progress: number;
   unlockedAt: number | null;
   updatedAt: number;
 }
@@ -76,23 +88,48 @@ export interface MetaRow {
   prefs: Record<string, string>;
 }
 
-class OrbitaDB extends Dexie {
+export interface OutboxRow {
+  id?: number;
+  op_id: string;
+  entity:
+    | "sessions_log"
+    | "country_progress"
+    | "challenge_attempts"
+    | "unlocks"
+    | "daily_streak"
+    | "profiles";
+  op: "insert" | "upsert";
+  payload: Record<string, unknown>;
+  created_at: number;
+  attempts: number;
+  next_attempt_at: number;
+  status: "pending" | "in_flight" | "dead";
+  last_error?: string;
+}
+
+export interface SyncMetaRow {
+  key: string;
+  value: string;
+}
+
+export class OrbitaDB extends Dexie {
   countryProgress!: Table<CountryProgressRow, string>;
   gameSessions!: Table<GameSessionRow, number>;
+  challengeAttempts!: Table<ChallengeAttemptRow, number>;
   unlocks!: Table<UnlockRow, string>;
   meta!: Table<MetaRow, "meta">;
+  outbox!: Table<OutboxRow, number>;
+  sync_meta!: Table<SyncMetaRow, string>;
 
-  constructor() {
-    super("orbita");
+  constructor(name: string) {
+    super(name);
 
-    // v1 — legacy: per-skill rows keyed by `${iso3}::${skill}`.
     this.version(1).stores({
       countryProgress: "key, iso3, skill, lastSeenAt, confidence",
       gameSessions: "++id, mode, skill, createdAt",
       meta: "id",
     });
 
-    // v2 — per-country rows with nested skill stats; unlocks table.
     this.version(2)
       .stores({
         countryProgress: "iso3, lastSeenAt",
@@ -101,7 +138,6 @@ class OrbitaDB extends Dexie {
         meta: "id",
       })
       .upgrade(async (tx) => {
-        // Aggregate v1 rows (one per iso3+skill) into v2 rows (one per iso3).
         const old = await tx
           .table<{ key: string; iso3: string; skill: Skill } & SkillStat>(
             "countryProgress",
@@ -130,22 +166,43 @@ class OrbitaDB extends Dexie {
           await tx.table("countryProgress").bulkPut([...grouped.values()]);
         }
       });
+
+    // v3: add sync-support fields and tables
+    this.version(3).stores({
+      countryProgress: "iso3, lastSeenAt, updated_at",
+      gameSessions: "++id, &op_id, mode, skill, createdAt, periodKey, updated_at",
+      challengeAttempts: "++id, &op_id, [kind+periodKey+questionIndex], createdAt",
+      unlocks: "key, unlockedAt, updatedAt",
+      meta: "id",
+      outbox: "++id, &op_id, entity, status, next_attempt_at, created_at",
+      sync_meta: "&key",
+    });
   }
 }
 
-let _db: OrbitaDB | null = null;
+export function createOrbitaDb(name: string): OrbitaDB {
+  const d = new OrbitaDB(name);
+  d.meta
+    .put({ id: "meta", schemaVersion: 3, lastOpenedAt: Date.now(), prefs: {} })
+    .catch(() => {});
+  return d;
+}
 
+/**
+ * Sync accessor used by all existing repo code. Idempotent: calls ensureDb()
+ * once and returns the same instance on hot paths. We open the DB eagerly on
+ * first call to keep the existing synchronous API intact.
+ */
+let _booted = false;
 export function db(): OrbitaDB {
   if (typeof window === "undefined") {
     throw new Error("Orbita DB is browser-only");
   }
-  if (!_db) {
-    _db = new OrbitaDB();
-    _db.meta
-      .put({ id: "meta", schemaVersion: 2, lastOpenedAt: Date.now(), prefs: {} })
-      .catch(() => {});
+  if (!_booted) {
+    _booted = true;
+    void ensureDb();
   }
-  return _db;
+  return getDbSync();
 }
 
 export function isBrowser() {

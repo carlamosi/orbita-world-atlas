@@ -114,10 +114,6 @@ function CinematicScroll({ totalCountries }: { totalCountries: number }) {
           style={{ opacity: heroOpacity, y: heroY }}
           className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6"
         >
-          <Badge tone="cyan" className="mb-6">
-            <span className="size-1.5 rounded-full bg-cyan animate-pulse" />
-            Cinematic geography mastery
-          </Badge>
           <h1 className="font-display font-semibold tracking-[-0.03em] text-[clamp(2.6rem,8vw,6.5rem)] leading-[0.95] text-white text-glow-violet">
             Master every corner
             <br />

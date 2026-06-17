@@ -34,6 +34,11 @@ const passwordSchema = z
   .string()
   .min(8, "At least 8 characters")
   .max(72, "Too long");
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, "Enter at least 2 characters")
+  .max(60, "Too long");
 
 function scorePassword(p: string): { score: number; label: string } {
   if (!p) return { score: 0, label: "" };

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowLeft, Check } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowLeft, Check, User as UserIcon } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";

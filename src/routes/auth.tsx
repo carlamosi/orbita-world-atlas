@@ -78,6 +78,10 @@ function AuthPage() {
       const p = passwordSchema.safeParse(password);
       if (!p.success) next.password = p.error.issues[0]?.message;
     }
+    if (mode === "signup") {
+      const n = nameSchema.safeParse(name);
+      if (!n.success) next.name = n.error.issues[0]?.message;
+    }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
@@ -96,7 +100,10 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/` },
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: { display_name: name.trim() },
+          },
         });
         if (error) throw error;
         toast.success("Account created — check your email to confirm");

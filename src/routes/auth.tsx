@@ -237,6 +237,29 @@ function AuthPage() {
         )}
 
         <form onSubmit={onSubmit} className={mode === "forgot" ? "mt-7 space-y-4" : "space-y-4"} noValidate>
+          {mode === "signup" && (
+            <Field
+              id="name"
+              label="Name"
+              icon={<UserIcon className="size-4" aria-hidden />}
+              error={errors.name}
+            >
+              <input
+                id="name"
+                type="text"
+                autoComplete="name"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onBlur={() => name && validate()}
+                required
+                maxLength={60}
+                className="w-full bg-transparent pl-10 pr-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "name-err" : undefined}
+              />
+            </Field>
+          )}
           <Field
             id="email"
             label="Email"

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
-import { Eye, EyeOff, Loader2, Mail, Lock, ArrowLeft, Check } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, Lock, ArrowLeft, Check, User as UserIcon } from "lucide-react";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -34,6 +34,11 @@ const passwordSchema = z
   .string()
   .min(8, "At least 8 characters")
   .max(72, "Too long");
+const nameSchema = z
+  .string()
+  .trim()
+  .min(2, "Enter at least 2 characters")
+  .max(60, "Too long");
 
 function scorePassword(p: string): { score: number; label: string } {
   if (!p) return { score: 0, label: "" };
@@ -51,12 +56,13 @@ function AuthPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<Mode>("signin");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
   const [busy, setBusy] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
 
   useEffect(() => {
     if (!authLoading && user) router.navigate({ to: "/" });
@@ -71,6 +77,10 @@ function AuthPage() {
     if (mode !== "forgot") {
       const p = passwordSchema.safeParse(password);
       if (!p.success) next.password = p.error.issues[0]?.message;
+    }
+    if (mode === "signup") {
+      const n = nameSchema.safeParse(name);
+      if (!n.success) next.name = n.error.issues[0]?.message;
     }
     setErrors(next);
     return Object.keys(next).length === 0;
@@ -90,7 +100,10 @@ function AuthPage() {
         const { error } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo: `${window.location.origin}/` },
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: { display_name: name.trim() },
+          },
         });
         if (error) throw error;
         toast.success("Account created — check your email to confirm");
@@ -224,6 +237,29 @@ function AuthPage() {
         )}
 
         <form onSubmit={onSubmit} className={mode === "forgot" ? "mt-7 space-y-4" : "space-y-4"} noValidate>
+          {mode === "signup" && (
+            <Field
+              id="name"
+              label="Name"
+              icon={<UserIcon className="size-4" aria-hidden />}
+              error={errors.name}
+            >
+              <input
+                id="name"
+                type="text"
+                autoComplete="name"
+                placeholder="Your name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onBlur={() => name && validate()}
+                required
+                maxLength={60}
+                className="w-full bg-transparent pl-10 pr-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none"
+                aria-invalid={!!errors.name}
+                aria-describedby={errors.name ? "name-err" : undefined}
+              />
+            </Field>
+          )}
           <Field
             id="email"
             label="Email"

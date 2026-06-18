@@ -122,6 +122,33 @@ export default function Globe3D({
     return () => ro.disconnect();
   }, []);
 
+  // ---- Procedural Earth material (day/night, terminator, fresnel) ------
+  const earthRef = useRef<EarthMaterialHandle | null>(null);
+  if (earthRef.current === null) {
+    earthRef.current = createEarthMaterial({
+      sunRotationSpeed: 0.02,
+    });
+  }
+  useEffect(() => {
+    return () => {
+      earthRef.current?.dispose();
+      earthRef.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    if (effectiveQuality === "static") return;
+    let raf = 0;
+    let last = performance.now();
+    const loop = (t: number) => {
+      const dt = Math.min(0.1, (t - last) / 1000);
+      last = t;
+      earthRef.current?.tick(dt);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [effectiveQuality]);
+
   // ---- Lazy 50m upgrade on first close zoom (high quality only) --------
   useEffect(() => {
     if (effectiveQuality !== "high") return;

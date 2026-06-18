@@ -13,6 +13,9 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navbar } from "@/components/layout/Navbar";
 import { Starfield } from "@/components/atmosphere/Starfield";
+import { Toaster } from "@/components/ui/sonner";
+import { authDebug } from "@/lib/auth/debug";
+import { ensureUserProfile } from "@/lib/auth/profile";
 
 function NotFoundComponent() {
   return (
@@ -138,6 +141,7 @@ function RootComponent() {
 
   useEffect(() => {
     let mounted = true;
+    let unsubscribeAuth: (() => void) | null = null;
     void import("@/lib/sync/workers").then(({ startSyncWorkers }) => {
       if (!mounted) return;
       startSyncWorkers();
@@ -150,21 +154,26 @@ function RootComponent() {
       if (!mounted) return;
       supabase.auth.getSession().then(({ data }) => {
         const uid = data.session?.user.id ?? null;
+        authDebug("root session restore", { hasSession: !!data.session, userId: uid });
         useSyncStore.getState().setSignedIn(!!uid);
         void swap(uid);
+        if (data.session?.user) void ensureUserProfile(data.session.user).catch((error) => authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) }));
       });
       const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
         if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED")
           return;
         const uid = session?.user.id ?? null;
+        authDebug("root auth event", { event, hasSession: !!session, userId: uid });
         useSyncStore.getState().setSignedIn(!!uid);
         void swap(uid);
+        if (session?.user) void ensureUserProfile(session.user).catch((error) => authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) }));
         if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
       });
-      return () => sub.subscription.unsubscribe();
+      unsubscribeAuth = () => sub.subscription.unsubscribe();
     });
     return () => {
       mounted = false;
+      unsubscribeAuth?.();
     };
   }, [queryClient]);
 
@@ -173,6 +182,7 @@ function RootComponent() {
       <AppShell>
         <Outlet />
       </AppShell>
+      <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );
 }

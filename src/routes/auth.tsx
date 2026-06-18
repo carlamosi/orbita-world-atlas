@@ -6,6 +6,8 @@ import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/useAuth";
+import { authDebug } from "@/lib/auth/debug";
+import { ensureUserProfile } from "@/lib/auth/profile";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
@@ -22,7 +24,8 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-type Mode = "signin" | "signup" | "forgot";
+type Mode = "signin" | "signup" | "forgot" | "check-email";
+type Notice = { tone: "success" | "error" | "info"; message: string } | null;
 
 const emailSchema = z
   .string()
@@ -52,6 +55,16 @@ function scorePassword(p: string): { score: number; label: string } {
   return { score: s, label };
 }
 
+function friendlyAuthMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error || "Authentication failed");
+  if (/invalid login credentials/i.test(message)) return "Email or password is incorrect.";
+  if (/email not confirmed/i.test(message)) return "Confirm your email before signing in.";
+  if (/already registered|already been registered|user already/i.test(message)) return "This email already has an account. Try signing in instead.";
+  if (/password/i.test(message) && /weak|pwned|compromised/i.test(message)) return "Choose a stronger password that has not appeared in a data breach.";
+  if (/rate limit|too many/i.test(message)) return "Too many attempts. Wait a moment and try again.";
+  return message;
+}
+
 function AuthPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -63,10 +76,25 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [googleBusy, setGoogleBusy] = useState(false);
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
+  const [notice, setNotice] = useState<Notice>(null);
+  const [submittedEmail, setSubmittedEmail] = useState("");
 
   useEffect(() => {
     if (!authLoading && user) router.navigate({ to: "/" });
   }, [user, authLoading, router]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const hashParams = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const authError = params.get("error_description") || hashParams.get("error_description");
+    if (authError) {
+      const message = friendlyAuthMessage(new Error(authError));
+      authDebug("url auth error", { message });
+      setNotice({ tone: "error", message });
+      toast.error(message);
+    }
+  }, []);
 
   const strength = useMemo(() => scorePassword(password), [password]);
 
@@ -90,34 +118,54 @@ function AuthPage() {
     ev.preventDefault();
     if (!validate()) return;
     setBusy(true);
+    setNotice(null);
     try {
       if (mode === "signin") {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
+        authDebug("signin:start", { emailDomain: email.split("@")[1] ?? null });
+        const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error) throw error;
+        authDebug("signin:success", { userId: data.user?.id, hasSession: !!data.session });
+        if (data.user) await ensureUserProfile(data.user);
         toast.success("Welcome back");
-        router.navigate({ to: "/" });
+        await router.navigate({ to: "/" });
       } else if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
+        authDebug("signup:start", { emailDomain: email.split("@")[1] ?? null, hasName: !!name.trim() });
+        const { data, error } = await supabase.auth.signUp({
+          email: email.trim(),
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/`,
+            emailRedirectTo: `${window.location.origin}/auth`,
             data: { display_name: name.trim() },
           },
         });
         if (error) throw error;
+        authDebug("signup:success", { userId: data.user?.id, hasSession: !!data.session, identities: data.user?.identities?.length ?? null });
+        if (data.session && data.user) {
+          await ensureUserProfile(data.user, name);
+          toast.success("Account created");
+          await router.navigate({ to: "/" });
+          return;
+        }
+        setSubmittedEmail(email.trim());
+        setNotice({ tone: "success", message: "Account created. Check your inbox and spam folder to confirm your email." });
         toast.success("Account created — check your email to confirm");
-        setMode("signin");
+        setMode("check-email");
       } else {
+        authDebug("password reset:start", { emailDomain: email.split("@")[1] ?? null });
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
           redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
+        authDebug("password reset:sent", { emailDomain: email.split("@")[1] ?? null });
+        setNotice({ tone: "success", message: "Reset link sent. Check your inbox and spam folder." });
         toast.success("Reset link sent — check your inbox");
         setMode("signin");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Authentication failed");
+      const message = friendlyAuthMessage(err);
+      authDebug("submit:failed", { mode, error: message });
+      setNotice({ tone: "error", message });
+      toast.error(message);
     } finally {
       setBusy(false);
     }
@@ -125,16 +173,30 @@ function AuthPage() {
 
   const onGoogle = async () => {
     setGoogleBusy(true);
+    setNotice(null);
     try {
+      authDebug("oauth google:start");
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: window.location.origin,
+        extraParams: { prompt: "select_account" },
       });
       if (result.error) {
-        toast.error(result.error.message ?? "Google sign-in failed");
+        const message = friendlyAuthMessage(result.error);
+        authDebug("oauth google:failed", { error: message });
+        setNotice({ tone: "error", message });
+        toast.error(message);
         return;
       }
       if (result.redirected) return;
-      router.navigate({ to: "/" });
+      const { data } = await supabase.auth.getUser();
+      authDebug("oauth google:session set", { userId: data.user?.id });
+      if (data.user) await ensureUserProfile(data.user);
+      await router.navigate({ to: "/" });
+    } catch (err) {
+      const message = friendlyAuthMessage(err);
+      authDebug("oauth google:exception", { error: message });
+      setNotice({ tone: "error", message });
+      toast.error(message);
     } finally {
       setGoogleBusy(false);
     }
@@ -145,12 +207,16 @@ function AuthPage() {
       ? "Welcome back"
       : mode === "signup"
         ? "Create your account"
+        : mode === "check-email"
+          ? "Check your email"
         : "Reset your password";
   const subtitle =
     mode === "signin"
       ? "Continue your journey through every corner of the world."
       : mode === "signup"
         ? "Sync your progress, streaks and unlocks across every device."
+        : mode === "check-email"
+          ? "Confirm your address to activate ORBITA sync."
         : "We'll email you a secure link to set a new password.";
 
   return (
@@ -212,6 +278,47 @@ function AuthPage() {
           </AnimatePresence>
         </header>
 
+        {notice && <AuthNotice notice={notice} />}
+
+        {mode === "check-email" ? (
+          <CheckEmailPanel
+            email={submittedEmail || email}
+            busy={busy}
+            onResend={async () => {
+              if (!password || !email) {
+                setMode("signup");
+                return;
+              }
+              setBusy(true);
+              setNotice(null);
+              try {
+                authDebug("signup resend:start", { emailDomain: email.split("@")[1] ?? null });
+                const { error } = await supabase.auth.signUp({
+                  email: email.trim(),
+                  password,
+                  options: {
+                    emailRedirectTo: `${window.location.origin}/auth`,
+                    data: { display_name: name.trim() },
+                  },
+                });
+                if (error) throw error;
+                setNotice({ tone: "success", message: "Confirmation email sent again. Check your inbox and spam folder." });
+                toast.success("Confirmation email sent");
+              } catch (err) {
+                const message = friendlyAuthMessage(err);
+                setNotice({ tone: "error", message });
+                toast.error(message);
+              } finally {
+                setBusy(false);
+              }
+            }}
+            onBack={() => {
+              setErrors({});
+              setMode("signin");
+            }}
+          />
+        ) : (
+          <>
         {mode !== "forgot" && (
           <>
             <button
@@ -380,6 +487,7 @@ function AuthPage() {
               type="button"
               onClick={() => {
                 setErrors({});
+                setNotice(null);
                 setMode(mode === "signin" ? "signup" : "signin");
               }}
               className="hover:text-foreground transition-colors"
@@ -406,8 +514,74 @@ function AuthPage() {
             practices. We use your email only to sync your progress.
           </p>
         )}
+          </>
+        )}
       </motion.section>
     </main>
+  );
+}
+
+function AuthNotice({ notice }: { notice: NonNullable<Notice> }) {
+  const toneClass =
+    notice.tone === "error"
+      ? "border-coral/40 bg-coral/10 text-coral"
+      : notice.tone === "success"
+        ? "border-neon/30 bg-neon/10 text-neon"
+        : "border-cyan/30 bg-cyan/10 text-cyan";
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -4 }}
+      animate={{ opacity: 1, y: 0 }}
+      className={`mt-5 rounded-xl border px-3 py-2.5 text-xs leading-relaxed ${toneClass}`}
+      role={notice.tone === "error" ? "alert" : "status"}
+      aria-live="polite"
+    >
+      {notice.message}
+    </motion.div>
+  );
+}
+
+function CheckEmailPanel({
+  email,
+  busy,
+  onResend,
+  onBack,
+}: {
+  email: string;
+  busy: boolean;
+  onResend: () => Promise<void>;
+  onBack: () => void;
+}) {
+  return (
+    <div className="mt-7 space-y-5">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5 text-center">
+        <div className="mx-auto grid size-12 place-items-center rounded-full border border-cyan/30 bg-cyan/10 text-cyan">
+          <Mail className="size-5" aria-hidden />
+        </div>
+        <p className="mt-4 text-sm font-medium text-foreground">Confirmation sent</p>
+        <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+          We sent a confirmation link to <span className="text-foreground">{email}</span>. Check your inbox and spam folder.
+        </p>
+      </div>
+      <button
+        type="button"
+        onClick={() => void onResend()}
+        disabled={busy}
+        className="w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-foreground hover:bg-white/[0.08] disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <span className="inline-flex items-center justify-center gap-2">
+          {busy && <Loader2 className="size-4 animate-spin" aria-hidden />}
+          Resend confirmation email
+        </span>
+      </button>
+      <button
+        type="button"
+        onClick={onBack}
+        className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors"
+      >
+        Back to sign in
+      </button>
+    </div>
   );
 }
 

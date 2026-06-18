@@ -15,6 +15,7 @@ import {
   loadCountryFeatures,
   type CountryFeature,
 } from "./geo";
+import { createEarthMaterial, type EarthMaterialHandle } from "./earthMaterial";
 
 export type GlobeQuality = "high" | "medium" | "static";
 
@@ -43,8 +44,6 @@ const COLOR_DUE = "255, 184, 77"; // amber
 const COLOR_HOVER = "0, 212, 255"; // cyan
 const COLOR_BASE = "108, 99, 255"; // violet
 
-const ATLAS_CDN_NIGHT = "//unpkg.com/three-globe/example/img/earth-night.jpg";
-const ATLAS_CDN_BUMP = "//unpkg.com/three-globe/example/img/earth-topology.png";
 
 const CONTINENT_TINT: Record<string, string> = {
   Africa: "255, 184, 77",
@@ -120,6 +119,33 @@ export default function Globe3D({
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  // ---- Procedural Earth material (day/night, terminator, fresnel) ------
+  const earthRef = useRef<EarthMaterialHandle | null>(null);
+  if (earthRef.current === null) {
+    earthRef.current = createEarthMaterial({
+      sunRotationSpeed: 0.02,
+    });
+  }
+  useEffect(() => {
+    return () => {
+      earthRef.current?.dispose();
+      earthRef.current = null;
+    };
+  }, []);
+  useEffect(() => {
+    if (effectiveQuality === "static") return;
+    let raf = 0;
+    let last = performance.now();
+    const loop = (t: number) => {
+      const dt = Math.min(0.1, (t - last) / 1000);
+      last = t;
+      earthRef.current?.tick(dt);
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, [effectiveQuality]);
 
   // ---- Lazy 50m upgrade on first close zoom (high quality only) --------
   useEffect(() => {
@@ -513,8 +539,7 @@ export default function Globe3D({
         width={dim.w}
         height={dim.h}
         backgroundColor="rgba(0,0,0,0)"
-        globeImageUrl={ATLAS_CDN_NIGHT}
-        bumpImageUrl={effectiveQuality === "high" ? ATLAS_CDN_BUMP : undefined}
+        globeMaterial={earthRef.current?.material}
         showAtmosphere
         atmosphereColor="#6C63FF"
         atmosphereAltitude={

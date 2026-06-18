@@ -10,9 +10,19 @@ interface Props {
   subtitle?: ReactNode;
   onNext: () => void;
   onSkip?: () => void;
+  /** Hide the manual Next button — auto-advance is handling it. */
+  hideNext?: boolean;
 }
 
-export function FeedbackBar({ show, state, title, subtitle, onNext, onSkip }: Props) {
+export function FeedbackBar({
+  show,
+  state,
+  title,
+  subtitle,
+  onNext,
+  onSkip,
+  hideNext,
+}: Props) {
   return (
     <AnimatePresence mode="wait">
       {show && (
@@ -31,16 +41,18 @@ export function FeedbackBar({ show, state, title, subtitle, onNext, onSkip }: Pr
                 : "shadow-[0_0_60px_-10px_color-mix(in_oklab,var(--coral)_50%,transparent)]"
             }`}
           >
-            <div className="text-left min-w-0">
+            <div className="text-left min-w-0 flex-1">
               <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
                 {state === "correct" ? "Nailed it" : state === "wrong" ? "Not quite" : "Revealed"}
               </div>
               <div className="font-display text-lg text-white truncate">{title}</div>
               {subtitle && <div className="text-[12px] text-white/55 truncate">{subtitle}</div>}
             </div>
-            <Button size="sm" onClick={onNext}>
-              Next →
-            </Button>
+            {!hideNext && (
+              <Button size="sm" onClick={onNext}>
+                Next →
+              </Button>
+            )}
           </div>
           {state === "wrong" && onSkip && (
             <button

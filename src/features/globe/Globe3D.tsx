@@ -541,8 +541,7 @@ export default function Globe3D({
         width={dim.w}
         height={dim.h}
         backgroundColor="rgba(0,0,0,0)"
-        globeImageUrl={ATLAS_CDN_NIGHT}
-        bumpImageUrl={effectiveQuality === "high" ? ATLAS_CDN_BUMP : undefined}
+        globeMaterial={earthRef.current?.material}
         showAtmosphere
         atmosphereColor="#6C63FF"
         atmosphereAltitude={

@@ -44,8 +44,6 @@ const COLOR_DUE = "255, 184, 77"; // amber
 const COLOR_HOVER = "0, 212, 255"; // cyan
 const COLOR_BASE = "108, 99, 255"; // violet
 
-const ATLAS_CDN_NIGHT = "//unpkg.com/three-globe/example/img/earth-night.jpg";
-const ATLAS_CDN_BUMP = "//unpkg.com/three-globe/example/img/earth-topology.png";
 
 const CONTINENT_TINT: Record<string, string> = {
   Africa: "255, 184, 77",

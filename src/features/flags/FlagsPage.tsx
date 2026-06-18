@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
@@ -9,6 +10,7 @@ import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { Badge } from "@/components/ui/orbita-badge";
 import { Button } from "@/components/ui/orbita-button";
+import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
@@ -36,11 +38,23 @@ export default function FlagsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
+
   const options = useMemo(() => {
     if (!current) return [];
     const distractors = pickRandomCountries(sub === "flagToCountry" ? 3 : 5, new Set([current.iso3]));
     return shuffle([current, ...distractors]);
   }, [current, sub]);
+
+  const hotkeyItems = useMemo(
+    () => (s.answerState === "idle" ? options.map((o) => ({ id: o.iso3 })) : []),
+    [options, s.answerState],
+  );
+  const onHotkey = useCallback(
+    (id: string) => current && s.submit(id === current.iso3),
+    [current, s],
+  );
+  useAnswerHotkeys(hotkeyItems, onHotkey);
 
   return (
     <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">
@@ -100,6 +114,7 @@ export default function FlagsPage() {
               subtitle={`Capital: ${current.capital ?? "—"}`}
               onNext={() => s.next()}
               onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+              hideNext
             />
           </div>
 

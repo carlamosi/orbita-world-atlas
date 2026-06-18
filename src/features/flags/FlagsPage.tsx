@@ -40,6 +40,12 @@ export default function FlagsPage() {
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
 
+  const options = useMemo(() => {
+    if (!current) return [];
+    const distractors = pickRandomCountries(sub === "flagToCountry" ? 3 : 5, new Set([current.iso3]));
+    return shuffle([current, ...distractors]);
+  }, [current, sub]);
+
   const hotkeyItems = useMemo(
     () => (s.answerState === "idle" ? options.map((o) => ({ id: o.iso3 })) : []),
     [options, s.answerState],
@@ -49,12 +55,6 @@ export default function FlagsPage() {
     [current, s],
   );
   useAnswerHotkeys(hotkeyItems, onHotkey);
-
-  const options = useMemo(() => {
-    if (!current) return [];
-    const distractors = pickRandomCountries(sub === "flagToCountry" ? 3 : 5, new Set([current.iso3]));
-    return shuffle([current, ...distractors]);
-  }, [current, sub]);
 
   return (
     <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">

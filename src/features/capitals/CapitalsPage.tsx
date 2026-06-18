@@ -123,6 +123,7 @@ export default function CapitalsPage() {
                 subtitle={current.continent}
                 onNext={() => s.next()}
                 onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+                hideNext
               />
             </div>
           </>
@@ -191,6 +192,7 @@ export default function CapitalsPage() {
               subtitle={current.continent}
               onNext={() => s.next()}
               onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+              hideNext
             />
           </div>
         </>
@@ -232,14 +234,12 @@ function ChoiceGrid({
   disabled: boolean;
   onPick: (iso3: string) => void;
 }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const idx = Number(e.key) - 1;
-      if (idx >= 0 && idx < options.length) onPick(options[idx]!.iso3);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [options, onPick]);
+  const hotkeyItems = useMemo(
+    () => (disabled ? [] : options.map((o) => ({ id: o.iso3 }))),
+    [options, disabled],
+  );
+  const onPickById = useCallback((id: string) => onPick(id), [onPick]);
+  useAnswerHotkeys(hotkeyItems, onPickById);
 
   return (
     <motion.div

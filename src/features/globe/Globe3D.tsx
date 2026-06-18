@@ -523,13 +523,11 @@ export default function Globe3D({
         rendererConfig={{
           antialias: effectiveQuality !== "static",
           alpha: true,
-          pixelRatio:
-            typeof window !== "undefined"
-              ? Math.min(window.devicePixelRatio, effectiveQuality === "medium" ? 1.5 : 2)
-              : 1,
         }}
         polygonsData={features ?? []}
-        polygonGeoJsonGeometry={(d: object) => (d as CountryFeature).geometry}
+        polygonGeoJsonGeometry={
+          ((d: object) => (d as CountryFeature).geometry) as unknown as undefined
+        }
         polygonCapColor={polygonCapColor}
         polygonSideColor={polygonSideColor}
         polygonStrokeColor={polygonStrokeColor}

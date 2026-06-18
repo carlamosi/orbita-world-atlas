@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useMemo } from "react";
 import { motion } from "framer-motion";
 import { COUNTRIES } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
@@ -22,6 +23,12 @@ export default function FindPage() {
     if (s.queue.length === 0 && !s.loading) s.start();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useAutoAdvance({
+    answerState: s.answerState,
+    finished,
+    next: s.next,
+  });
 
   const pov = useMemo(() => {
     if (s.answerState !== "idle" && current) {
@@ -101,6 +108,7 @@ export default function FindPage() {
               subtitle={`Capital: ${current.capital ?? "—"}`}
               onNext={() => s.next()}
               onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+              hideNext
             />
           </div>
         </>

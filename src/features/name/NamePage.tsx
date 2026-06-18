@@ -1,7 +1,8 @@
-import { lazy, Suspense, useEffect, useMemo, useState, useRef } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
@@ -9,6 +10,7 @@ import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
+import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
 import { fuzzyMatch } from "@/lib/fuzzy";
 import { spring } from "@/lib/motion";
@@ -31,6 +33,8 @@ export default function NamePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
+
   // Tight POV on the mystery country — but never reveal its name in label form.
   const pov = useMemo(() => {
     if (!current) return undefined;
@@ -50,7 +54,11 @@ export default function NamePage() {
         <Suspense fallback={<GlobeFallback />}>
           <Globe3D
             countries={COUNTRIES}
-            highlightIso3={s.answerState === "correct" ? current?.iso3 : null}
+            highlightIso3={
+              s.answerState === "idle" || s.answerState === "correct"
+                ? current?.iso3
+                : null
+            }
             revealIso3={
               s.answerState === "wrong" || s.answerState === "revealed" ? current?.iso3 : null
             }
@@ -116,6 +124,7 @@ export default function NamePage() {
                 subtitle={`Capital: ${current.capital ?? "—"}`}
                 onNext={() => s.next()}
                 onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+                hideNext
               />
             )}
           </div>
@@ -175,14 +184,12 @@ function EasyOptions({
   targetIso3: string;
   onPick: (iso3: string) => void;
 }) {
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      const idx = Number(e.key) - 1;
-      if (idx >= 0 && idx < options.length) onPick(options[idx]!.iso3);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [options, onPick]);
+  const hotkeyItems = useMemo(
+    () => options.map((o) => ({ id: o.iso3 })),
+    [options],
+  );
+  const onPickById = useCallback((id: string) => onPick(id), [onPick]);
+  useAnswerHotkeys(hotkeyItems, onPickById);
 
   return (
     <motion.div

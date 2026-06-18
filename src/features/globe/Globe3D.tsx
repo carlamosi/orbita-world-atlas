@@ -15,6 +15,7 @@ import {
   loadCountryFeatures,
   type CountryFeature,
 } from "./geo";
+import { createEarthMaterial, type EarthMaterialHandle } from "./earthMaterial";
 
 export type GlobeQuality = "high" | "medium" | "static";
 

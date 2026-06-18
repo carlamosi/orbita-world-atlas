@@ -3,6 +3,7 @@ import { createFileRoute, useRouter, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { Lock, Eye, EyeOff, Loader2, ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { authDebug } from "@/lib/auth/debug";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/reset-password")({
@@ -31,9 +32,11 @@ function ResetPasswordPage() {
   useEffect(() => {
     // Supabase parses the recovery hash automatically and emits PASSWORD_RECOVERY
     const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      authDebug("reset password event", { event, hasSession: !!session, userId: session?.user.id });
       if (event === "PASSWORD_RECOVERY" || session) setReady(true);
     });
     supabase.auth.getSession().then(({ data }) => {
+      authDebug("reset password session restore", { hasSession: !!data.session, userId: data.session?.user.id });
       if (data.session) setReady(true);
     });
     return () => sub.subscription.unsubscribe();
@@ -53,11 +56,14 @@ function ResetPasswordPage() {
     }
     setBusy(true);
     try {
+      authDebug("reset password update:start");
       const { error } = await supabase.auth.updateUser({ password });
       if (error) throw error;
+      authDebug("reset password update:success");
       toast.success("Password updated");
       router.navigate({ to: "/" });
     } catch (err) {
+      authDebug("reset password update:failed", { error: err instanceof Error ? err.message : String(err) });
       toast.error(err instanceof Error ? err.message : "Could not update password");
     } finally {
       setBusy(false);

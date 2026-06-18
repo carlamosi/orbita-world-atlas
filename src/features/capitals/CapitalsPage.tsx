@@ -1,13 +1,15 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
+import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
@@ -45,6 +47,12 @@ export default function CapitalsPage() {
     if (s.queue.length === 0 && !s.loading) s.start({ continent });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useAutoAdvance({
+    answerState: s.answerState,
+    finished,
+    next: () => s.next(),
+  });
 
   // Exclude countries without a capital from the queue effectively by skipping them.
   const valid = current && current.capital;

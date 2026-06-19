@@ -87,9 +87,10 @@ export default function CapitalsPage() {
               revealIso3={
                 s.answerState === "wrong" || s.answerState === "revealed" ? current?.iso3 : null
               }
-              onCountryClick={(iso3) => current && s.submit(iso3 === current.iso3)}
+              onCountryClick={(iso3) => current && s.answerState === "idle" && s.submit(iso3 === current.iso3)}
               pointOfView={pov}
-              disableHoverFeedback={s.answerState === "idle"}
+              disableHoverLabel
+              questionKey={current?.iso3 ?? null}
             />
           </Suspense>
         </div>

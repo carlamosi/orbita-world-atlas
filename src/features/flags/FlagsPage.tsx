@@ -66,63 +66,68 @@ export default function FlagsPage() {
   useAnswerHotkeys(hotkeyItems, onHotkey);
 
   return (
-    <div className="relative min-h-[calc(100dvh-0px)] pt-20 px-6 pb-8 flex flex-col items-center justify-center lg:justify-center">
+    <div className="relative min-h-dvh pt-20 flex flex-col">
       {!finished && current && (
         <>
-          <div className="w-full max-w-4xl mb-6 flex items-center justify-between gap-4 flex-wrap">
-            <SessionHud {...stats(s)} />
-            <SubModeToggle value={sub} onChange={(v) => { setSub(v); s.start(); }} />
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={s.hintUsed || s.answerState !== "idle"}
-              onClick={() => s.useHint()}
-            >
-              {s.hintUsed ? "Hint used" : "Hint"}
-            </Button>
+          {/* Sticky HUD bar */}
+          <div className="sticky top-20 z-20 px-6">
+            <div className="w-full max-w-5xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+              <SessionHud {...stats(s)} />
+              <SubModeToggle value={sub} onChange={(v) => { setSub(v); s.start(); }} />
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={s.hintUsed || s.answerState !== "idle"}
+                onClick={() => s.useHint()}
+              >
+                {s.hintUsed ? "Hint used" : "Hint"}
+              </Button>
+            </div>
           </div>
 
-          <Prompt
-            keyId={`${sub}-${current.iso3}`}
-            eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
-            title={
-              sub === "flagToCountry" ? (
-                <>Which country owns this flag?</>
+          {/* Centered gameplay region */}
+          <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-6">
+            <Prompt
+              keyId={`${sub}-${current.iso3}`}
+              eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
+              title={
+                sub === "flagToCountry" ? (
+                  <>Which country owns this flag?</>
+                ) : sub === "countryToFlag" ? (
+                  <>Find the flag of <span className="text-glow-cyan">{current.name}</span></>
+                ) : (
+                  <>Name this flag</>
+                )
+              }
+              subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
+            />
+
+            <div className="w-full max-w-4xl">
+              {sub === "flagToCountry" ? (
+                <FlagToCountry
+                  target={current}
+                  options={options}
+                  disabled={s.answerState !== "idle"}
+                  onPick={(iso3) => s.submit(iso3 === current.iso3)}
+                />
               ) : sub === "countryToFlag" ? (
-                <>Find the flag of <span className="text-glow-cyan">{current.name}</span></>
+                <CountryToFlag
+                  target={current}
+                  options={options}
+                  disabled={s.answerState !== "idle"}
+                  onPick={(iso3) => s.submit(iso3 === current.iso3)}
+                />
               ) : (
-                <>Name this flag</>
-              )
-            }
-            subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
-          />
-
-          {/* Main board */}
-          <div className="mt-6 w-full max-w-4xl">
-            {sub === "flagToCountry" ? (
-              <FlagToCountry
-                target={current}
-                options={options}
-                disabled={s.answerState !== "idle"}
-                onPick={(iso3) => s.submit(iso3 === current.iso3)}
-              />
-            ) : sub === "countryToFlag" ? (
-              <CountryToFlag
-                target={current}
-                options={options}
-                disabled={s.answerState !== "idle"}
-                onPick={(iso3) => s.submit(iso3 === current.iso3)}
-              />
-            ) : (
-              <FlagToType
-                target={current}
-                onSubmit={(ok) => s.submit(ok)}
-              />
-            )}
+                <FlagToType
+                  target={current}
+                  onSubmit={(ok) => s.submit(ok)}
+                />
+              )}
+            </div>
           </div>
 
-          {/* Feedback (also drives Next) */}
-          <div className="mt-8 w-full">
+          {/* Feedback bar */}
+          <div className="pb-6 px-6">
             <FeedbackBar
               show={s.answerState !== "idle"}
               state={s.answerState as "correct" | "wrong" | "revealed"}

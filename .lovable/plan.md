@@ -1,109 +1,1232 @@
-# ORBITA Upgrade Roadmap — Execution Plan
+# ORBITA Refinement Pass (Enhanced)
 
-This is a very large scope. To ship reliably, I'll execute in strict order, in **batches**, validating each batch before moving on. Each batch is a self-contained PR-sized unit.
+Focus: clarity, immersion, learning effectiveness, performance, and long-term mastery retention. Preserve existing public APIs wherever possible. Do not remove any existing functionality that already works correctly. Build on top of the current architecture and maintain consistency with the Orbita design language.
 
-Before I start, two decisions I need from you so I don't guess wrong on scope.
+## 1. Restore Premium Globe Aesthetic
 
-## Decisions needed
+**Goal:** roll back the procedural Earth experiment, restore the previous cinematic Orbita globe, and preserve all atlas improvements from M2 (real borders, adaptive picking, zoom controls, performance tiers).
 
-1. **Day/Night satellite textures (Phase D).** A true NASA-quality day/night Earth needs ~10–40 MB of texture assets (Blue Marble + Black Marble + specular + clouds + normal map). Options:
-   - **(a) Premium real textures** — bundle compressed 4k/8k assets, ~15–25 MB added to the app. Best fidelity.
-   - **(b) Procedural shader Earth** — no big assets, custom shader for day/night/twilight/atmosphere. Lighter, still cinematic, but not photoreal.
-   - **(c) Skip for now**, keep current stylized globe and revisit later.
-2. **Scope of this single execution.** Phases A–L is realistically 2–4 weeks of focused work and dozens of files. I propose to ship in **four shippable milestones**, each one fully working and reviewable, instead of one mega-change that's hard to validate:
-   - **M1 — Gameplay friction (A + B + H + J)**: auto-advance, global hotkeys, Name-Country highlighting + framing, Speed audit, sync pill cleanup.
-   - **M2 — Globe integrity & atlas (C + D + part of K/L)**: geometry audit + fixes, polygon-first interaction polish, cinematic zoom controls, atmosphere upgrade (option a/b/c above), perf pass.
-   - **M3 — Explorer + FSRS engine + Personal Atlas (E + F)**: Explorer redesign with side panel + search, `calculateCountryMastery()` single source of truth, mastered-country glow on globe.
-   - **M4 — Expedition mode + final polish (G + I + remainder of K/L)**: continent campaigns, completion sequences, Supabase-only audit, desktop layout pass.
+- `src/features/globe/Globe3D.tsx`
+  - Remove `createEarthMaterial` import, `earthRef`, the rAF tick loop, and the `globeMaterial` prop on `<Globe>`.
+  - Restore the previous atmospheric Orbita globe:
+    - Deep-space sphere.
+    - Rich orbital atmosphere.
+    - Soft violet atmospheric glow.
+    - Subtle cyan edge illumination.
+    - Cinematic depth and contrast.
+    - No day/night Earth textures.
+    - No procedural Earth shaders.
+    - No realistic satellite Earth rendering.
+  - Use a memoized `THREE.MeshPhongMaterial`:
+    - Base: deep indigo `#0a0d1f`
+    - Low shininess
+    - Subtle specular reflection
+    - Slight atmospheric color variation
+  - Keep:
+    - polygon borders
+    - adaptive picking
+    - zoom controls
+    - OrbitControls
+    - rings
+    - hover state system
+    - quality tiers
+    - accessibility improvements
 
-   Confirm you want all four milestones executed back-to-back in this thread, or just M1 now.
+### Additional Globe Fixes
 
-## Milestone 1 — Gameplay friction (Phases A, B, H, J)
+The atlas must accurately render all countries.
 
-**A. Auto-advance**
-- New `src/features/engine/useAutoAdvance.ts` hook: after `feedback` resolves, wait 1000 ms (configurable, 800 ms correct / 1200 ms wrong), then call `next()`. Cancelled if user manually advances or session ends.
-- Wire into `useSession` consumers: Find, Name, Flags, Capitals, Speed, (Expedition once it exists).
-- "Next" button hidden mid-session, kept only on `SessionEnd`.
+Current rendering bugs (France, overseas territories, microstates, etc.) must be audited.
 
-**A2. Global keyboard answers**
-- New `src/hooks/useAnswerHotkeys.ts`: listens on `window`, maps `1–4` (and `Digit1–Digit4`) to current answer slots. No-op if `document.activeElement` is `INPUT|TEXTAREA|[contenteditable]` or any Radix dialog is open (`[data-state="open"][role="dialog"]`).
-- Single shared registration via `Prompt`/option components.
+Validate:
 
-**B. Name Country highlighting + framing**
-- `Globe3D` already supports `highlightIso3` / polygon styling. Add a new `targetIso3` prop that:
-  - cyan stroke + pulse ring + altitude boost on target,
-  - neighbors (computed once from polygon adjacency in `geo.ts`) rendered at reduced opacity,
-  - rest of world dimmed via `polygonCapColor` alpha 0.04.
-- On question start, call `focusCountry(targetIso3, { padding: 'region' })` — new option that picks an altitude framing target + its neighbors instead of the country alone.
+- France visible and selectable.
+- Norway visible.
+- Indonesia visible.
+- Philippines visible.
+- Japan visible.
+- New Zealand visible.
+- Greenland visible.
+- Iceland visible.
+- Small island states visible.
 
-**H. Speed Round audit**
-- Read `SpeedPage.tsx` + `speedRuntimeStore.ts` end-to-end. Verify Sprint/Marathon/Sudden Death scoring, combo, accuracy, PR persistence (Dexie + sync queue). Fix what's broken; do not rewrite working logic.
+Verify ISO_A3 mapping between:
 
-**J. Sync pill cleanup**
-- `SyncPill.tsx`: show only on `syncing | offline | error`. On transition to `idle` after a `syncing`, show "Synced ✓" then fade out after 3 s (Framer Motion exit). Otherwise unmounted.
+```
 
-**Acceptance**: play one round of each mode using only keys 1–4, no manual clicks; Name Country shows obvious cyan target with neighbors visible; sync pill stays hidden during normal use.
+```
 
-## Milestone 2 — Globe integrity & atlas (C, D, parts of K/L)
+```
+countries.json
+GeoJSON polygons
+Explorer
+Find
+Name
+Flags
+Capitals
+Speed
+Progress
+```
 
-**C. Geometry integrity report**
-- Script `scripts/audit-geometry.ts`: cross-references `src/data/countries.json` ISO3 list against features available from `world-50m` + `m49-to-iso3`. Prints missing/extra/multipolygon-broken entries. Fixes:
-  - extend `m49-to-iso3.json` for gaps (France `FRA`/250, Norway, etc.),
-  - synthesize missing micro-states from a Natural Earth `ne_10m_admin_0_countries` subset for the 195 list,
-  - validate the 12 named countries explicitly in tests.
-- Output the report into `.lovable/geometry-report.md`.
+Build a validation utility:
 
-**D. Premium atlas (depends on Decision 1)**
-- Polygon-first model already shipped in last turn — extend with:
-  - glass zoom controls (+ / − / reset) in bottom-right with `backdrop-blur` + ring.
-  - pinch + wheel + trackpad zoom via three-globe `controls`.
-- Day/Night per chosen option (a/b/c).
-- Atmosphere: tweak `atmosphereColor`, add subtle radial gradient overlay.
+```
 
-**K/L partial**: memoize polygon accessors, throttle camera-altitude reader to rAF, cap DPR 1.5 on mobile, lazy-load 50m.
+```
 
-## Milestone 3 — Explorer + FSRS + Personal Atlas (E, F)
+```
+verifyCountryGeometryCoverage()
+```
 
-**F. `calculateCountryMastery()`**
-- New `src/lib/mastery/calculate.ts` exporting:
-  ```ts
-  type Mastery = { score: 0..1; level: 'unseen'|'learning'|'familiar'|'mastered'|'overlearned'; due: Date|null; stability: number; difficulty: number; retrievability: number; lapses: number }
-  function calculateCountryMastery(iso3, fsrsState, now=Date.now()): Mastery
-  ```
-- Derived purely from FSRS card state in `country_progress.skills` (find/name/flag/capital). No randomness. Memoized per (iso3, updated_at).
-- Refactor Progress/Explorer/heatmap consumers to use it.
+which confirms:
 
-**E. Explorer redesign**
-- Full-viewport `Globe3D` with right-side `Sheet`/panel (Radix), 420 px wide on desktop, drawer on mobile.
-- Country detail: flag, capital, region, subregion, population, area, languages, currencies, borders (clickable to jump), mastery breakdown bars per skill, FSRS due date, "Review now" button.
-- Top-left command palette (`cmdk`): instant fuzzy search → camera fly + select.
+```
 
-**Personal Atlas**
-- Globe consumes `masteryMap: Record<iso3, Mastery>` and emits glow via `polygonCapColor` alpha = `0.05 + 0.35 * score` with hue shifted toward cyan/green for mastered, amber for due. Recently mastered (< 24 h) gets a one-shot ring pulse.
-- Synced via existing `country_progress` table; nothing new server-side.
+```
 
-## Milestone 4 — Expedition + cleanup (G, I, K, L)
+```
+195 countries loaded
+195 countries mapped
+0 missing geometries
+0 duplicate ISO codes
+```
 
-**G. Expedition mode**
-- New route `src/routes/_authenticated/expedition.tsx` + `src/features/expedition/`.
-- Continents as campaigns; per-country nodes unlocked by mastery thresholds; mixes Find/Name/Flag/Capital prompts; integrates FSRS due reviews into each session.
-- Completion: `Globe3D.flyoverContinent(continent)` + illumination + summary modal.
-
-**I. Supabase-only audit**
-- grep for `lovable` integrations used at runtime (other than `lovable.auth.signInWithOAuth` which is required for Google). Remove anything else.
-
-**K/L final**: 1440p+ layout pass on every page, typography scale review, FPS profiling with `browser--performance_profile`.
-
-## Technical notes (for reference)
-
-- Hotkeys & auto-advance live in `src/features/engine/` so all game modes inherit them by switching to a `<GameShell>` wrapper around `Prompt`/`FeedbackBar`.
-- Polygon adjacency precomputed once from TopoJSON arcs and cached in `geo.ts`.
-- Mastery calc is pure → safe to memoize with `useMemo` keyed on `updated_at`.
-- All new tables: none required. Existing `country_progress`, `sessions_log`, `unlocks` cover everything.
-- No new secrets. No schema migrations expected unless Expedition needs a `expedition_progress` table (will confirm in M4).
+Explorer, Find, Name, Speed, Progress and Challenges must all consume the exact same canonical country source.
 
 ---
 
-**Please answer:**
-1. Day/Night textures: **(a) bundled real textures**, **(b) procedural shader**, or **(c) skip**?
-2. Execute **all four milestones now**, or **stop after M1** for review?
+## 2. Find Mode — Zero Accidental Hints
+
+**Goal:** while the user is searching for a country, there must be absolutely no accidental visual hint.
+
+The current hover system can reveal information.
+
+This destroys the challenge.
+
+### Globe3D
+
+Add:
+
+```
+
+```
+
+```
+disableHoverFeedback?: boolean
+```
+
+When enabled:
+
+-   
+No hover glow.  
+
+-   
+No hover altitude.  
+
+-   
+No hover opacity change.  
+
+-   
+No tooltip.  
+
+-   
+No country name.  
+
+-   
+No hover stroke change.  
+
+-   
+No hover cap color.  
+
+
+All countries appear identical.
+
+Borders remain visible.
+
+### FindPage
+
+During:
+
+```
+
+```
+
+```
+answerState === "idle"
+```
+
+enable:
+
+```
+
+```
+
+```
+disableHoverFeedback
+```
+
+Only after answer resolution may the selected country become highlighted.
+
+### Prompt
+
+Remove:
+
+```
+
+```
+
+```
+Africa · Eastern Africa
+Europe · Western Europe
+```
+
+from default view.
+
+Nothing should reveal continent information automatically.
+
+---
+
+## 3. Hint System — Progressive Reveal
+
+**Goal:** hints are earned and progressively disclosed.
+
+### Session Engine
+
+Replace:
+
+```
+
+```
+
+```
+hintUsed: boolean
+```
+
+with:
+
+```
+
+```
+
+```
+hintLevel: 0 | 1 | 2 | 3
+```
+
+Keep backwards compatibility:
+
+```
+
+```
+
+```
+hintUsed = hintLevel > 0
+```
+
+### Hint Levels
+
+Level 1:
+
+```
+
+```
+
+```
+Continent
+```
+
+Example:
+
+```
+
+```
+
+```
+Africa
+```
+
+Level 2:
+
+```
+
+```
+
+```
+Subregion
+```
+
+Example:
+
+```
+
+```
+
+```
+Eastern Africa
+```
+
+Level 3:
+
+```
+
+```
+
+```
+Starting letter + length
+```
+
+Example:
+
+```
+
+```
+
+```
+S _ _ _ _ _ _
+```
+
+### UI
+
+Button progression:
+
+```
+
+```
+
+```
+Hint
+Hint +1
+Hint +2
+Hint used
+```
+
+No continent/subregion should appear anywhere before hint usage.
+
+Applies to:
+
+```
+
+```
+
+```
+Find
+Name
+Flags
+Capitals
+Speed
+Future Expedition Mode
+```
+
+---
+
+## 4. Name Country — Full Audit + Hard Mode Fixes
+
+### Stability Audit
+
+Current hard mode occasionally becomes unstable.
+
+Audit:
+
+-   
+question transitions  
+
+-   
+focus restoration  
+
+-   
+race conditions  
+
+-   
+auto-advance  
+
+-   
+skipped questions  
+
+-   
+session completion  
+
+
+### Validation
+
+Use:
+
+```
+
+```
+
+```
+fuzzyMatch(
+  value,
+  current.name,
+  current.altNames ?? []
+)
+```
+
+everywhere.
+
+Ensure:
+
+```
+
+```
+
+```
+altNames
+```
+
+are fully populated in countries.json.
+
+Support:
+
+```
+
+```
+
+```
+United States
+USA
+US
+United States of America
+```
+
+where appropriate.
+
+### UX
+
+Remove Submit button completely.
+
+Hard mode should feel instant.
+
+---
+
+## 5. Instant Validation for Typing Modes
+
+### Goal
+
+If the answer is correct:
+
+the game instantly knows.
+
+No:
+
+```
+
+```
+
+```
+Submit
+Check
+Confirm
+```
+
+buttons.
+
+### Implementation
+
+Add:
+
+```
+
+```
+
+```
+exactMatch()
+```
+
+to:
+
+```
+
+```
+
+```
+src/lib/fuzzy.ts
+```
+
+based on:
+
+```
+
+```
+
+```
+normalize()
+```
+
+On every keystroke:
+
+```
+
+```
+
+```
+onChange
+```
+
+if exact match:
+
+```
+
+```
+
+```
+onSubmit(true)
+```
+
+Auto-advance handles the rest.
+
+Applies to:
+
+```
+
+```
+
+```
+Name Hard
+Flags Hard
+Future Capitals Hard
+Expedition Typing Challenges
+```
+
+---
+
+## 6. Global Spacebar = Skip
+
+### New Hook
+
+```
+
+```
+
+```
+src/hooks/useSkipHotkey.ts
+```
+
+### Rules
+
+Space:
+
+```
+
+```
+
+```
+skip current question
+```
+
+if:
+
+-   
+no input focused  
+
+-   
+no textarea  
+
+-   
+no contenteditable  
+
+-   
+no open dialog  
+
+-   
+no modifier keys  
+
+
+### Applies Everywhere
+
+```
+
+```
+
+```
+Find
+Name
+Flags
+Capitals
+Speed
+Expedition
+Future Modes
+```
+
+Behavior:
+
+```
+
+```
+
+```
+idle -> reveal wrong answer -> auto advance
+feedback -> no-op
+```
+
+---
+
+## 7. Universal Keyboard Controls
+
+### Goal
+
+Keyboard-first gameplay.
+
+The entire platform must feel extremely fast.
+
+### Requirements
+
+Keys:
+
+```
+
+```
+
+```
+1
+2
+3
+4
+```
+
+must select answers everywhere.
+
+Audit:
+
+```
+
+```
+
+```
+Name Easy
+Flags Easy
+Capitals Easy
+Speed Round
+Daily Challenge
+Weekly Challenge
+Future Expedition
+```
+
+Requirements:
+
+-   
+works instantly  
+
+-   
+works after route transitions  
+
+-   
+works after skips  
+
+-   
+works after hints  
+
+-   
+works after focus changes  
+
+
+Input fields must block shortcuts.
+
+Typing modes must never accidentally trigger answer buttons.
+
+---
+
+## 8. Automatic Progression
+
+### Goal
+
+Never force unnecessary clicks.
+
+Current flow:
+
+```
+
+```
+
+```
+Answer
+Correct
+Click Next
+```
+
+is too slow.
+
+### Required
+
+After answer resolution:
+
+```
+
+```
+
+```
+Correct
+Incorrect
+Reveal
+Skip
+```
+
+show feedback briefly.
+
+Then:
+
+```
+
+```
+
+```
+auto advance
+```
+
+Timing:
+
+```
+
+```
+
+```
+600-900ms desktop
+800-1200ms mobile
+```
+
+No Next button required.
+
+Session momentum is critical.
+
+---
+
+## 9. Flags Desktop Layout
+
+### Goal
+
+Desktop experience currently wastes vertical space.
+
+### Improvements
+
+-   
+Center gameplay vertically.  
+
+-   
+Reduce top padding.  
+
+-   
+Fixed HUD.  
+
+-   
+Larger flag.  
+
+-   
+Better visual balance.  
+
+
+### Desktop Layout
+
+1440p+:
+
+```
+
+```
+
+```
+Flag
+|
+Prompt + Answers
+```
+
+2-column layout.
+
+Avoid:
+
+```
+
+```
+
+```
+flag far below fold
+```
+
+---
+
+## 10. Flags Hard Mode
+
+### New Mode
+
+```
+
+```
+
+```
+Flag → Type Country
+```
+
+### SubModes
+
+```
+
+```
+
+```
+Country → Flag
+Flag → Country
+Flag → Type Country
+```
+
+Reuse shared:
+
+```
+
+```
+
+```
+HardInput
+```
+
+Instant validation.
+
+No Submit.
+
+Space skip enabled.
+
+Preference persisted.
+
+---
+
+## 11. Explorer Mode Redesign
+
+Current Explorer must behave like a true atlas.
+
+### Goal
+
+Explorer is not a quiz.
+
+Explorer is a living world atlas.
+
+### Requirements
+
+Free navigation.
+
+User may:
+
+-   
+zoom  
+
+-   
+rotate  
+
+-   
+pan  
+
+-   
+search  
+
+-   
+filter  
+
+
+Clicking a country opens:
+
+```
+
+```
+
+```
+Flag
+Capital
+Population
+Area
+Languages
+Currencies
+Borders
+Continent
+Subregion
+Fun Fact
+Mastery Status
+```
+
+### Interactions
+
+Country click:
+
+```
+
+```
+
+```
+smooth cinematic focus
+```
+
+No forced quizzes.
+
+No overlays blocking exploration.
+
+---
+
+## 12. Confidence Map Audit
+
+### Goal
+
+Confidence heatmaps must be real.
+
+Not decorative.
+
+### Requirements
+
+Every color derives from actual mastery calculations.
+
+Confidence source:
+
+```
+
+```
+
+```
+Spaced repetition engine
+answer history
+accuracy
+review intervals
+difficulty
+stability
+retrievability
+```
+
+Validate:
+
+```
+
+```
+
+```
+No fake confidence values
+No placeholder calculations
+No random heatmap colors
+```
+
+Progress dashboard must reflect actual learning state.
+
+---
+
+## 13. Navbar Sync Indicator
+
+### Goal
+
+Reduce visual clutter.
+
+Current Sync pill remains visible too long.
+
+### New Behavior
+
+After successful sync:
+
+```
+
+```
+
+```
+Synced
+```
+
+visible for:
+
+```
+
+```
+
+```
+3 seconds
+```
+
+Then fade away.
+
+Show again only if:
+
+```
+
+```
+
+```
+syncing
+offline
+error
+queued changes
+```
+
+Normal state:
+
+```
+
+```
+
+```
+hidden
+```
+
+---
+
+## 14. Performance & Responsiveness
+
+### Primary Target
+
+Desktop first.
+
+Optimize:
+
+```
+
+```
+
+```
+1440p
+1600p
+1920p
+2560p
+```
+
+### Requirements
+
+Maintain:
+
+```
+
+```
+
+```
+60fps
+```
+
+during:
+
+-   
+globe interaction  
+
+-   
+speed mode  
+
+-   
+explorer  
+
+-   
+progress dashboard  
+
+
+Reduce:
+
+-   
+layout shifts  
+
+-   
+re-renders  
+
+-   
+expensive animations  
+
+
+Audit:
+
+```
+
+```
+
+```
+React Profiler
+```
+
+for hotspots.
+
+---
+
+## 15. QA Pass
+
+Validate:
+
+### Find
+
+-   
+no hover hints  
+
+-   
+borders visible  
+
+-   
+hint hidden until requested  
+
+-   
+space skips  
+
+
+### Name Easy
+
+-   
+1-4 keys work  
+
+-   
+auto advance  
+
+
+### Name Hard
+
+-   
+instant validation  
+
+-   
+no submit  
+
+-   
+stable focus  
+
+-   
+auto advance  
+
+
+### Flags
+
+-   
+desktop centered  
+
+-   
+hard mode works  
+
+-   
+keyboard works  
+
+
+### Capitals
+
+-   
+hint progression  
+
+-   
+keyboard shortcuts  
+
+-   
+skip support  
+
+
+### Speed
+
+-   
+mode selector works  
+
+-   
+scoring works  
+
+-   
+timer works  
+
+-   
+skip works  
+
+-   
+keyboard works  
+
+
+### Explorer
+
+-   
+all countries render  
+
+-   
+France visible  
+
+-   
+click works  
+
+-   
+details correct  
+
+
+### Progress
+
+-   
+confidence maps real  
+
+-   
+mastery calculations real  
+
+
+### Globe
+
+-   
+premium Orbita look restored  
+
+-   
+no procedural Earth  
+
+-   
+no day/night Earth  
+
+-   
+borders crisp  
+
+-   
+zoom smooth  
+
+
+---
+
+## Technical Notes
+
+### New Files
+
+```
+
+```
+
+```
+src/hooks/useSkipHotkey.ts
+src/features/engine/HardInput.tsx
+src/features/globe/verifyCountryGeometryCoverage.ts
+```
+
+### Deleted
+
+```
+
+```
+
+```
+src/features/globe/earthMaterial.ts
+```
+
+### Modified
+
+```
+
+```
+
+```
+Globe3D.tsx
+FindPage.tsx
+NamePage.tsx
+FlagsPage.tsx
+CapitalsPage.tsx
+SpeedPage.tsx
+ExplorerPage.tsx
+ProgressPage.tsx
+useSession.ts
+fuzzy.ts
+Navbar.tsx
+```
+
+### Constraints
+
+-   
+Strict TypeScript.  
+
+-   
+No any.  
+
+-   
+No API breaking changes.  
+
+-   
+No new heavy dependencies.  
+
+-   
+Preserve existing Globe3D API.  
+
+-   
+Preserve existing session architecture.  
+
+-   
+Preserve cinematic Orbita design language.  
+
+
+### Final Requirement
+
+Before implementing any new feature, first fix every existing bug, visual inconsistency, geometry issue, keyboard issue, auto-advance issue, confidence-map issue, and atlas rendering issue described above. Stability, learning quality, and responsiveness take priority over feature expansion.
+
+**Go ahead and execute.**

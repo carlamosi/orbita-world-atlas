@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSpeedRuntime, type SpeedMode } from "./speedRuntimeStore";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";

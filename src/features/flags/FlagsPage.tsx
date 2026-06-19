@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { HardInput } from "@/features/engine/HardInput";
 import { FlagImage } from "@/components/ui/FlagImage";
-import { Badge } from "@/components/ui/orbita-badge";
 import { Button } from "@/components/ui/orbita-button";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ import { getPref, setPref } from "@/lib/db/repo";
 
 const useFlagSession = createSessionStore({ mode: "flag", skill: "flag" });
 
-type SubMode = "flagToCountry" | "countryToFlag";
+type SubMode = "flagToCountry" | "countryToFlag" | "flagToType";
 
 export default function FlagsPage() {
   const s = useFlagSession();

@@ -41,6 +41,11 @@ export default function FlagsPage() {
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
 
+  const onSkip = useCallback(() => {
+    if (!finished && current && s.answerState === "idle") s.reveal();
+  }, [finished, current, s]);
+  useSkipHotkey(onSkip);
+
   const options = useMemo(() => {
     if (!current) return [];
     const distractors = pickRandomCountries(sub === "flagToCountry" ? 3 : 5, new Set([current.iso3]));
@@ -48,8 +53,11 @@ export default function FlagsPage() {
   }, [current, sub]);
 
   const hotkeyItems = useMemo(
-    () => (s.answerState === "idle" ? options.map((o) => ({ id: o.iso3 })) : []),
-    [options, s.answerState],
+    () =>
+      s.answerState === "idle" && sub !== "flagToType"
+        ? options.map((o) => ({ id: o.iso3 }))
+        : [],
+    [options, s.answerState, sub],
   );
   const onHotkey = useCallback(
     (id: string) => current && s.submit(id === current.iso3),
@@ -58,7 +66,7 @@ export default function FlagsPage() {
   useAnswerHotkeys(hotkeyItems, onHotkey);
 
   return (
-    <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">
+    <div className="relative min-h-[calc(100dvh-0px)] pt-20 px-6 pb-8 flex flex-col items-center justify-center lg:justify-center">
       {!finished && current && (
         <>
           <div className="w-full max-w-4xl mb-6 flex items-center justify-between gap-4 flex-wrap">
@@ -80,15 +88,17 @@ export default function FlagsPage() {
             title={
               sub === "flagToCountry" ? (
                 <>Which country owns this flag?</>
-              ) : (
+              ) : sub === "countryToFlag" ? (
                 <>Find the flag of <span className="text-glow-cyan">{current.name}</span></>
+              ) : (
+                <>Name this flag</>
               )
             }
             subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
           />
 
           {/* Main board */}
-          <div className="mt-8 w-full max-w-4xl">
+          <div className="mt-6 w-full max-w-4xl">
             {sub === "flagToCountry" ? (
               <FlagToCountry
                 target={current}
@@ -96,12 +106,17 @@ export default function FlagsPage() {
                 disabled={s.answerState !== "idle"}
                 onPick={(iso3) => s.submit(iso3 === current.iso3)}
               />
-            ) : (
+            ) : sub === "countryToFlag" ? (
               <CountryToFlag
                 target={current}
                 options={options}
                 disabled={s.answerState !== "idle"}
                 onPick={(iso3) => s.submit(iso3 === current.iso3)}
+              />
+            ) : (
+              <FlagToType
+                target={current}
+                onSubmit={(ok) => s.submit(ok)}
               />
             )}
           </div>

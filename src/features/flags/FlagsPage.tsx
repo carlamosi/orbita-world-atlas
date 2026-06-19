@@ -3,12 +3,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { HardInput } from "@/features/engine/HardInput";
 import { FlagImage } from "@/components/ui/FlagImage";
-import { Badge } from "@/components/ui/orbita-badge";
 import { Button } from "@/components/ui/orbita-button";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
@@ -18,7 +19,7 @@ import { getPref, setPref } from "@/lib/db/repo";
 
 const useFlagSession = createSessionStore({ mode: "flag", skill: "flag" });
 
-type SubMode = "flagToCountry" | "countryToFlag";
+type SubMode = "flagToCountry" | "countryToFlag" | "flagToType";
 
 export default function FlagsPage() {
   const s = useFlagSession();
@@ -40,6 +41,11 @@ export default function FlagsPage() {
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
 
+  const onSkip = useCallback(() => {
+    if (!finished && current && s.answerState === "idle") s.reveal();
+  }, [finished, current, s]);
+  useSkipHotkey(onSkip);
+
   const options = useMemo(() => {
     if (!current) return [];
     const distractors = pickRandomCountries(sub === "flagToCountry" ? 3 : 5, new Set([current.iso3]));
@@ -47,8 +53,11 @@ export default function FlagsPage() {
   }, [current, sub]);
 
   const hotkeyItems = useMemo(
-    () => (s.answerState === "idle" ? options.map((o) => ({ id: o.iso3 })) : []),
-    [options, s.answerState],
+    () =>
+      s.answerState === "idle" && sub !== "flagToType"
+        ? options.map((o) => ({ id: o.iso3 }))
+        : [],
+    [options, s.answerState, sub],
   );
   const onHotkey = useCallback(
     (id: string) => current && s.submit(id === current.iso3),
@@ -57,7 +66,7 @@ export default function FlagsPage() {
   useAnswerHotkeys(hotkeyItems, onHotkey);
 
   return (
-    <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">
+    <div className="relative min-h-[calc(100dvh-0px)] pt-20 px-6 pb-8 flex flex-col items-center justify-center lg:justify-center">
       {!finished && current && (
         <>
           <div className="w-full max-w-4xl mb-6 flex items-center justify-between gap-4 flex-wrap">
@@ -79,15 +88,17 @@ export default function FlagsPage() {
             title={
               sub === "flagToCountry" ? (
                 <>Which country owns this flag?</>
-              ) : (
+              ) : sub === "countryToFlag" ? (
                 <>Find the flag of <span className="text-glow-cyan">{current.name}</span></>
+              ) : (
+                <>Name this flag</>
               )
             }
             subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
           />
 
           {/* Main board */}
-          <div className="mt-8 w-full max-w-4xl">
+          <div className="mt-6 w-full max-w-4xl">
             {sub === "flagToCountry" ? (
               <FlagToCountry
                 target={current}
@@ -95,12 +106,17 @@ export default function FlagsPage() {
                 disabled={s.answerState !== "idle"}
                 onPick={(iso3) => s.submit(iso3 === current.iso3)}
               />
-            ) : (
+            ) : sub === "countryToFlag" ? (
               <CountryToFlag
                 target={current}
                 options={options}
                 disabled={s.answerState !== "idle"}
                 onPick={(iso3) => s.submit(iso3 === current.iso3)}
+              />
+            ) : (
+              <FlagToType
+                target={current}
+                onSubmit={(ok) => s.submit(ok)}
               />
             )}
           </div>
@@ -160,6 +176,7 @@ function SubModeToggle({
         [
           ["flagToCountry", "Flag → Country"],
           ["countryToFlag", "Country → Flag"],
+          ["flagToType", "Flag → Type"],
         ] as const
       ).map(([k, label]) => (
         <button
@@ -200,7 +217,7 @@ function FlagToCountry({
           iso2={target.iso2}
           alt="Mystery flag"
           size={640}
-          className="w-[min(72vw,420px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+          className="w-[min(72vw,420px)] lg:w-[min(40vw,460px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
         />
       </motion.div>
       <div className="grid grid-cols-2 gap-3 w-full max-w-2xl">
@@ -260,6 +277,35 @@ function CountryToFlag({
     </div>
   );
 }
+
+function FlagToType({
+  target,
+  onSubmit,
+}: {
+  target: Country;
+  onSubmit: (ok: boolean) => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <motion.div
+        key={target.iso3}
+        initial={{ opacity: 0, scale: 0.92, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={spring.soft}
+      >
+        <FlagImage
+          iso2={target.iso2}
+          alt="Mystery flag"
+          size={640}
+          className="w-[min(72vw,420px)] lg:w-[min(40vw,460px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+        />
+      </motion.div>
+      <HardInput target={target} onSubmit={onSubmit} placeholder="Type the country…" />
+    </div>
+  );
+}
+
+
 
 function ConfettiBurst({ show }: { show: boolean }) {
   const particles = useMemo(

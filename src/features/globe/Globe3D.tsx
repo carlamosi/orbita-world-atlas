@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
-import { TOUCH } from "three";
+import { TOUCH, MeshPhongMaterial, Color } from "three";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 
 import type { Country } from "@/types/country";
@@ -15,7 +15,6 @@ import {
   loadCountryFeatures,
   type CountryFeature,
 } from "./geo";
-import { createEarthMaterial, type EarthMaterialHandle } from "./earthMaterial";
 
 export type GlobeQuality = "high" | "medium" | "static";
 
@@ -33,6 +32,8 @@ interface Globe3DProps {
   pointOfView?: { lat: number; lng: number; altitude?: number };
   size?: number;
   quality?: GlobeQuality;
+  /** When true, hovering a country has zero visual feedback (Find mode). */
+  disableHoverFeedback?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -83,6 +84,7 @@ export default function Globe3D({
   pointOfView,
   size,
   quality = "high",
+  disableHoverFeedback = false,
 }: Globe3DProps) {
   const ref = useRef<GlobeMethods | undefined>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -120,32 +122,21 @@ export default function Globe3D({
     return () => ro.disconnect();
   }, []);
 
-  // ---- Procedural Earth material (day/night, terminator, fresnel) ------
-  const earthRef = useRef<EarthMaterialHandle | null>(null);
-  if (earthRef.current === null) {
-    earthRef.current = createEarthMaterial({
-      sunRotationSpeed: 0.02,
+  // ---- Premium Orbita globe material -----------------------------------
+  // Deep-indigo sphere with subtle specular highlight. No textures, no
+  // procedural day/night — just the cinematic dark-space aesthetic.
+  const globeMaterial = useMemo(() => {
+    const mat = new MeshPhongMaterial({
+      color: new Color("#0a0d1f"),
+      emissive: new Color("#0b1230"),
+      emissiveIntensity: 0.35,
+      specular: new Color("#6C63FF"),
+      shininess: 14,
+      transparent: false,
     });
-  }
-  useEffect(() => {
-    return () => {
-      earthRef.current?.dispose();
-      earthRef.current = null;
-    };
+    return mat;
   }, []);
-  useEffect(() => {
-    if (effectiveQuality === "static") return;
-    let raf = 0;
-    let last = performance.now();
-    const loop = (t: number) => {
-      const dt = Math.min(0.1, (t - last) / 1000);
-      last = t;
-      earthRef.current?.tick(dt);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [effectiveQuality]);
+  useEffect(() => () => globeMaterial.dispose(), [globeMaterial]);
 
   // ---- Lazy 50m upgrade on first close zoom (high quality only) --------
   useEffect(() => {
@@ -231,13 +222,15 @@ export default function Globe3D({
     return () => window.clearInterval(id);
   }, [dueSet, effectiveQuality]);
 
+  const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
+
   const polygonCapColor = useCallback(
     (d: object) => {
       const f = d as CountryFeature;
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.28)`;
       if (iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.22)`;
-      if (iso3 === hoverIso3) return `rgba(${COLOR_HOVER}, 0.18)`;
+      if (iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.18)`;
       if (dueSet.has(iso3)) {
         const a = pulse === 0 ? 0.1 : 0.18;
         return `rgba(${COLOR_DUE}, ${a})`;
@@ -249,7 +242,7 @@ export default function Globe3D({
       }
       return "rgba(255, 255, 255, 0.012)";
     },
-    [revealIso3, highlightIso3, hoverIso3, dueSet, pulse, showContinentTint, continentByIso3],
+    [revealIso3, highlightIso3, effHoverIso3, dueSet, pulse, showContinentTint, continentByIso3],
   );
 
   const polygonSideColor = useCallback(
@@ -263,10 +256,10 @@ export default function Globe3D({
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.9)`;
       if (iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.85)`;
-      if (iso3 === hoverIso3) return `rgba(${COLOR_HOVER}, 0.7)`;
+      if (iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.7)`;
       return `rgba(255, 255, 255, ${strokeOpacity})`;
     },
-    [revealIso3, highlightIso3, hoverIso3, strokeOpacity],
+    [revealIso3, highlightIso3, effHoverIso3, strokeOpacity],
   );
 
   const polygonAltitude = useCallback(
@@ -274,16 +267,20 @@ export default function Globe3D({
       const f = d as CountryFeature;
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3 || iso3 === highlightIso3) return 0.035;
-      if (iso3 === hoverIso3) return 0.02;
+      if (iso3 === effHoverIso3) return 0.02;
       return 0.006;
     },
-    [revealIso3, highlightIso3, hoverIso3],
+    [revealIso3, highlightIso3, effHoverIso3],
   );
 
-  const polygonLabel = useCallback((d: object) => {
-    const f = d as CountryFeature;
-    return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
-  }, []);
+  const polygonLabel = useCallback(
+    (d: object) => {
+      if (disableHoverFeedback) return "";
+      const f = d as CountryFeature;
+      return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
+    },
+    [disableHoverFeedback],
+  );
 
   // ---- Cinematic country framing ---------------------------------------
   const focusCountry = useCallback(
@@ -539,7 +536,7 @@ export default function Globe3D({
         width={dim.w}
         height={dim.h}
         backgroundColor="rgba(0,0,0,0)"
-        globeMaterial={earthRef.current?.material}
+        globeMaterial={globeMaterial}
         showAtmosphere
         atmosphereColor="#6C63FF"
         atmosphereAltitude={

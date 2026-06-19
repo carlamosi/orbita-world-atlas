@@ -1,8 +1,9 @@
-import { lazy, Suspense, useEffect, useMemo } from "react";
+import { lazy, Suspense, useEffect, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import { COUNTRIES } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
@@ -30,6 +31,11 @@ export default function FindPage() {
     next: s.next,
   });
 
+  const onSkip = useCallback(() => {
+    if (!finished && current && s.answerState === "idle") s.reveal();
+  }, [finished, current, s]);
+  useSkipHotkey(onSkip);
+
   const pov = useMemo(() => {
     if (s.answerState !== "idle" && current) {
       return { lat: current.coordinates[0], lng: current.coordinates[1], altitude: 1.4 };
@@ -49,6 +55,7 @@ export default function FindPage() {
             }
             onCountryClick={(iso3) => current && s.submit(iso3 === current.iso3)}
             pointOfView={pov}
+            disableHoverFeedback={s.answerState === "idle"}
           />
         </Suspense>
       </div>
@@ -64,7 +71,7 @@ export default function FindPage() {
                   Find <span className="text-glow-cyan">{current.name}</span>
                 </>
               }
-              subtitle={`${current.continent} · ${current.subregion}`}
+              subtitle={s.hintUsed ? `${current.continent} · ${current.subregion}` : undefined}
             />
           </div>
 

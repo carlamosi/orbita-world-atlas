@@ -19,10 +19,12 @@ const MODE_LABELS: Record<SpeedMode, { name: string; sub: string }> = {
 
 export default function SpeedPage() {
   const status = useSpeedRuntime((s) => s.status);
+  const mode = useSpeedRuntime((s) => s.config.mode);
 
-  if (status === "idle") return <PreGame />;
-  if (status === "ended") return <PostGame />;
-  return <Active />;
+  if (status === "idle") return <PreGame key="pre" />;
+  if (status === "ended") return <PostGame key="post" />;
+  // Key by mode so a mode-switch tears down all subscribers + effects cleanly.
+  return <Active key={`active-${mode}`} />;
 }
 
 function PreGame() {
@@ -96,7 +98,7 @@ function PreGame() {
         </div>
 
         <div className="mt-10 flex justify-end gap-3">
-          <Button size="lg" onClick={() => start()}>
+          <Button size="lg" onClick={() => start(config.mode)}>
             Start →
           </Button>
         </div>
@@ -414,7 +416,7 @@ function PostGame() {
             />
           </div>
           <div className="mt-8 flex gap-3 justify-center">
-            <Button onClick={() => s.start()}>Run again</Button>
+            <Button onClick={() => s.start(s.config.mode)}>Run again</Button>
             <Button variant="secondary" onClick={() => s.reset()}>
               Change mode
             </Button>

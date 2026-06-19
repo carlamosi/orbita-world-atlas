@@ -9,6 +9,7 @@ import { spring } from "@/lib/motion";
 import { dateKey, currentStreak, longestStreak } from "@/lib/streak";
 import { DEFINITIONS } from "@/lib/unlocks";
 import { cn } from "@/lib/utils";
+import { retention, isDue, isOverdue } from "@/lib/spacedRepetition";
 
 const CONTINENTS = ["Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
 
@@ -64,9 +65,14 @@ export default function ProgressPage() {
         </div>
 
         <section className="mt-10">
+          <MasteryStability progress={progress} />
+        </section>
+
+        <section className="mt-10">
           <SectionTitle>Confidence map</SectionTitle>
           <ConfidenceMap progress={progress} />
         </section>
+
 
         <section className="mt-10 grid lg:grid-cols-2 gap-4">
           {ALL_SKILLS.map((skill) => (
@@ -192,6 +198,200 @@ export default function ProgressPage() {
           </div>
         </section>
       </div>
+    </div>
+  );
+}
+
+function MasteryStability({
+  progress,
+}: {
+  progress: Array<{
+    iso3: string;
+    skills: Record<string, { confidence: number; srs?: { reps: number; interval: number; nextReviewAt: number; lastReviewedAt: number; ef: number } } | undefined>;
+  }>;
+}) {
+  const now = Date.now();
+  const metrics = useMemo(() => {
+    let totalSeen = 0;
+    let active = 0;
+    let dueToday = 0;
+    let overdue = 0;
+    let retentionSum = 0;
+    let retentionCount = 0;
+    const perSkill = new Map<
+      Skill,
+      { seen: number; due: number; overdue: number; retSum: number; retCount: number; intervalSum: number; intervalCount: number }
+    >();
+    for (const sk of ALL_SKILLS)
+      perSkill.set(sk, {
+        seen: 0,
+        due: 0,
+        overdue: 0,
+        retSum: 0,
+        retCount: 0,
+        intervalSum: 0,
+        intervalCount: 0,
+      });
+
+    for (const row of progress) {
+      for (const sk of ALL_SKILLS) {
+        const stat = row.skills[sk];
+        if (!stat) continue;
+        totalSeen++;
+        const p = perSkill.get(sk)!;
+        p.seen++;
+        const srs = stat.srs;
+        if (srs) {
+          const r = retention(srs, now);
+          retentionSum += r;
+          retentionCount++;
+          p.retSum += r;
+          p.retCount++;
+          p.intervalSum += srs.interval;
+          p.intervalCount++;
+          if (srs.reps >= 2 && srs.nextReviewAt > now) active++;
+          if (isDue(srs, now)) {
+            dueToday++;
+            p.due++;
+          }
+          if (isOverdue(srs, now)) {
+            overdue++;
+            p.overdue++;
+          }
+        } else {
+          // Pre-SRS legacy rows: count by confidence.
+          retentionSum += stat.confidence;
+          retentionCount++;
+        }
+      }
+    }
+
+    return {
+      totalSeen,
+      active,
+      dueToday,
+      overdue,
+      retention: retentionCount > 0 ? retentionSum / retentionCount : 0,
+      stability: totalSeen > 0 ? active / totalSeen : 0,
+      perSkill,
+    };
+  }, [progress, now]);
+
+  return (
+    <div className="glass-strong rounded-3xl p-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <Badge tone="neon">Spaced repetition</Badge>
+          <h2 className="mt-2 font-display text-2xl text-white tracking-tight text-glow-violet">
+            Mastery stability
+          </h2>
+          <p className="mt-1 text-[13px] text-white/55">
+            Long-term retention from SM-2 spaced repetition. Higher = items are
+            sticking; due/overdue = ready for review.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <StabilityStat
+          label="Retention"
+          value={`${Math.round(metrics.retention * 100)}%`}
+          tone={
+            metrics.retention >= 0.8
+              ? "neon"
+              : metrics.retention >= 0.5
+                ? "cyan"
+                : "coral"
+          }
+        />
+        <StabilityStat
+          label="Stable items"
+          value={`${Math.round(metrics.stability * 100)}%`}
+          sub={`${metrics.active}/${metrics.totalSeen}`}
+        />
+        <StabilityStat
+          label="Due today"
+          value={String(metrics.dueToday)}
+          tone={metrics.dueToday > 0 ? "cyan" : undefined}
+        />
+        <StabilityStat
+          label="Overdue"
+          value={String(metrics.overdue)}
+          tone={metrics.overdue > 0 ? "coral" : undefined}
+        />
+      </div>
+
+      <div className="mt-5">
+        <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45 mb-2">
+          Per skill
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {ALL_SKILLS.map((sk) => {
+            const p = metrics.perSkill.get(sk)!;
+            const r = p.retCount > 0 ? p.retSum / p.retCount : 0;
+            const avgInt = p.intervalCount > 0 ? p.intervalSum / p.intervalCount : 0;
+            return (
+              <div key={sk} className="glass rounded-2xl p-3">
+                <div className="flex items-center justify-between">
+                  <span className="font-display text-white capitalize">{sk}</span>
+                  <span className="font-mono text-[11px] text-white/55">
+                    {p.seen} seen
+                  </span>
+                </div>
+                <div className="mt-2 h-1.5 rounded-full bg-white/8 overflow-hidden">
+                  <div
+                    className="h-full"
+                    style={{
+                      width: `${Math.max(2, r * 100)}%`,
+                      background:
+                        r >= 0.8 ? "var(--neon)" : r >= 0.5 ? "var(--cyan)" : "var(--coral)",
+                    }}
+                  />
+                </div>
+                <div className="mt-2 flex justify-between font-mono text-[10px] uppercase tracking-wider text-white/45">
+                  <span>{Math.round(r * 100)}% retain</span>
+                  <span>
+                    {p.due} due · {p.overdue} overdue
+                  </span>
+                  <span>~{avgInt.toFixed(1)}d</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StabilityStat({
+  label,
+  value,
+  sub,
+  tone,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+  tone?: "neon" | "cyan" | "coral";
+}) {
+  const color =
+    tone === "neon"
+      ? "text-[color:var(--neon)]"
+      : tone === "cyan"
+        ? "text-[color:var(--cyan)]"
+        : tone === "coral"
+          ? "text-[color:var(--coral)]"
+          : "text-white";
+  return (
+    <div className="glass rounded-2xl p-4">
+      <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
+        {label}
+      </div>
+      <div className={cn("mt-1 font-display text-2xl tracking-tight", color)}>{value}</div>
+      {sub && (
+        <div className="mt-1 font-mono text-[10px] text-white/45">{sub}</div>
+      )}
     </div>
   );
 }

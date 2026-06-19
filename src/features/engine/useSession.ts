@@ -24,6 +24,8 @@ export interface SessionState {
   startedAt: number;
   endedAt: number | null;
   loading: boolean;
+  /** Epoch ms when the current question became visible. */
+  questionStartedAt: number;
 
   current(): Country | null;
   start(opts?: { continent?: string }): Promise<void>;
@@ -63,6 +65,7 @@ export function createSessionStore({
     startedAt: 0,
     endedAt: null,
     loading: false,
+    questionStartedAt: 0,
 
     current() {
       const s = get();
@@ -70,7 +73,6 @@ export function createSessionStore({
     },
 
     async start(opts) {
-      // Reset hard so a re-mount or replay never inherits stale flags.
       set({
         loading: true,
         queue: [],
@@ -84,10 +86,12 @@ export function createSessionStore({
         hintUsed: false,
         startedAt: 0,
         endedAt: null,
+        questionStartedAt: 0,
       });
       const q = await selectQuestions(skill, questions, {
         continent: opts?.continent,
       });
+      const now = Date.now();
       set({
         queue: q,
         index: 0,
@@ -98,9 +102,10 @@ export function createSessionStore({
         wrong: 0,
         answerState: "idle",
         hintUsed: false,
-        startedAt: Date.now(),
+        startedAt: now,
         endedAt: null,
         loading: false,
+        questionStartedAt: now,
       });
     },
 
@@ -109,6 +114,7 @@ export function createSessionStore({
       if (s.answerState !== "idle") return;
       const target = s.queue[s.index];
       if (!target) return;
+      const responseMs = Math.max(0, Date.now() - (s.questionStartedAt || Date.now()));
       if (isCorrect) {
         const combo = s.combo + 1;
         const base = 100;
@@ -126,7 +132,7 @@ export function createSessionStore({
         set({ combo: 0, wrong: s.wrong + 1, answerState: "wrong" });
       }
       updateSkillProgress(target.iso3, skill, (prev) =>
-        confidenceAfter(prev, isCorrect, s.hintUsed),
+        confidenceAfter(prev, isCorrect, s.hintUsed, Date.now(), responseMs),
       );
     },
 
@@ -158,7 +164,12 @@ export function createSessionStore({
         });
         return;
       }
-      set({ index: nextIndex, answerState: "idle", hintUsed: false });
+      set({
+        index: nextIndex,
+        answerState: "idle",
+        hintUsed: false,
+        questionStartedAt: Date.now(),
+      });
     },
   }));
 }

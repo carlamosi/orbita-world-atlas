@@ -33,7 +33,8 @@ export function useAnswerHotkeys(
       e.preventDefault();
       onPick(options![n - 1]!.id);
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // Capture phase so transition overlays / auto-advance can't swallow keys.
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, [options, onPick, enabled]);
 }

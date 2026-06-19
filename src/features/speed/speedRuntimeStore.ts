@@ -5,32 +5,26 @@ import { confidenceAfter, selectMixedQuestions } from "@/lib/mastery";
 import { recordSessionEnd, updateSkillProgress } from "@/lib/db/repo";
 
 /**
- * Speed Runtime — intentionally NOT a session-engine extension.
+ * Speed Runtime — decoupled from the turn-based session engine.
  *
- * Why decoupled:
- *  - Speed has a 250ms timer tick that would otherwise re-render the whole
- *    session tree (including HUD subscribers in other modes).
- *  - Combo & lives state mutates per-answer, not per-question round, so the
- *    turn-based "answerState idle → correct/wrong → next" cycle does not fit.
- *  - Question selection is pre-batched (queue of ~80 mixed-skill items)
- *    rather than re-fetched between turns, so the active loop is allocation-
- *    free.
- *  - Persistence goes through the *same* repo layer as useSession, so all
- *    Dexie writes remain centralised.
+ * Why decoupled: 250ms timer ticks would otherwise re-render the entire
+ * session tree; combo / lives mutate per-answer rather than per-question;
+ * questions are pre-batched into a queue. Persistence still routes through
+ * the same repo layer (Dexie cache → outbox → Supabase RPC).
  */
 
 export type SpeedMode = "sprint60" | "marathon120" | "suddenDeath";
 
 export interface SpeedConfig {
   mode: SpeedMode;
-  continent: string; // "All" or specific
+  continent: string;
 }
 
 interface SpeedItem {
   country: Country;
   skill: Skill;
-  // four MCQ options resolved at queue build (deterministic per item)
   options: Country[];
+  shownAt: number;
 }
 
 export interface SpeedState {
@@ -52,7 +46,7 @@ export interface SpeedState {
   endedAt: number | null;
 
   setConfig: (patch: Partial<SpeedConfig>) => void;
-  start: () => Promise<void>;
+  start: (mode?: SpeedMode) => Promise<void>;
   answer: (iso3: string) => void;
   skip: () => void;
   reset: () => void;
@@ -65,14 +59,25 @@ const TICK_MS = 250;
 function modeDurationMs(m: SpeedMode): number {
   if (m === "sprint60") return SPRINT_MS;
   if (m === "marathon120") return MARATHON_MS;
-  return Number.POSITIVE_INFINITY; // sudden death: ends on lives=0
+  return Number.POSITIVE_INFINITY;
 }
 
 function startingLives(m: SpeedMode): number {
   return m === "suddenDeath" ? 3 : Infinity;
 }
 
+// Module-level timer registry — survives store re-init, drained by reset().
 let tickHandle: ReturnType<typeof setInterval> | null = null;
+const pendingTimeouts = new Set<ReturnType<typeof setTimeout>>();
+
+function clearAllTimers() {
+  if (tickHandle) {
+    clearInterval(tickHandle);
+    tickHandle = null;
+  }
+  for (const t of pendingTimeouts) clearTimeout(t);
+  pendingTimeouts.clear();
+}
 
 function makeOptions(target: Country, all: readonly Country[]): Country[] {
   const pool = all.filter((c) => c.iso3 !== target.iso3);
@@ -88,40 +93,69 @@ function makeOptions(target: Country, all: readonly Country[]): Country[] {
   return out;
 }
 
-export const useSpeedRuntime = create<SpeedState>((set, get) => ({
-  config: { mode: "sprint60", continent: "All" },
-  status: "idle",
-  queue: [],
+const INITIAL_STATE = {
+  status: "idle" as const,
+  queue: [] as SpeedItem[],
   index: 0,
   timeRemainingMs: SPRINT_MS,
   score: 0,
   combo: 0,
   bestCombo: 0,
-  lives: Infinity,
+  lives: Infinity as number,
   correct: 0,
   wrong: 0,
   startedAt: 0,
-  endedAt: null,
+  endedAt: null as number | null,
+};
+
+export const useSpeedRuntime = create<SpeedState>((set, get) => ({
+  config: { mode: "sprint60", continent: "All" },
+  ...INITIAL_STATE,
 
   setConfig(patch) {
-    set({ config: { ...get().config, ...patch } });
+    // Changing the mode mid-idle MUST also hard-reset the timer/queue UI so
+    // pre-game previews and time rings reflect the new mode immediately.
+    const next = { ...get().config, ...patch };
+    clearAllTimers();
+    set({
+      config: next,
+      ...INITIAL_STATE,
+      timeRemainingMs: modeDurationMs(next.mode),
+      lives: startingLives(next.mode),
+    });
   },
 
-  async start() {
-    const { config } = get();
+  async start(modeOverride) {
+    // Always hard-reset first — no in-place mutation, no stale closures.
+    clearAllTimers();
+    const config = modeOverride
+      ? { ...get().config, mode: modeOverride }
+      : get().config;
+
+    set({
+      config,
+      ...INITIAL_STATE,
+      timeRemainingMs: modeDurationMs(config.mode),
+      lives: startingLives(config.mode),
+    });
+
     const { COUNTRIES } = await import("@/lib/countries");
     const picks = await selectMixedQuestions(
       80,
       ["name", "flag", "capital", "location"],
       { continent: config.continent },
     );
+    const now = Date.now();
     const queue: SpeedItem[] = picks.map((p) => ({
       country: p.country,
       skill: p.skill,
       options: makeOptions(p.country, COUNTRIES),
+      shownAt: now,
     }));
 
-    if (tickHandle) clearInterval(tickHandle);
+    // If reset() was called while building the queue, abort.
+    if (get().status !== "idle") return;
+
     set({
       status: "running",
       queue,
@@ -133,21 +167,24 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
       lives: startingLives(config.mode),
       correct: 0,
       wrong: 0,
-      startedAt: Date.now(),
+      startedAt: now,
       endedAt: null,
     });
 
     if (Number.isFinite(modeDurationMs(config.mode))) {
-      const startedAt = Date.now();
+      const startedAt = now;
       const total = modeDurationMs(config.mode);
       tickHandle = setInterval(() => {
+        if (useSpeedRuntime.getState().status !== "running") {
+          clearAllTimers();
+          return;
+        }
         const elapsed = Date.now() - startedAt;
         const remaining = Math.max(0, total - elapsed);
         if (remaining <= 0) {
           finalize();
           return;
         }
-        // Cheap targeted set — only timeRemainingMs changes per tick.
         useSpeedRuntime.setState({ timeRemainingMs: remaining });
       }, TICK_MS);
     }
@@ -159,9 +196,10 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     const item = s.queue[s.index];
     if (!item) return;
     const isCorrect = item.country.iso3 === iso3;
+    const responseMs = Math.max(0, Date.now() - item.shownAt);
 
     updateSkillProgress(item.country.iso3, item.skill, (prev) =>
-      confidenceAfter(prev, isCorrect, false),
+      confidenceAfter(prev, isCorrect, false, Date.now(), responseMs),
     );
 
     if (isCorrect) {
@@ -188,7 +226,20 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
         return;
       }
     }
-    // Out of questions — generate more (cheap; rare for 60-120s window).
+    // Stamp `shownAt` on the new current item so response time is accurate.
+    const newIdx = get().index;
+    const newItem = get().queue[newIdx];
+    if (newItem && newItem.shownAt === 0) {
+      const next = get().queue.slice();
+      next[newIdx] = { ...newItem, shownAt: Date.now() };
+      useSpeedRuntime.setState({ queue: next });
+    } else if (newItem) {
+      // Re-stamp the freshly-displayed item so its timer starts at "now".
+      const next = get().queue.slice();
+      next[newIdx] = { ...newItem, shownAt: Date.now() };
+      useSpeedRuntime.setState({ queue: next });
+    }
+
     if (get().index >= get().queue.length - 4) {
       void topUpQueue();
     }
@@ -204,23 +255,13 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     }
   },
 
-
   reset() {
-    if (tickHandle) clearInterval(tickHandle);
-    tickHandle = null;
+    clearAllTimers();
+    const cfg = get().config;
     set({
-      status: "idle",
-      queue: [],
-      index: 0,
-      timeRemainingMs: modeDurationMs(get().config.mode),
-      score: 0,
-      combo: 0,
-      bestCombo: 0,
-      lives: startingLives(get().config.mode),
-      correct: 0,
-      wrong: 0,
-      startedAt: 0,
-      endedAt: null,
+      ...INITIAL_STATE,
+      timeRemainingMs: modeDurationMs(cfg.mode),
+      lives: startingLives(cfg.mode),
     });
   },
 }));
@@ -233,6 +274,7 @@ async function topUpQueue() {
     ["name", "flag", "capital", "location"],
     { continent: s.config.continent },
   );
+  const now = Date.now();
   useSpeedRuntime.setState({
     queue: [
       ...s.queue,
@@ -240,14 +282,14 @@ async function topUpQueue() {
         country: p.country,
         skill: p.skill,
         options: makeOptions(p.country, COUNTRIES),
+        shownAt: now,
       })),
     ],
   });
 }
 
 function finalize() {
-  if (tickHandle) clearInterval(tickHandle);
-  tickHandle = null;
+  clearAllTimers();
   const s = useSpeedRuntime.getState();
   if (s.status !== "running") return;
   const endedAt = Date.now();

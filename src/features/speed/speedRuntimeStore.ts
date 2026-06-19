@@ -54,6 +54,7 @@ export interface SpeedState {
   setConfig: (patch: Partial<SpeedConfig>) => void;
   start: () => Promise<void>;
   answer: (iso3: string) => void;
+  skip: () => void;
   reset: () => void;
 }
 
@@ -192,6 +193,17 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
       void topUpQueue();
     }
   },
+
+  skip() {
+    const s = get();
+    if (s.status !== "running") return;
+    if (!s.queue[s.index]) return;
+    set({ combo: 0, wrong: s.wrong + 1, index: s.index + 1 });
+    if (get().index >= get().queue.length - 4) {
+      void topUpQueue();
+    }
+  },
+
 
   reset() {
     if (tickHandle) clearInterval(tickHandle);

@@ -1,6 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSpeedRuntime, type SpeedMode } from "./speedRuntimeStore";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
@@ -108,8 +109,11 @@ function Active() {
   // Isolated subscribers — timer tick (4Hz) re-renders only TimerRing.
   const queue = useSpeedRuntime((s) => s.queue);
   const index = useSpeedRuntime((s) => s.index);
+  const status = useSpeedRuntime((s) => s.status);
   const item = queue[index];
   const answer = useSpeedRuntime((s) => s.answer);
+  const skip = useSpeedRuntime((s) => s.skip);
+  const reset = useSpeedRuntime((s) => s.reset);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -120,7 +124,18 @@ function Active() {
     return () => window.removeEventListener("keydown", onKey);
   }, [item, answer]);
 
-  if (!item) return null;
+  const onSkip = useCallback(() => skip(), [skip]);
+  useSkipHotkey(onSkip);
+
+  // Kill the timer if the user navigates away mid-run.
+  useEffect(() => {
+    return () => {
+      if (useSpeedRuntime.getState().status === "running") reset();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!item || status !== "running") return null;
 
   return (
     <div className="min-h-dvh pt-24 px-4 pb-10 flex flex-col items-center">
@@ -276,10 +291,37 @@ function OptionsGrid({
   onPick: (iso3: string) => void;
 }) {
   const flash = useFlash(item.country.iso3);
+  const isFlagSkill = item.skill === "flag";
+  if (isFlagSkill) {
+    // Flag-pick mode: render flags only, no country names alongside.
+    return (
+      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
+        {item.options.map((o, i) => (
+          <button
+            key={o.iso3}
+            onClick={() => {
+              flash(o.iso3 === item.country.iso3);
+              onPick(o.iso3);
+            }}
+            className={cn(
+              "group relative aspect-[3/2] rounded-2xl overflow-hidden transition-transform duration-150",
+              "hover:scale-[1.03] shadow-[0_16px_40px_-18px_rgba(0,0,0,0.7)]",
+              "outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--cyan)]/60",
+            )}
+            aria-label={`Option ${i + 1}`}
+          >
+            <FlagImage iso2={o.iso2} alt="flag option" className="absolute inset-0 rounded-none" />
+            <span className="absolute top-1.5 left-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/60 rounded-full px-1.5 py-0.5">
+              {i + 1}
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 w-full">
       {item.options.map((o, i) => {
-        const showFlag = item.skill === "flag";
         const showCapital = item.skill === "capital";
         const label = showCapital ? (o.capital ?? "—") : o.name;
         return (
@@ -297,13 +339,8 @@ function OptionsGrid({
             <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
               {i + 1}
             </div>
-            <div className="mt-1 flex items-center gap-3">
-              {showFlag && (
-                <FlagImage iso2={o.iso2} alt={o.name} className="w-12 h-8 shrink-0" />
-              )}
-              <div className="font-display text-base text-white tracking-tight truncate">
-                {label}
-              </div>
+            <div className="mt-1 font-display text-base text-white tracking-tight truncate">
+              {label}
             </div>
           </button>
         );

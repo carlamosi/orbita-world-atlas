@@ -32,8 +32,12 @@ interface Globe3DProps {
   pointOfView?: { lat: number; lng: number; altitude?: number };
   size?: number;
   quality?: GlobeQuality;
-  /** When true, hovering a country has zero visual feedback (Find mode). */
+  /** Hide only the country-name tooltip (Find/Capitals). Glow + altitude lift remain for spatial feedback. */
+  disableHoverLabel?: boolean;
+  /** Strict mode: suppress ALL hover feedback (glow, lift, tooltip). */
   disableHoverFeedback?: boolean;
+  /** Changes whenever the active question changes — clears stale hover state on transition. */
+  questionKey?: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -84,7 +88,9 @@ export default function Globe3D({
   pointOfView,
   size,
   quality = "high",
+  disableHoverLabel = false,
   disableHoverFeedback = false,
+  questionKey = null,
 }: Globe3DProps) {
   const ref = useRef<GlobeMethods | undefined>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -224,6 +230,12 @@ export default function Globe3D({
 
   const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
 
+  // Clear stale hover when the active question/target changes so the previous
+  // country doesn't keep glowing after auto-advance.
+  useEffect(() => {
+    setHoverIso3(null);
+  }, [questionKey, highlightIso3, revealIso3]);
+
   const polygonCapColor = useCallback(
     (d: object) => {
       const f = d as CountryFeature;
@@ -275,11 +287,11 @@ export default function Globe3D({
 
   const polygonLabel = useCallback(
     (d: object) => {
-      if (disableHoverFeedback) return "";
+      if (disableHoverFeedback || disableHoverLabel) return "";
       const f = d as CountryFeature;
       return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
     },
-    [disableHoverFeedback],
+    [disableHoverFeedback, disableHoverLabel],
   );
 
   // ---- Cinematic country framing ---------------------------------------

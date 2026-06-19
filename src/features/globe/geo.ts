@@ -58,14 +58,20 @@ interface TopoLike {
   transform?: unknown;
 }
 
+let warnedMissing = false;
+
 function enrich(raw: FeatureCollection): CountryFeature[] {
   const out: CountryFeature[] = [];
+  const missing: string[] = [];
   for (const f of raw.features) {
     if (!f.geometry) continue;
     if (f.geometry.type !== "Polygon" && f.geometry.type !== "MultiPolygon") continue;
     const m49 = String(f.id ?? "").padStart(3, "0");
     const iso3 = M49_TO_ISO3[m49];
-    if (!iso3) continue;
+    if (!iso3) {
+      missing.push(m49);
+      continue;
+    }
     const geom = f.geometry as CountryGeometry;
     const centroid = computeCentroid(geom);
     const angularSpan = computeAngularSpan(geom, centroid);
@@ -82,6 +88,10 @@ function enrich(raw: FeatureCollection): CountryFeature[] {
         angularSpan,
       },
     });
+  }
+  if (!warnedMissing && missing.length > 0 && typeof console !== "undefined") {
+    warnedMissing = true;
+    console.warn(`[geo] ${missing.length} M49 codes have no ISO3 mapping:`, missing.slice(0, 20));
   }
   return out;
 }

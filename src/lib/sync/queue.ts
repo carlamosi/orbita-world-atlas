@@ -1,7 +1,15 @@
 /**
- * Sync queue helpers. All writes are fire-and-forget against the local
- * Dexie outbox — no network calls happen here. The push worker drains it.
+ * Sync queue helpers.
+ *
+ * Supabase is the sole backend for ORBITA. Dexie is the offline cache and
+ * write-ahead outbox; this module enqueues mutations locally and the push
+ * worker drains them through the Supabase `sync_push` RPC. No alternative
+ * backend exists — there is no edge-function fallback, no hybrid layer.
+ *
+ * All writes are fire-and-forget against the local Dexie outbox — no
+ * network calls happen here. The push worker drains it.
  */
+
 import { db } from "@/lib/db/orbita-db";
 import { getClientId, newOpId } from "./clientId";
 import type { SyncEntity } from "./types";

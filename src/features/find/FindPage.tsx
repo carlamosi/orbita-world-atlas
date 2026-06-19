@@ -8,6 +8,7 @@ import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { PromptPill } from "@/features/engine/PromptPill";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { spring } from "@/lib/motion";
@@ -65,29 +66,15 @@ export default function FindPage() {
 
       {!finished && current && (
         <>
-          <motion.div
-            key={current.iso3}
-            initial={{ opacity: 0, y: -8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={spring.soft}
-            className="absolute top-24 left-1/2 -translate-x-1/2 z-20 px-4 pointer-events-none"
-          >
-            <div className="glass rounded-full px-5 py-2 flex items-center gap-3 pointer-events-auto">
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45 whitespace-nowrap">
-                {s.index + 1} / {s.queue.length}
-              </span>
-              <span className="h-3 w-px bg-white/15" />
-              <span className="font-display text-base md:text-lg text-white tracking-tight whitespace-nowrap">
-                Find <span className="text-glow-cyan">{current.name}</span>
-              </span>
-              {s.hintUsed && (
-                <>
-                  <span className="h-3 w-px bg-white/15" />
-                  <span className="text-[11px] text-white/55 whitespace-nowrap">{current.continent}</span>
-                </>
-              )}
-            </div>
-          </motion.div>
+          <div className="absolute top-24 inset-x-0 z-20 flex justify-center">
+            <PromptPill
+              keyId={current.iso3}
+              index={s.index}
+              total={s.queue.length}
+              title={<>Find <span className="text-glow-cyan">{current.name}</span></>}
+              hint={s.hintUsed ? current.continent : undefined}
+            />
+          </div>
 
           <div className="absolute top-24 left-4 md:left-6 z-20">
             <SessionHud

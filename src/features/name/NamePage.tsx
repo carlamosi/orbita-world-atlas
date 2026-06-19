@@ -6,7 +6,7 @@ import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
-import { Prompt } from "@/features/engine/Prompt";
+import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { HardInput } from "@/features/engine/HardInput";
 import { Button } from "@/components/ui/orbita-button";
@@ -75,12 +75,13 @@ export default function NamePage() {
 
       {!finished && current && (
         <>
-          <div className="absolute top-24 left-1/2 -translate-x-1/2 z-20 px-4 w-full max-w-xl">
-            <Prompt
+          <div className="absolute top-24 inset-x-0 z-20 flex justify-center">
+            <PromptPill
               keyId={current.iso3}
-              eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
-              title={<>Name this country</>}
-              subtitle={mode === "easy" ? "Pick from 4 · keys 1–4" : "Just type — answers in real time"}
+              index={s.index}
+              total={s.queue.length}
+              title="Name this country"
+              hint={mode === "easy" ? "Pick 1–4" : "Type to answer"}
             />
           </div>
 

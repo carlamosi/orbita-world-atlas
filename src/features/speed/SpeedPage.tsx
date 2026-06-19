@@ -54,23 +54,31 @@ function PreGame() {
               Mode
             </div>
             <div className="grid grid-cols-3 gap-2">
-              {(Object.keys(MODE_LABELS) as SpeedMode[]).map((m) => (
-                <button
-                  key={m}
-                  onClick={() => setConfig({ mode: m })}
-                  className={cn(
-                    "glass rounded-2xl p-3 text-left transition-all",
-                    config.mode === m
-                      ? "border-white/30 bg-white/8 shadow-[0_0_40px_-12px_color-mix(in_oklab,var(--violet)_70%,transparent)]"
-                      : "hover:border-white/20",
-                  )}
-                >
-                  <div className="font-display text-base text-white">{MODE_LABELS[m].name}</div>
-                  <div className="font-mono text-[10px] uppercase tracking-wider text-white/50 mt-1">
-                    {MODE_LABELS[m].sub}
-                  </div>
-                </button>
-              ))}
+              {(Object.keys(MODE_LABELS) as SpeedMode[]).map((m) => {
+                const active = config.mode === m;
+                return (
+                  <button
+                    key={m}
+                    type="button"
+                    onClick={() => setConfig({ mode: m })}
+                    aria-pressed={active}
+                    className={cn(
+                      "relative rounded-2xl p-3 text-left transition-all duration-200 border",
+                      active
+                        ? "bg-[color-mix(in_oklab,var(--violet)_22%,transparent)] border-[color:var(--violet)]/70 shadow-[0_0_38px_-10px_color-mix(in_oklab,var(--violet)_75%,transparent)] scale-[1.02]"
+                        : "glass border-white/10 hover:border-white/25 hover:-translate-y-0.5",
+                    )}
+                  >
+                    <div className="font-display text-base text-white">{MODE_LABELS[m].name}</div>
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-white/55 mt-1">
+                      {MODE_LABELS[m].sub}
+                    </div>
+                    {active && (
+                      <span className="absolute top-2 right-2 size-1.5 rounded-full bg-[color:var(--neon)] shadow-[0_0_10px_color-mix(in_oklab,var(--neon)_80%,transparent)]" />
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
 

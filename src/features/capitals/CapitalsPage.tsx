@@ -7,6 +7,7 @@ import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
+import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
@@ -96,16 +97,13 @@ export default function CapitalsPage() {
         </div>
         {!finished && current && (
           <>
-            <div className="absolute top-24 left-1/2 -translate-x-1/2 z-20 px-4 w-full max-w-xl">
-              <Prompt
+            <div className="absolute top-24 inset-x-0 z-20 flex justify-center">
+              <PromptPill
                 keyId={current.iso3}
-                eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
-                title={
-                  <>
-                    Which country has <span className="text-glow-cyan">{current.capital}</span> as its capital?
-                  </>
-                }
-                subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
+                index={s.index}
+                total={s.queue.length}
+                title={<>Find the country whose capital is <span className="text-glow-cyan">{current.capital}</span></>}
+                hint={s.hintUsed ? current.continent : undefined}
               />
             </div>
             <div className="absolute top-24 left-4 md:left-6 z-20">

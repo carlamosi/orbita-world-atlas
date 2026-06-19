@@ -19,6 +19,17 @@ const CONTINENTS = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"] as
 
 type Layer = "explore" | "country" | "expedition";
 
+/**
+ * Atlas / Explorer.
+ *
+ * Layout invariants:
+ *  - Top-level container is `min-h-dvh` with a fixed HUD band (tabs + search)
+ *    sitting OUTSIDE the globe — never overlaid on it.
+ *  - Below the HUD: a stable CSS grid (1-col mobile, 2-col ≥lg).
+ *  - Globe is contained in its grid cell, fills available height. No absolute
+ *    overlays leak across cells. No `position: absolute` on the panel.
+ *  - The panel column scrolls internally; nothing escapes the cell box.
+ */
 export default function ExplorerPage() {
   const [layer, setLayer] = useState<Layer>("explore");
   const [selectedIso3, setSelectedIso3] = useState<string>("FRA");
@@ -27,7 +38,6 @@ export default function ExplorerPage() {
   const [expeditionId, setExpeditionId] = useState<string | null>(null);
   const [expeditionStep, setExpeditionStep] = useState(0);
 
-  // Read deep-link from URL once on mount
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
@@ -42,7 +52,6 @@ export default function ExplorerPage() {
     }
   }, []);
 
-  // Sync URL on changes (non-blocking)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
@@ -68,7 +77,9 @@ export default function ExplorerPage() {
   }, [continent, query]);
 
   const focusIso3 =
-    layer === "expedition" && expedition ? expedition.iso3s[expeditionStep] ?? null : selectedIso3;
+    layer === "expedition" && expedition
+      ? expedition.iso3s[expeditionStep] ?? null
+      : selectedIso3;
 
   const pov = useMemo(() => {
     const iso = focusIso3;
@@ -89,66 +100,71 @@ export default function ExplorerPage() {
   }, []);
 
   return (
-    <div className="relative min-h-dvh pt-24 pb-10 px-4">
-      <div className="mx-auto max-w-[1400px] grid lg:grid-cols-[1fr,440px] gap-4 h-[calc(100dvh-7rem)]">
-        {/* GLOBE */}
-        <div className="relative rounded-3xl overflow-hidden border border-white/10 glass">
-          <div className="absolute inset-0">
-            <Suspense fallback={<div className="size-full" />}>
-              <Globe3D
-                countries={COUNTRIES}
-                highlightIso3={focusIso3 ?? null}
-                onCountryClick={handleGlobeClick}
-                pointOfView={pov}
-                quality="medium"
-              />
-            </Suspense>
-          </div>
-
-          {/* Top controls: layer tabs + search/filter (search only relevant in explore) */}
-          <div className="absolute top-3 left-3 right-3 flex items-center gap-2 flex-wrap">
-            <LayerTabs value={layer} onChange={setLayer} />
-            {layer === "explore" && (
-              <>
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search countries or capitals…"
-                  className="glass rounded-full px-4 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/30 min-w-[200px] flex-1"
-                />
-                <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider flex-wrap">
-                  {CONTINENTS.map((c) => (
-                    <button
-                      key={c}
-                      onClick={() => setContinent(c)}
-                      className={cn(
-                        "px-2.5 py-1 rounded-full transition-colors",
-                        continent === c
-                          ? "bg-white/10 text-white"
-                          : "text-white/55 hover:text-white",
-                      )}
-                    >
-                      {c}
-                    </button>
-                  ))}
-                </div>
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  onClick={() => {
-                    const pool = results.length > 0 ? results : COUNTRIES;
-                    setSelectedIso3(pool[Math.floor(Math.random() * pool.length)]!.iso3);
-                  }}
+    <div className="min-h-dvh pt-20 pb-6 px-4 lg:px-8 flex flex-col">
+      {/* HUD BAND — outside the grid, always visible */}
+      <header className="mx-auto w-full max-w-[1440px] flex flex-wrap items-center gap-3 py-3">
+        <LayerTabs value={layer} onChange={setLayer} />
+        {layer === "explore" && (
+          <>
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search countries or capitals…"
+              className="glass rounded-full px-4 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/30 min-w-[200px] flex-1"
+            />
+            <div className="glass rounded-full p-1 hidden md:flex text-[11px] font-mono uppercase tracking-wider">
+              {CONTINENTS.map((c) => (
+                <button
+                  key={c}
+                  onClick={() => setContinent(c)}
+                  className={cn(
+                    "px-2.5 py-1 rounded-full transition-colors",
+                    continent === c
+                      ? "bg-white/10 text-white"
+                      : "text-white/55 hover:text-white",
+                  )}
                 >
-                  Shuffle
-                </Button>
-              </>
-            )}
-          </div>
+                  {c}
+                </button>
+              ))}
+            </div>
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => {
+                const pool = results.length > 0 ? results : COUNTRIES;
+                setSelectedIso3(
+                  pool[Math.floor(Math.random() * pool.length)]!.iso3,
+                );
+              }}
+            >
+              Shuffle
+            </Button>
+          </>
+        )}
+      </header>
 
-          {/* Result rail — only in explore */}
+      {/* MAIN GRID — stable 2-col on lg+ */}
+      <div
+        className="mx-auto w-full max-w-[1440px] mt-3 grid gap-4 flex-1 min-h-0
+          grid-cols-1
+          lg:grid-cols-[minmax(0,1fr)_minmax(360px,420px)]"
+      >
+        {/* GLOBE CELL */}
+        <div className="relative rounded-3xl overflow-hidden border border-white/10 glass min-h-[420px] lg:min-h-0">
+          <Suspense fallback={<div className="size-full" />}>
+            <Globe3D
+              countries={COUNTRIES}
+              highlightIso3={focusIso3 ?? null}
+              onCountryClick={handleGlobeClick}
+              pointOfView={pov}
+              quality="medium"
+            />
+          </Suspense>
+
+          {/* Inline result rail — INSIDE the globe cell, doesn't escape */}
           {layer === "explore" && (query || continent !== "All") && (
-            <div className="absolute bottom-3 left-3 right-3 glass-strong rounded-2xl px-3 py-2 overflow-x-auto">
+            <div className="absolute bottom-3 left-3 right-3 glass-strong rounded-2xl px-3 py-2 overflow-x-auto z-10">
               <div className="flex gap-2">
                 {results.map((c) => (
                   <button
@@ -173,28 +189,34 @@ export default function ExplorerPage() {
           )}
         </div>
 
-        {/* PANEL */}
-        <div className="relative">
-          <AnimatePresence mode="wait">
-            {layer === "expedition" ? (
-              <ExpeditionsPanel
-                key="expedition-panel"
-                selected={expedition}
-                step={expeditionStep}
-                onSelect={(id) => {
-                  setExpeditionId(id);
-                  setExpeditionStep(0);
-                }}
-                onStep={setExpeditionStep}
-                onFocusIso3={handleExpeditionFocus}
-              />
-            ) : layer === "country" && selected ? (
-              <CountryPanel key={selected.iso3} country={selected} onSelect={setSelectedIso3} />
-            ) : (
-              <ExploreHint key="hint" onPickExpedition={() => setLayer("expedition")} />
-            )}
-          </AnimatePresence>
-        </div>
+        {/* PANEL CELL — internally scrollable */}
+        <aside className="min-h-0 lg:overflow-hidden">
+          <div className="h-full lg:overflow-y-auto pr-1">
+            <AnimatePresence mode="wait">
+              {layer === "expedition" ? (
+                <ExpeditionsPanel
+                  key="expedition-panel"
+                  selected={expedition}
+                  step={expeditionStep}
+                  onSelect={(id) => {
+                    setExpeditionId(id);
+                    setExpeditionStep(0);
+                  }}
+                  onStep={setExpeditionStep}
+                  onFocusIso3={handleExpeditionFocus}
+                />
+              ) : layer === "country" && selected ? (
+                <CountryPanel
+                  key={selected.iso3}
+                  country={selected}
+                  onSelect={setSelectedIso3}
+                />
+              ) : (
+                <ExploreHint key="hint" onPickExpedition={() => setLayer("expedition")} />
+              )}
+            </AnimatePresence>
+          </div>
+        </aside>
       </div>
     </div>
   );
@@ -231,15 +253,15 @@ function ExploreHint({ onPickExpedition }: { onPickExpedition: () => void }) {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0 }}
       transition={spring.soft}
-      className="glass-strong rounded-3xl p-6 h-full overflow-y-auto"
+      className="glass-strong rounded-3xl p-6"
     >
       <Badge tone="cyan">Atlas Mode</Badge>
       <h2 className="mt-3 font-display text-2xl text-white tracking-tight text-glow-violet">
         Free exploration
       </h2>
       <p className="mt-2 text-white/55 text-[13px]">
-        Pan and rotate the globe. Click any country to open its intelligence card, or follow a
-        guided expedition.
+        Pan and rotate the globe. Click any country to open its intelligence
+        card, or follow a guided expedition.
       </p>
       <div className="mt-5 space-y-2">
         <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
@@ -251,7 +273,9 @@ function ExploreHint({ onPickExpedition }: { onPickExpedition: () => void }) {
             onClick={onPickExpedition}
             className="w-full text-left glass rounded-2xl p-3 hover:border-white/25 transition-all"
           >
-            <div className="font-display text-sm text-white tracking-tight">{e.title}</div>
+            <div className="font-display text-sm text-white tracking-tight">
+              {e.title}
+            </div>
             <div className="text-[11px] text-white/55 mt-0.5">{e.subtitle}</div>
           </button>
         ))}
@@ -278,7 +302,7 @@ function CountryPanel({
       animate={{ opacity: 1, x: 0, filter: "blur(0)" }}
       exit={{ opacity: 0, x: 10, filter: "blur(6px)" }}
       transition={spring.soft}
-      className="glass-strong rounded-3xl p-6 h-full overflow-y-auto"
+      className="glass-strong rounded-3xl p-6"
     >
       <div className="flex items-start gap-4">
         <FlagImage
@@ -303,8 +327,16 @@ function CountryPanel({
         <Stat label="Population" value={fmt(country.population)} />
         <Stat label="Area" value={`${fmt(country.area)} km²`} />
         <Stat label="Difficulty" value={country.difficulty} />
-        <Stat label="Currencies" value={country.currencies.join(", ") || "—"} className="col-span-2" />
-        <Stat label="Languages" value={country.languages.join(", ") || "—"} className="col-span-2" />
+        <Stat
+          label="Currencies"
+          value={country.currencies.join(", ") || "—"}
+          className="col-span-2"
+        />
+        <Stat
+          label="Languages"
+          value={country.languages.join(", ") || "—"}
+          className="col-span-2"
+        />
       </div>
 
       <div className="mt-6">

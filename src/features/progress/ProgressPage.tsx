@@ -9,6 +9,7 @@ import { spring } from "@/lib/motion";
 import { dateKey, currentStreak, longestStreak } from "@/lib/streak";
 import { DEFINITIONS } from "@/lib/unlocks";
 import { cn } from "@/lib/utils";
+import { retention, isDue, isOverdue } from "@/lib/spacedRepetition";
 
 const CONTINENTS = ["Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
 
@@ -64,9 +65,14 @@ export default function ProgressPage() {
         </div>
 
         <section className="mt-10">
+          <MasteryStability progress={progress} />
+        </section>
+
+        <section className="mt-10">
           <SectionTitle>Confidence map</SectionTitle>
           <ConfidenceMap progress={progress} />
         </section>
+
 
         <section className="mt-10 grid lg:grid-cols-2 gap-4">
           {ALL_SKILLS.map((skill) => (

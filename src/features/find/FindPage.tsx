@@ -8,6 +8,7 @@ import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { PromptPill } from "@/features/engine/PromptPill";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { spring } from "@/lib/motion";

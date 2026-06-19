@@ -222,13 +222,15 @@ export default function Globe3D({
     return () => window.clearInterval(id);
   }, [dueSet, effectiveQuality]);
 
+  const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
+
   const polygonCapColor = useCallback(
     (d: object) => {
       const f = d as CountryFeature;
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.28)`;
       if (iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.22)`;
-      if (iso3 === hoverIso3) return `rgba(${COLOR_HOVER}, 0.18)`;
+      if (iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.18)`;
       if (dueSet.has(iso3)) {
         const a = pulse === 0 ? 0.1 : 0.18;
         return `rgba(${COLOR_DUE}, ${a})`;
@@ -240,7 +242,7 @@ export default function Globe3D({
       }
       return "rgba(255, 255, 255, 0.012)";
     },
-    [revealIso3, highlightIso3, hoverIso3, dueSet, pulse, showContinentTint, continentByIso3],
+    [revealIso3, highlightIso3, effHoverIso3, dueSet, pulse, showContinentTint, continentByIso3],
   );
 
   const polygonSideColor = useCallback(
@@ -254,10 +256,10 @@ export default function Globe3D({
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.9)`;
       if (iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.85)`;
-      if (iso3 === hoverIso3) return `rgba(${COLOR_HOVER}, 0.7)`;
+      if (iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.7)`;
       return `rgba(255, 255, 255, ${strokeOpacity})`;
     },
-    [revealIso3, highlightIso3, hoverIso3, strokeOpacity],
+    [revealIso3, highlightIso3, effHoverIso3, strokeOpacity],
   );
 
   const polygonAltitude = useCallback(
@@ -265,16 +267,20 @@ export default function Globe3D({
       const f = d as CountryFeature;
       const iso3 = f.properties.iso3;
       if (iso3 === revealIso3 || iso3 === highlightIso3) return 0.035;
-      if (iso3 === hoverIso3) return 0.02;
+      if (iso3 === effHoverIso3) return 0.02;
       return 0.006;
     },
-    [revealIso3, highlightIso3, hoverIso3],
+    [revealIso3, highlightIso3, effHoverIso3],
   );
 
-  const polygonLabel = useCallback((d: object) => {
-    const f = d as CountryFeature;
-    return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
-  }, []);
+  const polygonLabel = useCallback(
+    (d: object) => {
+      if (disableHoverFeedback) return "";
+      const f = d as CountryFeature;
+      return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
+    },
+    [disableHoverFeedback],
+  );
 
   // ---- Cinematic country framing ---------------------------------------
   const focusCountry = useCallback(

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
@@ -54,6 +55,11 @@ export default function CapitalsPage() {
     next: () => s.next(),
   });
 
+  const onSkip = useCallback(() => {
+    if (!finished && current && s.answerState === "idle") s.reveal();
+  }, [finished, current, s]);
+  useSkipHotkey(onSkip);
+
   // Exclude countries without a capital from the queue effectively by skipping them.
   const valid = current && current.capital;
 
@@ -97,7 +103,7 @@ export default function CapitalsPage() {
                     Which country has <span className="text-glow-cyan">{current.capital}</span> as its capital?
                   </>
                 }
-                subtitle={s.hintUsed ? `Hint: ${current.continent}` : "Click the country on the globe"}
+                subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
               />
             </div>
             <div className="absolute top-24 left-4 md:left-6 z-20">

@@ -197,8 +197,7 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
   skip() {
     const s = get();
     if (s.status !== "running") return;
-    const item = s.queue[s.index];
-    if (!item) return;
+    if (!s.queue[s.index]) return;
     set({ combo: 0, wrong: s.wrong + 1, index: s.index + 1 });
     if (get().index >= get().queue.length - 4) {
       void topUpQueue();

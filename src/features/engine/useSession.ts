@@ -144,7 +144,7 @@ export function createSessionStore({
       const nextIndex = s.index + 1;
       if (nextIndex >= s.queue.length) {
         const endedAt = Date.now();
-        set({ endedAt, answerState: "idle" });
+        set({ endedAt, answerState: "idle", hintUsed: false, combo: 0 });
         recordSessionEnd({
           mode,
           skill,

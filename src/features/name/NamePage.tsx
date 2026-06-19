@@ -1,18 +1,19 @@
-import { lazy, Suspense, useEffect, useMemo, useState, useRef, useCallback } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { HardInput } from "@/features/engine/HardInput";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import { cn } from "@/lib/utils";
-import { fuzzyMatch } from "@/lib/fuzzy";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
 
@@ -34,6 +35,11 @@ export default function NamePage() {
   }, []);
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
+
+  const onSkip = useCallback(() => {
+    if (!finished && current && s.answerState === "idle") s.reveal();
+  }, [finished, current, s]);
+  useSkipHotkey(onSkip);
 
   // Tight POV on the mystery country — but never reveal its name in label form.
   const pov = useMemo(() => {
@@ -74,7 +80,7 @@ export default function NamePage() {
               keyId={current.iso3}
               eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
               title={<>Name this country</>}
-              subtitle={mode === "easy" ? "Pick from 4 · keys 1–4" : "Type the name · Enter to submit"}
+              subtitle={mode === "easy" ? "Pick from 4 · keys 1–4" : "Just type — answers in real time"}
             />
           </div>
 

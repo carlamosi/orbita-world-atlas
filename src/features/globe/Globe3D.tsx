@@ -88,7 +88,9 @@ export default function Globe3D({
   pointOfView,
   size,
   quality = "high",
+  disableHoverLabel = false,
   disableHoverFeedback = false,
+  questionKey = null,
 }: Globe3DProps) {
   const ref = useRef<GlobeMethods | undefined>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);

@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Compass } from "lucide-react";
 import { COUNTRY_BY_ISO3 } from "@/lib/countries";
 import { Badge } from "@/components/ui/orbita-badge";
 import { Button } from "@/components/ui/orbita-button";
-import { FlagImage } from "@/components/ui/flag-image-shim";
+import { FlagImage } from "@/components/ui/FlagImage";
 import { EXPEDITIONS, type Expedition } from "./expeditions";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";

@@ -1,1232 +1,154 @@
-# ORBITA Refinement Pass (Enhanced)
-
-Focus: clarity, immersion, learning effectiveness, performance, and long-term mastery retention. Preserve existing public APIs wherever possible. Do not remove any existing functionality that already works correctly. Build on top of the current architecture and maintain consistency with the Orbita design language.
-
-## 1. Restore Premium Globe Aesthetic
-
-**Goal:** roll back the procedural Earth experiment, restore the previous cinematic Orbita globe, and preserve all atlas improvements from M2 (real borders, adaptive picking, zoom controls, performance tiers).
-
-- `src/features/globe/Globe3D.tsx`
-  - Remove `createEarthMaterial` import, `earthRef`, the rAF tick loop, and the `globeMaterial` prop on `<Globe>`.
-  - Restore the previous atmospheric Orbita globe:
-    - Deep-space sphere.
-    - Rich orbital atmosphere.
-    - Soft violet atmospheric glow.
-    - Subtle cyan edge illumination.
-    - Cinematic depth and contrast.
-    - No day/night Earth textures.
-    - No procedural Earth shaders.
-    - No realistic satellite Earth rendering.
-  - Use a memoized `THREE.MeshPhongMaterial`:
-    - Base: deep indigo `#0a0d1f`
-    - Low shininess
-    - Subtle specular reflection
-    - Slight atmospheric color variation
-  - Keep:
-    - polygon borders
-    - adaptive picking
-    - zoom controls
-    - OrbitControls
-    - rings
-    - hover state system
-    - quality tiers
-    - accessibility improvements
-
-### Additional Globe Fixes
-
-The atlas must accurately render all countries.
-
-Current rendering bugs (France, overseas territories, microstates, etc.) must be audited.
-
-Validate:
-
-- France visible and selectable.
-- Norway visible.
-- Indonesia visible.
-- Philippines visible.
-- Japan visible.
-- New Zealand visible.
-- Greenland visible.
-- Iceland visible.
-- Small island states visible.
-
-Verify ISO_A3 mapping between:
 
-```
-
-```
-
-```
-countries.json
-GeoJSON polygons
-Explorer
-Find
-Name
-Flags
-Capitals
-Speed
-Progress
-```
-
-Build a validation utility:
-
-```
-
-```
-
-```
-verifyCountryGeometryCoverage()
-```
-
-which confirms:
-
-```
-
-```
-
-```
-195 countries loaded
-195 countries mapped
-0 missing geometries
-0 duplicate ISO codes
-```
-
-Explorer, Find, Name, Speed, Progress and Challenges must all consume the exact same canonical country source.
-
----
-
-## 2. Find Mode — Zero Accidental Hints
-
-**Goal:** while the user is searching for a country, there must be absolutely no accidental visual hint.
-
-The current hover system can reveal information.
-
-This destroys the challenge.
-
-### Globe3D
-
-Add:
-
-```
-
-```
-
-```
-disableHoverFeedback?: boolean
-```
-
-When enabled:
-
--   
-No hover glow.  
-
--   
-No hover altitude.  
-
--   
-No hover opacity change.  
-
--   
-No tooltip.  
-
--   
-No country name.  
-
--   
-No hover stroke change.  
-
--   
-No hover cap color.  
-
-
-All countries appear identical.
-
-Borders remain visible.
-
-### FindPage
-
-During:
-
-```
-
-```
-
-```
-answerState === "idle"
-```
-
-enable:
-
-```
-
-```
-
-```
-disableHoverFeedback
-```
-
-Only after answer resolution may the selected country become highlighted.
-
-### Prompt
-
-Remove:
-
-```
-
-```
-
-```
-Africa · Eastern Africa
-Europe · Western Europe
-```
-
-from default view.
-
-Nothing should reveal continent information automatically.
-
----
-
-## 3. Hint System — Progressive Reveal
-
-**Goal:** hints are earned and progressively disclosed.
-
-### Session Engine
-
-Replace:
-
-```
-
-```
-
-```
-hintUsed: boolean
-```
-
-with:
-
-```
-
-```
-
-```
-hintLevel: 0 | 1 | 2 | 3
-```
-
-Keep backwards compatibility:
-
-```
-
-```
-
-```
-hintUsed = hintLevel > 0
-```
-
-### Hint Levels
-
-Level 1:
-
-```
-
-```
-
-```
-Continent
-```
-
-Example:
-
-```
-
-```
-
-```
-Africa
-```
-
-Level 2:
-
-```
-
-```
-
-```
-Subregion
-```
-
-Example:
-
-```
-
-```
-
-```
-Eastern Africa
-```
-
-Level 3:
-
-```
-
-```
-
-```
-Starting letter + length
-```
-
-Example:
-
-```
-
-```
-
-```
-S _ _ _ _ _ _
-```
-
-### UI
-
-Button progression:
-
-```
-
-```
-
-```
-Hint
-Hint +1
-Hint +2
-Hint used
-```
-
-No continent/subregion should appear anywhere before hint usage.
-
-Applies to:
-
-```
-
-```
-
-```
-Find
-Name
-Flags
-Capitals
-Speed
-Future Expedition Mode
-```
-
----
-
-## 4. Name Country — Full Audit + Hard Mode Fixes
-
-### Stability Audit
-
-Current hard mode occasionally becomes unstable.
-
-Audit:
-
--   
-question transitions  
-
--   
-focus restoration  
-
--   
-race conditions  
-
--   
-auto-advance  
-
--   
-skipped questions  
-
--   
-session completion  
-
-
-### Validation
-
-Use:
-
-```
-
-```
-
-```
-fuzzyMatch(
-  value,
-  current.name,
-  current.altNames ?? []
-)
-```
-
-everywhere.
-
-Ensure:
-
-```
-
-```
-
-```
-altNames
-```
-
-are fully populated in countries.json.
-
-Support:
-
-```
-
-```
-
-```
-United States
-USA
-US
-United States of America
-```
-
-where appropriate.
-
-### UX
-
-Remove Submit button completely.
-
-Hard mode should feel instant.
-
----
-
-## 5. Instant Validation for Typing Modes
-
-### Goal
-
-If the answer is correct:
-
-the game instantly knows.
-
-No:
-
-```
-
-```
-
-```
-Submit
-Check
-Confirm
-```
-
-buttons.
-
-### Implementation
-
-Add:
-
-```
-
-```
-
-```
-exactMatch()
-```
-
-to:
-
-```
-
-```
-
-```
-src/lib/fuzzy.ts
-```
-
-based on:
-
-```
-
-```
-
-```
-normalize()
-```
-
-On every keystroke:
-
-```
-
-```
-
-```
-onChange
-```
-
-if exact match:
-
-```
-
-```
-
-```
-onSubmit(true)
-```
-
-Auto-advance handles the rest.
-
-Applies to:
-
-```
-
-```
-
-```
-Name Hard
-Flags Hard
-Future Capitals Hard
-Expedition Typing Challenges
-```
-
----
-
-## 6. Global Spacebar = Skip
-
-### New Hook
-
-```
-
-```
-
-```
-src/hooks/useSkipHotkey.ts
-```
-
-### Rules
-
-Space:
-
-```
-
-```
-
-```
-skip current question
-```
-
-if:
-
--   
-no input focused  
-
--   
-no textarea  
-
--   
-no contenteditable  
-
--   
-no open dialog  
-
--   
-no modifier keys  
-
-
-### Applies Everywhere
-
-```
-
-```
-
-```
-Find
-Name
-Flags
-Capitals
-Speed
-Expedition
-Future Modes
-```
-
-Behavior:
-
-```
-
-```
-
-```
-idle -> reveal wrong answer -> auto advance
-feedback -> no-op
-```
-
----
-
-## 7. Universal Keyboard Controls
-
-### Goal
-
-Keyboard-first gameplay.
-
-The entire platform must feel extremely fast.
-
-### Requirements
-
-Keys:
-
-```
-
-```
-
-```
-1
-2
-3
-4
-```
-
-must select answers everywhere.
-
-Audit:
-
-```
-
-```
-
-```
-Name Easy
-Flags Easy
-Capitals Easy
-Speed Round
-Daily Challenge
-Weekly Challenge
-Future Expedition
-```
-
-Requirements:
-
--   
-works instantly  
-
--   
-works after route transitions  
-
--   
-works after skips  
-
--   
-works after hints  
-
--   
-works after focus changes  
-
-
-Input fields must block shortcuts.
-
-Typing modes must never accidentally trigger answer buttons.
-
----
-
-## 8. Automatic Progression
-
-### Goal
-
-Never force unnecessary clicks.
-
-Current flow:
-
-```
-
-```
-
-```
-Answer
-Correct
-Click Next
-```
-
-is too slow.
-
-### Required
-
-After answer resolution:
-
-```
-
-```
-
-```
-Correct
-Incorrect
-Reveal
-Skip
-```
-
-show feedback briefly.
-
-Then:
-
-```
-
-```
-
-```
-auto advance
-```
-
-Timing:
-
-```
-
-```
-
-```
-600-900ms desktop
-800-1200ms mobile
-```
-
-No Next button required.
-
-Session momentum is critical.
-
----
+# ORBITA Stabilization & Atlas Redesign
 
-## 9. Flags Desktop Layout
+Correctness-first pass. No new modes, no backend swap (Supabase is already the only backend — see Section 7).
 
-### Goal
+## 1. Globe3D — Restore hover, hide tooltip
 
-Desktop experience currently wastes vertical space.
+`Globe3D.tsx` currently disables ALL hover feedback when `disableHoverFeedback` is set, which kills spatial cues.
 
-### Improvements
+- Split prop into two flags: keep `disableHoverFeedback` (default false, meaning everything on), add `disableHoverLabel?: boolean`.
+- Hover GLOW (cyan cap tint), STROKE highlight, and altitude LIFT always stay on — they are spatial feedback, not answer leaks.
+- Only the `polygonLabel` HTML tooltip is suppressed by `disableHoverLabel`.
+- `disableHoverFeedback` becomes a stricter mode (used nowhere by default) that suppresses everything; replace its current usage in `FindPage` / `CapitalsPage` locator with `disableHoverLabel`.
+- Continent tint at altBand ≤ 2 is fine; not text, not an answer leak.
 
--   
-Center gameplay vertically.  
+## 2. Find mode — fix "session breaks after one answer"
 
--   
-Reduce top padding.  
+Root cause: `useFindSession` is a module-level Zustand singleton. When Find mode unmounts and remounts (or when `next()` runs alongside `useAutoAdvance`), `hoverIso3` inside `Globe3D` keeps the previous country highlighted because the polygon under the cursor never re-fires hover, and `pov` recomputes from stale `answerState`. Also `next()` doesn't reset `hintUsed` to false on the LAST answer path correctly when `endedAt` is set, leaving session in inconsistent state on replay.
 
--   
-Fixed HUD.  
+Fixes:
+- In `useSession.next()`, when ending the session, reset full per-question state (`hintUsed: false`, `answerState: "idle"`) and DO NOT keep `combo` carrying.
+- In `useSession.start()`, explicitly reset `endedAt: null` and clear `queue` to [] before async `selectQuestions` resolves so the UI shows fallback (loading), not stale data.
+- In `Globe3D`, when `highlightIso3` / `revealIso3` / `pointOfView` props change to a new ISO3, clear `hoverIso3` state (effect on `[highlightIso3, revealIso3]`).
+- In `FindPage`, key the `<Globe3D>` mount? No — keep singleton globe, but pass a `questionKey={current?.iso3}` prop that Globe3D uses in an effect to clear hover. Avoids globe re-init.
+- `useAutoAdvance` must clear its pending timer on `current.iso3` change to prevent double-advance after rapid clicks.
 
--   
-Larger flag.  
+## 3. Flags layout — vertically centered on desktop
 
--   
-Better visual balance.  
+Current wrapper: `min-h-[calc(100dvh-0px)] pt-20 ... flex-col items-center justify-center`. The top HUD row and prompt push the flag below the fold on 1080p.
 
+- Restructure: fixed/sticky HUD bar at top (sub-mode + score + hint), then a flex-1 region with `flex items-center justify-center` containing prompt + flag + options stacked.
+- Cap flag at `lg:w-[min(38vw,440px)]` so options stay in viewport.
+- Ensure `min-h-dvh` parent uses `flex flex-col` so the centered region truly centers.
 
-### Desktop Layout
+## 4. Capitals locator — click registration
 
-1440p+:
+Symptom: clicking a country in locator sub-mode sometimes doesn't register. Causes:
+- `onCountryClick` fires for both polygon and hitbox points; when the hitbox cloud is active (altBand > 3), polygon clicks may be eaten by the invisible points.
+- ISO3 mismatch when `m49-to-iso3.json` returns null for some features (silent skip in `geo.ts`).
 
-```
-
-```
-
-```
-Flag
-|
-Prompt + Answers
-```
-
-2-column layout.
-
-Avoid:
-
-```
-
-```
-
-```
-flag far below fold
-```
-
----
-
-## 10. Flags Hard Mode
-
-### New Mode
-
-```
-
-```
-
-```
-Flag → Type Country
-```
-
-### SubModes
-
-```
-
-```
-
-```
-Country → Flag
-Flag → Country
-Flag → Type Country
-```
-
-Reuse shared:
-
-```
-
-```
-
-```
-HardInput
-```
-
-Instant validation.
-
-No Submit.
-
-Space skip enabled.
-
-Preference persisted.
-
----
-
-## 11. Explorer Mode Redesign
-
-Current Explorer must behave like a true atlas.
-
-### Goal
-
-Explorer is not a quiz.
-
-Explorer is a living world atlas.
-
-### Requirements
-
-Free navigation.
-
-User may:
-
--   
-zoom  
-
--   
-rotate  
-
--   
-pan  
-
--   
-search  
-
--   
-filter  
-
-
-Clicking a country opens:
-
-```
-
-```
-
-```
-Flag
-Capital
-Population
-Area
-Languages
-Currencies
-Borders
-Continent
-Subregion
-Fun Fact
-Mastery Status
-```
-
-### Interactions
-
-Country click:
-
-```
-
-```
-
-```
-smooth cinematic focus
-```
-
-No forced quizzes.
-
-No overlays blocking exploration.
-
----
-
-## 12. Confidence Map Audit
-
-### Goal
-
-Confidence heatmaps must be real.
-
-Not decorative.
-
-### Requirements
-
-Every color derives from actual mastery calculations.
-
-Confidence source:
-
-```
-
-```
-
-```
-Spaced repetition engine
-answer history
-accuracy
-review intervals
-difficulty
-stability
-retrievability
-```
-
-Validate:
-
-```
-
-```
-
-```
-No fake confidence values
-No placeholder calculations
-No random heatmap colors
-```
-
-Progress dashboard must reflect actual learning state.
-
----
-
-## 13. Navbar Sync Indicator
-
-### Goal
-
-Reduce visual clutter.
-
-Current Sync pill remains visible too long.
-
-### New Behavior
-
-After successful sync:
-
-```
-
-```
-
-```
-Synced
-```
-
-visible for:
-
-```
-
-```
-
-```
-3 seconds
-```
-
-Then fade away.
-
-Show again only if:
-
-```
-
-```
-
-```
-syncing
-offline
-error
-queued changes
-```
-
-Normal state:
-
-```
-
-```
-
-```
-hidden
-```
-
----
-
-## 14. Performance & Responsiveness
-
-### Primary Target
-
-Desktop first.
-
-Optimize:
-
-```
-
-```
-
-```
-1440p
-1600p
-1920p
-2560p
-```
-
-### Requirements
-
-Maintain:
-
-```
-
-```
-
-```
-60fps
-```
-
-during:
-
--   
-globe interaction  
-
--   
-speed mode  
-
--   
-explorer  
-
--   
-progress dashboard  
-
-
-Reduce:
-
--   
-layout shifts  
-
--   
-re-renders  
-
--   
-expensive animations  
-
-
-Audit:
-
-```
-
-```
-
-```
-React Profiler
-```
-
-for hotspots.
-
----
-
-## 15. QA Pass
-
-Validate:
-
-### Find
-
--   
-no hover hints  
-
--   
-borders visible  
-
--   
-hint hidden until requested  
-
--   
-space skips  
-
+Fixes:
+- In `geo.ts` `loadCountryFeatures`, log a warn-once list of M49 codes that failed to map (dev only, no PII).
+- Add a `__validateIsoMapping()` dev assertion run once in `Globe3D` mount that intersects feature ISO3s with `COUNTRY_BY_ISO3` and console.warns any orphans.
+- Capitals locator: pass `quality="high"` and `disableHoverLabel` (not full disable) so user gets glow feedback on click target.
 
-### Name Easy
+## 5. Speed mode — flag rendering & navigation
 
--   
-1-4 keys work  
+In `OptionsGrid`, when `skill === "flag"`, options render `FlagImage` + `o.name` (line 304). Hide the name for `flag` skill:
+- If `showFlag` is true: render flag at larger size (`w-20 h-14`), no label text, and the `i+1` keycap stays.
+- Keep name visible for `name` / `capital` skills.
 
--   
-auto advance  
+Navigation:
+- `PostGame` "Change mode" calls `reset()`. Verify `useSpeedRuntime.reset()` clears timer interval and queue (read `speedRuntimeStore.ts` and patch if interval not cleared).
+- Navbar/back navigation from Active session: add a `useEffect` cleanup in `Active` that calls `reset()` on unmount when `status === "active"` so navigating to `/` or another mode mid-run doesn't leave a ghost timer.
+- Add Space=skip via `useSkipHotkey` calling `answer("__skip__")` (or new `skip()` action) — wire into runtime store.
 
+## 6. Universal keyboard
 
-### Name Hard
+Audit and ensure `useAnswerHotkeys(1–4)` and `useSkipHotkey(Space)` are wired with the standard input/dialog guard in every mode:
 
--   
-instant validation  
+| Mode | 1–4 | Space=skip | Auto-advance |
+|---|---|---|---|
+| Find | n/a (no options) | ✅ | ✅ |
+| Name (Hard typing) | n/a | ✅ | ✅ (exactMatch) |
+| Flags Flag→Country | ✅ | ✅ | ✅ |
+| Flags Country→Flag | ✅ (1–6) | ✅ | ✅ |
+| Flags Flag→Type | n/a | ✅ | ✅ |
+| Capitals choice | ✅ | ✅ | ✅ |
+| Capitals locator | n/a | ✅ | ✅ |
+| Speed | ✅ already | ADD | n/a |
+| Explorer | passive | n/a | n/a |
 
--   
-no submit  
+Confirm `useAnswerHotkeys` already ignores keystrokes while focus is in `<input>` / `<textarea>` / `[contenteditable]`; if not, add the guard.
 
--   
-stable focus  
+## 7. Backend — Supabase only (no change needed, just verify)
 
--   
-auto advance  
+The project ALREADY uses Supabase exclusively. "Lovable Cloud" in this project is just the user-facing label for the same Supabase backend — there is no hybrid layer to remove. Verification only:
+- `recordSessionEnd` writes Dexie + enqueues to outbox; push worker calls `sync_push` RPC. ✅
+- `country_progress`, `unlocks`, `daily_streak`, `sessions_log` all enqueued. ✅
+- No edge-function fallback paths exist in `lib/sync/`. ✅
 
+Action: add a one-line comment block at top of `lib/sync/queue.ts` documenting "Supabase is the sole backend; Dexie is the offline cache." No code change.
 
-### Flags
+## 8. Auto-advance — remove all Next buttons
 
--   
-desktop centered  
+Audit `FeedbackBar` props across modes — all already pass `hideNext`. Verify `useAutoAdvance` delay (currently ~1100ms correct / ~1800ms wrong) and ensure no mode renders a residual Continue button. Confirm `SessionEnd` shows Replay only (not Next).
 
--   
-hard mode works  
+## 9. Explorer → "Atlas Mode" (three layers)
 
--   
-keyboard works  
+Restructure `ExplorerPage.tsx` into a tabbed atlas:
 
-
-### Capitals
-
--   
-hint progression  
-
--   
-keyboard shortcuts  
-
--   
-skip support  
-
-
-### Speed
-
--   
-mode selector works  
-
--   
-scoring works  
-
--   
-timer works  
-
--   
-skip works  
-
--   
-keyboard works  
-
-
-### Explorer
-
--   
-all countries render  
-
--   
-France visible  
-
--   
-click works  
-
--   
-details correct  
-
-
-### Progress
-
--   
-confidence maps real  
-
--   
-mastery calculations real  
-
-
-### Globe
-
--   
-premium Orbita look restored  
-
--   
-no procedural Earth  
-
--   
-no day/night Earth  
-
--   
-borders crisp  
-
--   
-zoom smooth  
-
-
----
-
-## Technical Notes
-
-### New Files
-
-```
-
-```
-
-```
-src/hooks/useSkipHotkey.ts
-src/features/engine/HardInput.tsx
-src/features/globe/verifyCountryGeometryCoverage.ts
-```
-
-### Deleted
-
-```
-
-```
-
-```
-src/features/globe/earthMaterial.ts
-```
-
-### Modified
-
-```
-
-```
-
-```
-Globe3D.tsx
-FindPage.tsx
-NamePage.tsx
-FlagsPage.tsx
-CapitalsPage.tsx
-SpeedPage.tsx
-ExplorerPage.tsx
-ProgressPage.tsx
-useSession.ts
-fuzzy.ts
-Navbar.tsx
+```text
+┌─────────────────────────────────────────────────────┐
+│  [Atlas] [Free explore | Country intel | Expeditions]│
+├──────────────────────────────┬──────────────────────┤
+│                              │                      │
+│         Globe (flex-1)       │   Country Panel /    │
+│                              │   Expedition stepper │
+│                              │                      │
+└──────────────────────────────┴──────────────────────┘
 ```
-
-### Constraints
-
--   
-Strict TypeScript.  
-
--   
-No any.  
-
--   
-No API breaking changes.  
-
--   
-No new heavy dependencies.  
-
--   
-Preserve existing Globe3D API.  
-
--   
-Preserve existing session architecture.  
-
--   
-Preserve cinematic Orbita design language.  
-
-
-### Final Requirement
-
-Before implementing any new feature, first fix every existing bug, visual inconsistency, geometry issue, keyboard issue, auto-advance issue, confidence-map issue, and atlas rendering issue described above. Stability, learning quality, and responsiveness take priority over feature expansion.
 
-**Go ahead and execute.**
+Three layers:
+
+**(a) Free Exploration** — current globe with search + continent filter + Shuffle. Polygon click selects → Country Panel slides in.
+
+**(b) Country Intelligence Panel** — already exists (`CountryPanel`). Augment:
+- Add Borders flag-chips row at top (already present, keep).
+- Add a "Locate on globe" pulse ring that re-frames camera.
+- Group stats: Identity (flag, continent, subregion) / Demography (population, area, languages, currencies) / Mastery bars (existing).
+- Quick-practice CTAs already present.
+
+**(c) Guided Expeditions** — NEW component `Expeditions.tsx`:
+- List 6 expeditions: each continent + "Microstates of Europe" + "Capitals of Africa".
+- An expedition is an ordered list of ISO3s. Selecting one enters "tour mode":
+  - Right panel shows step N of M with country card and Prev/Next buttons (and ←/→ hotkeys).
+  - Globe focuses + pulses the active country.
+  - On reaching the end, offer "Practice this expedition" → starts a Find session filtered to those ISO3s (extend `selectQuestions` to accept `isoList?: string[]`).
+- Expeditions data lives in `src/features/explorer/expeditions.ts` (static).
+
+Layer switch via top tab strip; URL search param `?layer=explore|country|expedition&iso=...&exp=...` so state survives reload.
+
+## 10. Files
+
+**New:**
+- `src/features/explorer/expeditions.ts` — static expedition definitions
+- `src/features/explorer/Expeditions.tsx` — expedition stepper UI
+
+**Edited:**
+- `src/features/globe/Globe3D.tsx` — add `disableHoverLabel`, `questionKey`, hover-clear effect, ISO mapping dev assertion
+- `src/features/find/FindPage.tsx` — swap to `disableHoverLabel`, pass `questionKey`, drop legacy flag
+- `src/features/capitals/CapitalsPage.tsx` — swap to `disableHoverLabel` in locator
+- `src/features/flags/FlagsPage.tsx` — sticky HUD + centered flex layout
+- `src/features/speed/SpeedPage.tsx` — flag-only options for `skill === "flag"`, add Space=skip, unmount cleanup
+- `src/features/speed/speedRuntimeStore.ts` — add `skip()` action, ensure `reset()` clears interval
+- `src/features/explorer/ExplorerPage.tsx` — restructure into layered tabs
+- `src/features/engine/useSession.ts` — reset `endedAt`/queue in `start()`, reset `hintUsed` on terminal `next()`
+- `src/features/engine/useAutoAdvance.ts` — clear timer on question key change
+- `src/hooks/useAnswerHotkeys.ts` — verify input/dialog guard, add if missing
+- `src/features/globe/geo.ts` — warn-once on unmapped M49 codes
+- `src/lib/mastery.ts` — `selectQuestions` accepts optional `isoList` filter
+- `src/lib/sync/queue.ts` — header comment only
+
+**No backend / migration changes.** Existing Supabase schema already covers everything.
+
+## 11. QA checklist
+
+- Find: hover glows + lifts, no tooltip; clicking 5 countries in a row never breaks session; replay works.
+- Name Hard: instant validate, Space skips, 1–4 don't fire while typing.
+- Flags: flag vertically centered at 1440×900 and 1920×1080; sub-mode toggle persists.
+- Capitals locator: every click registers; ISO mismatch warnings empty in dev console.
+- Speed flag question: only flags shown as options, no country names; Space skips; navigating away mid-run kills timer.
+- Explorer: three tabs functional, deep-link `?layer=expedition&exp=africa` resumes.
+- All keyboards work in every mode per Section 6 table.

@@ -70,7 +70,21 @@ export function createSessionStore({
     },
 
     async start(opts) {
-      set({ loading: true });
+      // Reset hard so a re-mount or replay never inherits stale flags.
+      set({
+        loading: true,
+        queue: [],
+        index: 0,
+        score: 0,
+        combo: 0,
+        bestCombo: 0,
+        correct: 0,
+        wrong: 0,
+        answerState: "idle",
+        hintUsed: false,
+        startedAt: 0,
+        endedAt: null,
+      });
       const q = await selectQuestions(skill, questions, {
         continent: opts?.continent,
       });

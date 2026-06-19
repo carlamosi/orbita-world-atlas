@@ -222,7 +222,7 @@ function FlagToCountry({
           iso2={target.iso2}
           alt="Mystery flag"
           size={640}
-          className="w-[min(72vw,420px)] lg:w-[min(40vw,460px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+          className="w-[min(58vw,340px)] lg:w-[min(34vw,400px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
         />
       </motion.div>
       <div className="grid grid-cols-2 gap-3 w-full max-w-2xl">
@@ -302,7 +302,7 @@ function FlagToType({
           iso2={target.iso2}
           alt="Mystery flag"
           size={640}
-          className="w-[min(72vw,420px)] lg:w-[min(40vw,460px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+          className="w-[min(58vw,340px)] lg:w-[min(34vw,400px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
         />
       </motion.div>
       <HardInput target={target} onSubmit={onSubmit} placeholder="Type the country…" />

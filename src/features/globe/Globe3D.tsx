@@ -230,6 +230,12 @@ export default function Globe3D({
 
   const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
 
+  // Clear stale hover when the active question/target changes so the previous
+  // country doesn't keep glowing after auto-advance.
+  useEffect(() => {
+    setHoverIso3(null);
+  }, [questionKey, highlightIso3, revealIso3]);
+
   const polygonCapColor = useCallback(
     (d: object) => {
       const f = d as CountryFeature;

@@ -24,6 +24,14 @@ export interface SkillStat {
   timesWrong: number;
   streak: number;
   lastSeenAt: number;
+  /** SM-2 spaced-repetition state, populated by the SRS engine. */
+  srs?: {
+    ef: number;
+    reps: number;
+    interval: number;
+    nextReviewAt: number;
+    lastReviewedAt: number;
+  };
 }
 
 export interface CountryProgressRow {

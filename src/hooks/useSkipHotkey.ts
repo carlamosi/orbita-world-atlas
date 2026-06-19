@@ -27,7 +27,8 @@ export function useSkipHotkey(onSkip: () => void, enabled = true) {
       e.preventDefault();
       onSkip();
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // Capture phase so animations / auto-advance overlays can't swallow it.
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, [onSkip, enabled]);
 }

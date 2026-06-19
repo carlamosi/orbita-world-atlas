@@ -2,6 +2,7 @@ import { COUNTRIES } from "@/lib/countries";
 import type { Country } from "@/types/country";
 import type { Skill, SkillStat } from "@/lib/db/orbita-db";
 import { getSkillStatMap } from "@/lib/db/repo";
+import { updateSrs, retention, type SrsState } from "@/lib/spacedRepetition";
 
 const DAY_MS = 86_400_000;
 
@@ -13,28 +14,36 @@ export function decay(prev: number, lastSeenAt: number, now = Date.now()): numbe
   return prev * factor;
 }
 
-/** Update a skill stat after an answer. Hint reduces gain but never increases. */
+/**
+ * Update a skill stat after an answer.
+ *
+ * Now SRS-aware: advances SM-2 state (ef/reps/interval/nextReviewAt) using
+ * objective signals only — correctness, response time, hint usage. The
+ * `confidence` field continues to exist for back-compat (legacy heatmap,
+ * weighting, unlocks), but its source of truth is now `retention(srs)` when
+ * SRS state is present.
+ */
 export function confidenceAfter(
   prev: SkillStat | undefined,
   correct: boolean,
   hintUsed: boolean,
   now = Date.now(),
+  responseMs = 8_000,
 ): SkillStat {
-  const base = prev ? decay(prev.confidence, prev.lastSeenAt, now) : 0.2;
-  let next: number;
-  if (correct) {
-    const gain = hintUsed ? 0.08 : 0.18;
-    next = Math.min(1, base + gain * (1 - base));
-  } else {
-    const loss = 0.22;
-    next = Math.max(0, base - loss * base - 0.05);
-  }
+  const srs: SrsState = updateSrs(prev?.srs, { correct, hintUsed, responseMs }, now);
+  // Confidence mirrors retention right after review (≈1.0 if correct), but is
+  // clamped to keep legacy thresholds (≥0.8 = mastered) reasonable.
+  const confidence = correct
+    ? Math.min(1, Math.max(0.2, retention(srs, now) * 0.4 + 0.6))
+    : Math.max(0, (prev?.confidence ?? 0) * 0.5 - 0.05);
+
   return {
-    confidence: Number(next.toFixed(4)),
+    confidence: Number(confidence.toFixed(4)),
     timesRight: (prev?.timesRight ?? 0) + (correct ? 1 : 0),
     timesWrong: (prev?.timesWrong ?? 0) + (correct ? 0 : 1),
     streak: correct ? (prev?.streak ?? 0) + 1 : 0,
     lastSeenAt: now,
+    srs,
   };
 }
 

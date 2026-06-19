@@ -230,41 +230,6 @@ function EasyOptions({
   );
 }
 
-function HardInput({ target, onSubmit }: { target: Country; onSubmit: (ok: boolean) => void }) {
-  const [val, setVal] = useState("");
-  const ref = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    ref.current?.focus();
-    setVal("");
-  }, [target.iso3]);
-
-  return (
-    <motion.form
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={spring.soft}
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(fuzzyMatch(val, target.name));
-      }}
-      className="max-w-md mx-auto glass-strong rounded-2xl p-4 flex items-center gap-3"
-    >
-      <input
-        ref={ref}
-        value={val}
-        onChange={(e) => setVal(e.target.value)}
-        placeholder="Type the country name…"
-        className="flex-1 bg-transparent outline-none text-white placeholder:text-white/35 font-display text-lg"
-        autoComplete="off"
-        autoCapitalize="words"
-        spellCheck={false}
-      />
-      <Button size="sm" type="submit" disabled={!val.trim()}>
-        Submit
-      </Button>
-    </motion.form>
-  );
-}
 
 function shuffle<T>(arr: T[]): T[] {
   const a = arr.slice();

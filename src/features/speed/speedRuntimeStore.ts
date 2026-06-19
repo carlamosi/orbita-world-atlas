@@ -54,6 +54,7 @@ export interface SpeedState {
   setConfig: (patch: Partial<SpeedConfig>) => void;
   start: () => Promise<void>;
   answer: (iso3: string) => void;
+  skip: () => void;
   reset: () => void;
 }
 

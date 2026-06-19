@@ -109,8 +109,11 @@ function Active() {
   // Isolated subscribers — timer tick (4Hz) re-renders only TimerRing.
   const queue = useSpeedRuntime((s) => s.queue);
   const index = useSpeedRuntime((s) => s.index);
+  const status = useSpeedRuntime((s) => s.status);
   const item = queue[index];
   const answer = useSpeedRuntime((s) => s.answer);
+  const skip = useSpeedRuntime((s) => s.skip);
+  const reset = useSpeedRuntime((s) => s.reset);
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -121,7 +124,18 @@ function Active() {
     return () => window.removeEventListener("keydown", onKey);
   }, [item, answer]);
 
-  if (!item) return null;
+  const onSkip = useCallback(() => skip(), [skip]);
+  useSkipHotkey(onSkip);
+
+  // Kill the timer if the user navigates away mid-run.
+  useEffect(() => {
+    return () => {
+      if (useSpeedRuntime.getState().status === "running") reset();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  if (!item || status !== "running") return null;
 
   return (
     <div className="min-h-dvh pt-24 px-4 pb-10 flex flex-col items-center">

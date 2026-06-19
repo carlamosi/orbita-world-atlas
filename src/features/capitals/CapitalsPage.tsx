@@ -89,6 +89,7 @@ export default function CapitalsPage() {
               }
               onCountryClick={(iso3) => current && s.submit(iso3 === current.iso3)}
               pointOfView={pov}
+              disableHoverFeedback={s.answerState === "idle"}
             />
           </Suspense>
         </div>

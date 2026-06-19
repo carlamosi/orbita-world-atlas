@@ -122,32 +122,21 @@ export default function Globe3D({
     return () => ro.disconnect();
   }, []);
 
-  // ---- Procedural Earth material (day/night, terminator, fresnel) ------
-  const earthRef = useRef<EarthMaterialHandle | null>(null);
-  if (earthRef.current === null) {
-    earthRef.current = createEarthMaterial({
-      sunRotationSpeed: 0.02,
+  // ---- Premium Orbita globe material -----------------------------------
+  // Deep-indigo sphere with subtle specular highlight. No textures, no
+  // procedural day/night — just the cinematic dark-space aesthetic.
+  const globeMaterial = useMemo(() => {
+    const mat = new MeshPhongMaterial({
+      color: new Color("#0a0d1f"),
+      emissive: new Color("#0b1230"),
+      emissiveIntensity: 0.35,
+      specular: new Color("#6C63FF"),
+      shininess: 14,
+      transparent: false,
     });
-  }
-  useEffect(() => {
-    return () => {
-      earthRef.current?.dispose();
-      earthRef.current = null;
-    };
+    return mat;
   }, []);
-  useEffect(() => {
-    if (effectiveQuality === "static") return;
-    let raf = 0;
-    let last = performance.now();
-    const loop = (t: number) => {
-      const dt = Math.min(0.1, (t - last) / 1000);
-      last = t;
-      earthRef.current?.tick(dt);
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(raf);
-  }, [effectiveQuality]);
+  useEffect(() => () => globeMaterial.dispose(), [globeMaterial]);
 
   // ---- Lazy 50m upgrade on first close zoom (high quality only) --------
   useEffect(() => {

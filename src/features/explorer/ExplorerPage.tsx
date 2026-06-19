@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLiveQuery } from "dexie-react-hooks";
 import { COUNTRIES, COUNTRY_BY_ISO3 } from "@/lib/countries";
@@ -10,17 +10,52 @@ import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import { Link } from "@tanstack/react-router";
 import type { Country } from "@/types/country";
+import { EXPEDITIONS, findExpedition } from "./expeditions";
+import { ExpeditionsPanel } from "./Expeditions";
 
 const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 
 const CONTINENTS = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
 
+type Layer = "explore" | "country" | "expedition";
+
 export default function ExplorerPage() {
+  const [layer, setLayer] = useState<Layer>("explore");
   const [selectedIso3, setSelectedIso3] = useState<string>("FRA");
   const [continent, setContinent] = useState<string>("All");
   const [query, setQuery] = useState("");
+  const [expeditionId, setExpeditionId] = useState<string | null>(null);
+  const [expeditionStep, setExpeditionStep] = useState(0);
+
+  // Read deep-link from URL once on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    const l = url.searchParams.get("layer") as Layer | null;
+    const iso = url.searchParams.get("iso");
+    const exp = url.searchParams.get("exp");
+    if (l) setLayer(l);
+    if (iso && COUNTRY_BY_ISO3.has(iso)) setSelectedIso3(iso);
+    if (exp && findExpedition(exp)) {
+      setExpeditionId(exp);
+      setLayer("expedition");
+    }
+  }, []);
+
+  // Sync URL on changes (non-blocking)
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    url.searchParams.set("layer", layer);
+    if (selectedIso3) url.searchParams.set("iso", selectedIso3);
+    else url.searchParams.delete("iso");
+    if (expeditionId) url.searchParams.set("exp", expeditionId);
+    else url.searchParams.delete("exp");
+    window.history.replaceState({}, "", url.toString());
+  }, [layer, selectedIso3, expeditionId]);
 
   const selected = COUNTRY_BY_ISO3.get(selectedIso3) ?? null;
+  const expedition = expeditionId ? findExpedition(expeditionId) ?? null : null;
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -32,10 +67,26 @@ export default function ExplorerPage() {
     }).slice(0, 60);
   }, [continent, query]);
 
-  const pov = useMemo(
-    () => (selected ? { lat: selected.coordinates[0], lng: selected.coordinates[1], altitude: 1.7 } : undefined),
-    [selected],
+  const focusIso3 =
+    layer === "expedition" && expedition ? expedition.iso3s[expeditionStep] ?? null : selectedIso3;
+
+  const pov = useMemo(() => {
+    const iso = focusIso3;
+    const c = iso ? COUNTRY_BY_ISO3.get(iso) : null;
+    return c ? { lat: c.coordinates[0], lng: c.coordinates[1], altitude: 1.7 } : undefined;
+  }, [focusIso3]);
+
+  const handleGlobeClick = useCallback(
+    (iso3: string) => {
+      setSelectedIso3(iso3);
+      if (layer === "explore") setLayer("country");
+    },
+    [layer],
   );
+
+  const handleExpeditionFocus = useCallback((iso3: string) => {
+    setSelectedIso3(iso3);
+  }, []);
 
   return (
     <div className="relative min-h-dvh pt-24 pb-10 px-4">
@@ -46,48 +97,57 @@ export default function ExplorerPage() {
             <Suspense fallback={<div className="size-full" />}>
               <Globe3D
                 countries={COUNTRIES}
-                highlightIso3={selectedIso3}
-                onCountryClick={setSelectedIso3}
+                highlightIso3={focusIso3 ?? null}
+                onCountryClick={handleGlobeClick}
                 pointOfView={pov}
                 quality="medium"
               />
             </Suspense>
           </div>
+
+          {/* Top controls: layer tabs + search/filter (search only relevant in explore) */}
           <div className="absolute top-3 left-3 right-3 flex items-center gap-2 flex-wrap">
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search countries or capitals…"
-              className="glass rounded-full px-4 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/30 min-w-[220px] flex-1"
-            />
-            <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider flex-wrap">
-              {CONTINENTS.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setContinent(c)}
-                  className={cn(
-                    "px-2.5 py-1 rounded-full transition-colors",
-                    continent === c ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
-                  )}
+            <LayerTabs value={layer} onChange={setLayer} />
+            {layer === "explore" && (
+              <>
+                <input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search countries or capitals…"
+                  className="glass rounded-full px-4 py-2 text-sm text-white placeholder:text-white/40 outline-none focus:border-white/30 min-w-[200px] flex-1"
+                />
+                <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider flex-wrap">
+                  {CONTINENTS.map((c) => (
+                    <button
+                      key={c}
+                      onClick={() => setContinent(c)}
+                      className={cn(
+                        "px-2.5 py-1 rounded-full transition-colors",
+                        continent === c
+                          ? "bg-white/10 text-white"
+                          : "text-white/55 hover:text-white",
+                      )}
+                    >
+                      {c}
+                    </button>
+                  ))}
+                </div>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => {
+                    const pool = results.length > 0 ? results : COUNTRIES;
+                    setSelectedIso3(pool[Math.floor(Math.random() * pool.length)]!.iso3);
+                  }}
                 >
-                  {c}
-                </button>
-              ))}
-            </div>
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() => {
-                const pool = results.length > 0 ? results : COUNTRIES;
-                setSelectedIso3(pool[Math.floor(Math.random() * pool.length)]!.iso3);
-              }}
-            >
-              Shuffle
-            </Button>
+                  Shuffle
+                </Button>
+              </>
+            )}
           </div>
 
-          {/* result rail */}
-          {(query || continent !== "All") && (
+          {/* Result rail — only in explore */}
+          {layer === "explore" && (query || continent !== "All") && (
             <div className="absolute bottom-3 left-3 right-3 glass-strong rounded-2xl px-3 py-2 overflow-x-auto">
               <div className="flex gap-2">
                 {results.map((c) => (
@@ -116,11 +176,87 @@ export default function ExplorerPage() {
         {/* PANEL */}
         <div className="relative">
           <AnimatePresence mode="wait">
-            {selected && <CountryPanel key={selected.iso3} country={selected} onSelect={setSelectedIso3} />}
+            {layer === "expedition" ? (
+              <ExpeditionsPanel
+                key="expedition-panel"
+                selected={expedition}
+                step={expeditionStep}
+                onSelect={(id) => {
+                  setExpeditionId(id);
+                  setExpeditionStep(0);
+                }}
+                onStep={setExpeditionStep}
+                onFocusIso3={handleExpeditionFocus}
+              />
+            ) : layer === "country" && selected ? (
+              <CountryPanel key={selected.iso3} country={selected} onSelect={setSelectedIso3} />
+            ) : (
+              <ExploreHint key="hint" onPickExpedition={() => setLayer("expedition")} />
+            )}
           </AnimatePresence>
         </div>
       </div>
     </div>
+  );
+}
+
+function LayerTabs({ value, onChange }: { value: Layer; onChange: (v: Layer) => void }) {
+  const tabs: Array<{ id: Layer; label: string }> = [
+    { id: "explore", label: "Explore" },
+    { id: "country", label: "Country" },
+    { id: "expedition", label: "Expeditions" },
+  ];
+  return (
+    <div className="glass-strong rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider">
+      {tabs.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => onChange(t.id)}
+          className={cn(
+            "px-3 py-1.5 rounded-full transition-colors whitespace-nowrap",
+            value === t.id ? "bg-white/15 text-white" : "text-white/55 hover:text-white",
+          )}
+        >
+          {t.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ExploreHint({ onPickExpedition }: { onPickExpedition: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      exit={{ opacity: 0 }}
+      transition={spring.soft}
+      className="glass-strong rounded-3xl p-6 h-full overflow-y-auto"
+    >
+      <Badge tone="cyan">Atlas Mode</Badge>
+      <h2 className="mt-3 font-display text-2xl text-white tracking-tight text-glow-violet">
+        Free exploration
+      </h2>
+      <p className="mt-2 text-white/55 text-[13px]">
+        Pan and rotate the globe. Click any country to open its intelligence card, or follow a
+        guided expedition.
+      </p>
+      <div className="mt-5 space-y-2">
+        <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45">
+          Featured journeys
+        </div>
+        {EXPEDITIONS.slice(0, 3).map((e) => (
+          <button
+            key={e.id}
+            onClick={onPickExpedition}
+            className="w-full text-left glass rounded-2xl p-3 hover:border-white/25 transition-all"
+          >
+            <div className="font-display text-sm text-white tracking-tight">{e.title}</div>
+            <div className="text-[11px] text-white/55 mt-0.5">{e.subtitle}</div>
+          </button>
+        ))}
+      </div>
+    </motion.div>
   );
 }
 
@@ -195,7 +331,10 @@ function CountryPanel({
                           : v >= 0.4
                             ? "var(--cyan)"
                             : "var(--coral)",
-                      boxShadow: v >= 0.8 ? "0 0 12px color-mix(in oklab, var(--neon) 60%, transparent)" : undefined,
+                      boxShadow:
+                        v >= 0.8
+                          ? "0 0 12px color-mix(in oklab, var(--neon) 60%, transparent)"
+                          : undefined,
                     }}
                   />
                 </div>

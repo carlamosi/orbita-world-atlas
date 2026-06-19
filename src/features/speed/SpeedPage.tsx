@@ -291,10 +291,37 @@ function OptionsGrid({
   onPick: (iso3: string) => void;
 }) {
   const flash = useFlash(item.country.iso3);
+  const isFlagSkill = item.skill === "flag";
+  if (isFlagSkill) {
+    // Flag-pick mode: render flags only, no country names alongside.
+    return (
+      <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
+        {item.options.map((o, i) => (
+          <button
+            key={o.iso3}
+            onClick={() => {
+              flash(o.iso3 === item.country.iso3);
+              onPick(o.iso3);
+            }}
+            className={cn(
+              "group relative aspect-[3/2] rounded-2xl overflow-hidden transition-transform duration-150",
+              "hover:scale-[1.03] shadow-[0_16px_40px_-18px_rgba(0,0,0,0.7)]",
+              "outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--cyan)]/60",
+            )}
+            aria-label={`Option ${i + 1}`}
+          >
+            <FlagImage iso2={o.iso2} alt="flag option" className="absolute inset-0 rounded-none" />
+            <span className="absolute top-1.5 left-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-white bg-black/60 rounded-full px-1.5 py-0.5">
+              {i + 1}
+            </span>
+          </button>
+        ))}
+      </div>
+    );
+  }
   return (
     <div className="mt-6 grid grid-cols-2 gap-3 w-full">
       {item.options.map((o, i) => {
-        const showFlag = item.skill === "flag";
         const showCapital = item.skill === "capital";
         const label = showCapital ? (o.capital ?? "—") : o.name;
         return (
@@ -312,13 +339,8 @@ function OptionsGrid({
             <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
               {i + 1}
             </div>
-            <div className="mt-1 flex items-center gap-3">
-              {showFlag && (
-                <FlagImage iso2={o.iso2} alt={o.name} className="w-12 h-8 shrink-0" />
-              )}
-              <div className="font-display text-base text-white tracking-tight truncate">
-                {label}
-              </div>
+            <div className="mt-1 font-display text-base text-white tracking-tight truncate">
+              {label}
             </div>
           </button>
         );

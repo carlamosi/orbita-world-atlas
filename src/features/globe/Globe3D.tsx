@@ -530,7 +530,7 @@ export default function Globe3D({
         width={dim.w}
         height={dim.h}
         backgroundColor="rgba(0,0,0,0)"
-        globeMaterial={earthRef.current?.material}
+        globeMaterial={globeMaterial}
         showAtmosphere
         atmosphereColor="#6C63FF"
         atmosphereAltitude={

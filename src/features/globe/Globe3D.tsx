@@ -287,11 +287,11 @@ export default function Globe3D({
 
   const polygonLabel = useCallback(
     (d: object) => {
-      if (disableHoverFeedback) return "";
+      if (disableHoverFeedback || disableHoverLabel) return "";
       const f = d as CountryFeature;
       return `<div style="font-family:'Inter',sans-serif;padding:6px 10px;background:rgba(5,5,8,0.85);border:1px solid rgba(255,255,255,0.12);border-radius:9999px;color:#fff;font-size:12px;backdrop-filter:blur(8px)">${f.properties.name}</div>`;
     },
-    [disableHoverFeedback],
+    [disableHoverFeedback, disableHoverLabel],
   );
 
   // ---- Cinematic country framing ---------------------------------------

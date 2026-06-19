@@ -10,6 +10,7 @@ import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
+import { spring } from "@/lib/motion";
 
 const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 

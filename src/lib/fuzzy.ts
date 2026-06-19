@@ -42,3 +42,11 @@ export function fuzzyMatch(guess: string, target: string, alts: string[] = []): 
   }
   return false;
 }
+
+/** Strict normalized equality — used for instant typing validation. */
+export function exactMatch(guess: string, target: string, alts: string[] = []): boolean {
+  const g = normalize(guess);
+  if (!g) return false;
+  const candidates = [target, ...alts].map(normalize).filter(Boolean);
+  return candidates.includes(g);
+}

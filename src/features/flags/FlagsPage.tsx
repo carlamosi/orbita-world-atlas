@@ -278,6 +278,35 @@ function CountryToFlag({
   );
 }
 
+function FlagToType({
+  target,
+  onSubmit,
+}: {
+  target: Country;
+  onSubmit: (ok: boolean) => void;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <motion.div
+        key={target.iso3}
+        initial={{ opacity: 0, scale: 0.92, y: 16 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={spring.soft}
+      >
+        <FlagImage
+          iso2={target.iso2}
+          alt="Mystery flag"
+          size={640}
+          className="w-[min(72vw,420px)] lg:w-[min(40vw,460px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+        />
+      </motion.div>
+      <HardInput target={target} onSubmit={onSubmit} placeholder="Type the country…" />
+    </div>
+  );
+}
+
+
+
 function ConfettiBurst({ show }: { show: boolean }) {
   const particles = useMemo(
     () =>

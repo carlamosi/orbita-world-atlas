@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import Globe, { type GlobeMethods } from "react-globe.gl";
-import { TOUCH } from "three";
+import { TOUCH, MeshPhongMaterial, Color } from "three";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 
 import type { Country } from "@/types/country";
@@ -15,7 +15,6 @@ import {
   loadCountryFeatures,
   type CountryFeature,
 } from "./geo";
-import { createEarthMaterial, type EarthMaterialHandle } from "./earthMaterial";
 
 export type GlobeQuality = "high" | "medium" | "static";
 
@@ -33,6 +32,8 @@ interface Globe3DProps {
   pointOfView?: { lat: number; lng: number; altitude?: number };
   size?: number;
   quality?: GlobeQuality;
+  /** When true, hovering a country has zero visual feedback (Find mode). */
+  disableHoverFeedback?: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -83,6 +84,7 @@ export default function Globe3D({
   pointOfView,
   size,
   quality = "high",
+  disableHoverFeedback = false,
 }: Globe3DProps) {
   const ref = useRef<GlobeMethods | undefined>(undefined);
   const wrapperRef = useRef<HTMLDivElement>(null);

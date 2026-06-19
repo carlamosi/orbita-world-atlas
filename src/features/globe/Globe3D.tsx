@@ -32,8 +32,12 @@ interface Globe3DProps {
   pointOfView?: { lat: number; lng: number; altitude?: number };
   size?: number;
   quality?: GlobeQuality;
-  /** When true, hovering a country has zero visual feedback (Find mode). */
+  /** Hide only the country-name tooltip (Find/Capitals). Glow + altitude lift remain for spatial feedback. */
+  disableHoverLabel?: boolean;
+  /** Strict mode: suppress ALL hover feedback (glow, lift, tooltip). */
   disableHoverFeedback?: boolean;
+  /** Changes whenever the active question changes — clears stale hover state on transition. */
+  questionKey?: string | null;
 }
 
 // ---------------------------------------------------------------------------

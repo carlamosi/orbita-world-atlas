@@ -111,20 +111,22 @@ export default function FlagsPage() {
 
           {/* Centered gameplay region */}
           <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-6">
-            <Prompt
+            <PromptPill
               keyId={`${sub}-${current.iso3}`}
-              eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
+              index={s.index}
+              total={s.queue.length}
               title={
                 sub === "flagToCountry" ? (
-                  <>Which country owns this flag?</>
+                  "Which country owns this flag?"
                 ) : sub === "countryToFlag" ? (
                   <>Find the flag of <span className="text-glow-cyan">{current.name}</span></>
                 ) : (
-                  <>Name this flag</>
+                  "Name this flag"
                 )
               }
-              subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
+              hint={s.hintUsed ? `Hint: ${current.continent}` : undefined}
             />
+
 
             <div className="w-full max-w-4xl">
               {sub === "flagToCountry" ? (

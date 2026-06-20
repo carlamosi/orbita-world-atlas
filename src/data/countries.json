@@ -1,1 +1,6183 @@
-{"version":1,"count":194,"countries":[{"iso3":"AFG","iso2":"AF","name":"Afghanistan","capital":"Kabul","flagCode":"af","coordinates":[33,65],"capitalCoords":[33,65],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["AFN"],"languages":["Dari","Pashto","Turkmen"],"borders":["IRN","PAK","TKM","UZB","TJK","CHN"],"area":652230,"difficulty":"easy"},{"iso3":"ALB","iso2":"AL","name":"Albania","capital":"Tirana","flagCode":"al","coordinates":[41,20],"capitalCoords":[41,20],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["ALL"],"languages":["Albanian"],"borders":["MNE","GRC","MKD","UNK"],"area":28748,"difficulty":"hard"},{"iso3":"DZA","iso2":"DZ","name":"Algeria","capital":"Algiers","flagCode":"dz","coordinates":[28,3],"capitalCoords":[28,3],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["DZD"],"languages":["Arabic"],"borders":["TUN","LBY","NER","ESH","MRT","MLI","MAR"],"area":2381741,"difficulty":"easy"},{"iso3":"AND","iso2":"AD","name":"Andorra","capital":"Andorra la Vella","flagCode":"ad","coordinates":[42.5,1.5],"capitalCoords":[42.5,1.5],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Catalan"],"borders":["FRA","ESP"],"area":468,"difficulty":"hard"},{"iso3":"AGO","iso2":"AO","name":"Angola","capital":"Luanda","flagCode":"ao","coordinates":[-12.5,18.5],"capitalCoords":[-12.5,18.5],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["AOA"],"languages":["Portuguese"],"borders":["COG","COD","ZMB","NAM"],"area":1246700,"difficulty":"easy"},{"iso3":"ATG","iso2":"AG","name":"Antigua and Barbuda","capital":"Saint John's","flagCode":"ag","coordinates":[17.05,-61.8],"capitalCoords":[17.05,-61.8],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":442,"difficulty":"hard"},{"iso3":"ARG","iso2":"AR","name":"Argentina","capital":"Buenos Aires","flagCode":"ar","coordinates":[-34,-64],"capitalCoords":[-34,-64],"continent":"Americas","subregion":"South America","population":0,"currencies":["ARS"],"languages":["Guaran\u00ed","Spanish"],"borders":["BOL","BRA","CHL","PRY","URY"],"area":2780400,"difficulty":"easy"},{"iso3":"ARM","iso2":"AM","name":"Armenia","capital":"Yerevan","flagCode":"am","coordinates":[40,45],"capitalCoords":[40,45],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["AMD"],"languages":["Armenian"],"borders":["AZE","GEO","IRN","TUR"],"area":29743,"difficulty":"hard"},{"iso3":"AUS","iso2":"AU","name":"Australia","capital":"Canberra","flagCode":"au","coordinates":[-27,133],"capitalCoords":[-27,133],"continent":"Oceania","subregion":"Australia and New Zealand","population":0,"currencies":["AUD"],"languages":["English"],"borders":[],"area":7692024,"difficulty":"easy"},{"iso3":"AUT","iso2":"AT","name":"Austria","capital":"Vienna","flagCode":"at","coordinates":[47.33333333,13.33333333],"capitalCoords":[47.33333333,13.33333333],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["EUR"],"languages":["Austro-Bavarian German"],"borders":["CZE","DEU","HUN","ITA","LIE","SVK","SVN","CHE"],"area":83871,"difficulty":"hard"},{"iso3":"AZE","iso2":"AZ","name":"Azerbaijan","capital":"Baku","flagCode":"az","coordinates":[40.5,47.5],"capitalCoords":[40.5,47.5],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["AZN"],"languages":["Azerbaijani","Russian"],"borders":["ARM","GEO","IRN","RUS","TUR"],"area":86600,"difficulty":"hard"},{"iso3":"BHS","iso2":"BS","name":"Bahamas","capital":"Nassau","flagCode":"bs","coordinates":[24.25,-76],"capitalCoords":[24.25,-76],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["BSD","USD"],"languages":["English"],"borders":[],"area":13943,"difficulty":"hard"},{"iso3":"BHR","iso2":"BH","name":"Bahrain","capital":"Manama","flagCode":"bh","coordinates":[26,50.55],"capitalCoords":[26,50.55],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["BHD"],"languages":["Arabic"],"borders":[],"area":765,"difficulty":"hard"},{"iso3":"BGD","iso2":"BD","name":"Bangladesh","capital":"Dhaka","flagCode":"bd","coordinates":[24,90],"capitalCoords":[24,90],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["BDT"],"languages":["Bengali"],"borders":["MMR","IND"],"area":147570,"difficulty":"hard"},{"iso3":"BRB","iso2":"BB","name":"Barbados","capital":"Bridgetown","flagCode":"bb","coordinates":[13.16666666,-59.53333333],"capitalCoords":[13.16666666,-59.53333333],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["BBD"],"languages":["English"],"borders":[],"area":430,"difficulty":"hard"},{"iso3":"BLR","iso2":"BY","name":"Belarus","capital":"Minsk","flagCode":"by","coordinates":[53,28],"capitalCoords":[53,28],"continent":"Europe","subregion":"Eastern Europe","population":0,"currencies":["BYN"],"languages":["Belarusian","Russian"],"borders":["LVA","LTU","POL","RUS","UKR"],"area":207600,"difficulty":"hard"},{"iso3":"BEL","iso2":"BE","name":"Belgium","capital":"Brussels","flagCode":"be","coordinates":[50.83333333,4],"capitalCoords":[50.83333333,4],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["German","French","Dutch"],"borders":["FRA","DEU","LUX","NLD"],"area":30528,"difficulty":"hard"},{"iso3":"BLZ","iso2":"BZ","name":"Belize","capital":"Belmopan","flagCode":"bz","coordinates":[17.25,-88.75],"capitalCoords":[17.25,-88.75],"continent":"Americas","subregion":"Central America","population":0,"currencies":["BZD"],"languages":["Belizean Creole","English","Spanish"],"borders":["GTM","MEX"],"area":22966,"difficulty":"hard"},{"iso3":"BEN","iso2":"BJ","name":"Benin","capital":"Porto-Novo","flagCode":"bj","coordinates":[9.5,2.25],"capitalCoords":[9.5,2.25],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["BFA","NER","NGA","TGO"],"area":112622,"difficulty":"hard"},{"iso3":"BTN","iso2":"BT","name":"Bhutan","capital":"Thimphu","flagCode":"bt","coordinates":[27.5,90.5],"capitalCoords":[27.5,90.5],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["BTN","INR"],"languages":["Dzongkha"],"borders":["CHN","IND"],"area":38394,"difficulty":"hard"},{"iso3":"BOL","iso2":"BO","name":"Bolivia","capital":"Sucre","flagCode":"bo","coordinates":[-17,-65],"capitalCoords":[-17,-65],"continent":"Americas","subregion":"South America","population":0,"currencies":["BOB"],"languages":["Aymara","Guaran\u00ed","Quechua","Spanish"],"borders":["ARG","BRA","CHL","PRY","PER"],"area":1098581,"difficulty":"easy"},{"iso3":"BIH","iso2":"BA","name":"Bosnia and Herzegovina","capital":"Sarajevo","flagCode":"ba","coordinates":[44,18],"capitalCoords":[44,18],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["BAM"],"languages":["Bosnian","Croatian","Serbian"],"borders":["HRV","MNE","SRB"],"area":51209,"difficulty":"hard"},{"iso3":"BWA","iso2":"BW","name":"Botswana","capital":"Gaborone","flagCode":"bw","coordinates":[-22,24],"capitalCoords":[-22,24],"continent":"Africa","subregion":"Southern Africa","population":0,"currencies":["BWP"],"languages":["English","Tswana"],"borders":["NAM","ZAF","ZMB","ZWE"],"area":582000,"difficulty":"easy"},{"iso3":"BRA","iso2":"BR","name":"Brazil","capital":"Bras\u00edlia","flagCode":"br","coordinates":[-10,-55],"capitalCoords":[-10,-55],"continent":"Americas","subregion":"South America","population":0,"currencies":["BRL"],"languages":["Portuguese"],"borders":["ARG","BOL","COL","GUF","GUY","PRY","PER","SUR","URY","VEN"],"area":8515767,"difficulty":"easy"},{"iso3":"BRN","iso2":"BN","name":"Brunei","capital":"Bandar Seri Begawan","flagCode":"bn","coordinates":[4.5,114.66666666],"capitalCoords":[4.5,114.66666666],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["BND","SGD"],"languages":["Malay"],"borders":["MYS"],"area":5765,"difficulty":"hard"},{"iso3":"BGR","iso2":"BG","name":"Bulgaria","capital":"Sofia","flagCode":"bg","coordinates":[43,25],"capitalCoords":[43,25],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["EUR"],"languages":["Bulgarian"],"borders":["GRC","MKD","ROU","SRB","TUR"],"area":110879,"difficulty":"hard"},{"iso3":"BFA","iso2":"BF","name":"Burkina Faso","capital":"Ouagadougou","flagCode":"bf","coordinates":[13,-2],"capitalCoords":[13,-2],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["BEN","CIV","GHA","MLI","NER","TGO"],"area":272967,"difficulty":"hard"},{"iso3":"BDI","iso2":"BI","name":"Burundi","capital":"Gitega","flagCode":"bi","coordinates":[-3.5,30],"capitalCoords":[-3.5,30],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["BIF"],"languages":["French","Kirundi"],"borders":["COD","RWA","TZA"],"area":27834,"difficulty":"hard"},{"iso3":"KHM","iso2":"KH","name":"Cambodia","capital":"Phnom Penh","flagCode":"kh","coordinates":[13,105],"capitalCoords":[13,105],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["KHR","USD"],"languages":["Khmer"],"borders":["LAO","THA","VNM"],"area":181035,"difficulty":"hard"},{"iso3":"CMR","iso2":"CM","name":"Cameroon","capital":"Yaound\u00e9","flagCode":"cm","coordinates":[6,12],"capitalCoords":[6,12],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["English","French"],"borders":["CAF","TCD","COG","GNQ","GAB","NGA"],"area":475442,"difficulty":"hard"},{"iso3":"CAN","iso2":"CA","name":"Canada","capital":"Ottawa","flagCode":"ca","coordinates":[60,-95],"capitalCoords":[60,-95],"continent":"Americas","subregion":"North America","population":0,"currencies":["CAD"],"languages":["English","French"],"borders":["USA"],"area":9984670,"difficulty":"easy"},{"iso3":"CPV","iso2":"CV","name":"Cape Verde","capital":"Praia","flagCode":"cv","coordinates":[16,-24],"capitalCoords":[16,-24],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["CVE"],"languages":["Portuguese"],"borders":[],"area":4033,"difficulty":"hard"},{"iso3":"CAF","iso2":"CF","name":"Central African Republic","capital":"Bangui","flagCode":"cf","coordinates":[7,21],"capitalCoords":[7,21],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["French","Sango"],"borders":["CMR","TCD","COD","COG","SSD","SDN"],"area":622984,"difficulty":"easy"},{"iso3":"TCD","iso2":"TD","name":"Chad","capital":"N'Djamena","flagCode":"td","coordinates":[15,19],"capitalCoords":[15,19],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["Arabic","French"],"borders":["CMR","CAF","LBY","NER","NGA","SDN"],"area":1284000,"difficulty":"easy"},{"iso3":"CHL","iso2":"CL","name":"Chile","capital":"Santiago","flagCode":"cl","coordinates":[-30,-71],"capitalCoords":[-30,-71],"continent":"Americas","subregion":"South America","population":0,"currencies":["CLP"],"languages":["Spanish"],"borders":["ARG","BOL","PER"],"area":756102,"difficulty":"easy"},{"iso3":"CHN","iso2":"CN","name":"China","capital":"Beijing","flagCode":"cn","coordinates":[35,105],"capitalCoords":[35,105],"continent":"Asia","subregion":"Eastern Asia","population":0,"currencies":["CNY"],"languages":["Chinese"],"borders":["AFG","BTN","MMR","HKG","IND","KAZ","NPL","PRK","KGZ","LAO","MAC","MNG","PAK","RUS","TJK","VNM"],"area":9706961,"difficulty":"easy"},{"iso3":"COL","iso2":"CO","name":"Colombia","capital":"Bogot\u00e1","flagCode":"co","coordinates":[4,-72],"capitalCoords":[4,-72],"continent":"Americas","subregion":"South America","population":0,"currencies":["COP"],"languages":["Spanish"],"borders":["BRA","ECU","PAN","PER","VEN"],"area":1141748,"difficulty":"easy"},{"iso3":"COM","iso2":"KM","name":"Comoros","capital":"Moroni","flagCode":"km","coordinates":[-12.16666666,44.25],"capitalCoords":[-12.16666666,44.25],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["KMF"],"languages":["Arabic","French","Comorian"],"borders":[],"area":1862,"difficulty":"hard"},{"iso3":"COG","iso2":"CG","name":"Congo","capital":"Brazzaville","flagCode":"cg","coordinates":[-1,15],"capitalCoords":[-1,15],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["French","Kikongo","Lingala"],"borders":["AGO","CMR","CAF","COD","GAB"],"area":342000,"difficulty":"hard"},{"iso3":"CRI","iso2":"CR","name":"Costa Rica","capital":"San Jos\u00e9","flagCode":"cr","coordinates":[10,-84],"capitalCoords":[10,-84],"continent":"Americas","subregion":"Central America","population":0,"currencies":["CRC"],"languages":["Spanish"],"borders":["NIC","PAN"],"area":51100,"difficulty":"hard"},{"iso3":"HRV","iso2":"HR","name":"Croatia","capital":"Zagreb","flagCode":"hr","coordinates":[45.16666666,15.5],"capitalCoords":[45.16666666,15.5],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["EUR"],"languages":["Croatian"],"borders":["BIH","HUN","MNE","SRB","SVN"],"area":56594,"difficulty":"hard"},{"iso3":"CUB","iso2":"CU","name":"Cuba","capital":"Havana","flagCode":"cu","coordinates":[21.5,-80],"capitalCoords":[21.5,-80],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["CUC","CUP"],"languages":["Spanish"],"borders":[],"area":109884,"difficulty":"hard"},{"iso3":"CYP","iso2":"CY","name":"Cyprus","capital":"Nicosia","flagCode":"cy","coordinates":[35,33],"capitalCoords":[35,33],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Greek","Turkish"],"borders":[],"area":9251,"difficulty":"hard"},{"iso3":"CZE","iso2":"CZ","name":"Czechia","capital":"Prague","flagCode":"cz","coordinates":[49.75,15.5],"capitalCoords":[49.75,15.5],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["CZK"],"languages":["Czech","Slovak"],"borders":["AUT","DEU","POL","SVK"],"area":78865,"difficulty":"hard"},{"iso3":"COD","iso2":"CD","name":"DR Congo","capital":"Kinshasa","flagCode":"cd","coordinates":[0,25],"capitalCoords":[0,25],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["CDF"],"languages":["French","Kikongo","Lingala","Tshiluba","Swahili"],"borders":["AGO","BDI","CAF","COG","RWA","SSD","TZA","UGA","ZMB"],"area":2344858,"difficulty":"easy"},{"iso3":"DNK","iso2":"DK","name":"Denmark","capital":"Copenhagen","flagCode":"dk","coordinates":[56,10],"capitalCoords":[56,10],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["DKK"],"languages":["Danish"],"borders":["DEU"],"area":43094,"difficulty":"hard"},{"iso3":"DJI","iso2":"DJ","name":"Djibouti","capital":"Djibouti","flagCode":"dj","coordinates":[11.5,43],"capitalCoords":[11.5,43],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["DJF"],"languages":["Arabic","French"],"borders":["ERI","ETH","SOM"],"area":23200,"difficulty":"hard"},{"iso3":"DMA","iso2":"DM","name":"Dominica","capital":"Roseau","flagCode":"dm","coordinates":[15.41666666,-61.33333333],"capitalCoords":[15.41666666,-61.33333333],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":751,"difficulty":"hard"},{"iso3":"DOM","iso2":"DO","name":"Dominican Republic","capital":"Santo Domingo","flagCode":"do","coordinates":[19,-70.66666666],"capitalCoords":[19,-70.66666666],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["DOP"],"languages":["Spanish"],"borders":["HTI"],"area":48671,"difficulty":"hard"},{"iso3":"ECU","iso2":"EC","name":"Ecuador","capital":"Quito","flagCode":"ec","coordinates":[-2,-77.5],"capitalCoords":[-2,-77.5],"continent":"Americas","subregion":"South America","population":0,"currencies":["USD"],"languages":["Spanish"],"borders":["COL","PER"],"area":276841,"difficulty":"hard"},{"iso3":"EGY","iso2":"EG","name":"Egypt","capital":"Cairo","flagCode":"eg","coordinates":[27,30],"capitalCoords":[27,30],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["EGP"],"languages":["Arabic"],"borders":["ISR","LBY","PSE","SDN"],"area":1002450,"difficulty":"easy"},{"iso3":"SLV","iso2":"SV","name":"El Salvador","capital":"San Salvador","flagCode":"sv","coordinates":[13.83333333,-88.91666666],"capitalCoords":[13.83333333,-88.91666666],"continent":"Americas","subregion":"Central America","population":0,"currencies":["USD"],"languages":["Spanish"],"borders":["GTM","HND"],"area":21041,"difficulty":"hard"},{"iso3":"GNQ","iso2":"GQ","name":"Equatorial Guinea","capital":"Malabo","flagCode":"gq","coordinates":[2,10],"capitalCoords":[2,10],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["French","Portuguese","Spanish"],"borders":["CMR","GAB"],"area":28051,"difficulty":"hard"},{"iso3":"ERI","iso2":"ER","name":"Eritrea","capital":"Asmara","flagCode":"er","coordinates":[15,39],"capitalCoords":[15,39],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["ERN"],"languages":["Arabic","English","Tigrinya"],"borders":["DJI","ETH","SDN"],"area":117600,"difficulty":"hard"},{"iso3":"EST","iso2":"EE","name":"Estonia","capital":"Tallinn","flagCode":"ee","coordinates":[59,26],"capitalCoords":[59,26],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["EUR"],"languages":["Estonian"],"borders":["LVA","RUS"],"area":45227,"difficulty":"hard"},{"iso3":"SWZ","iso2":"SZ","name":"Eswatini","capital":"Lobamba","flagCode":"sz","coordinates":[-26.5,31.5],"capitalCoords":[-26.5,31.5],"continent":"Africa","subregion":"Southern Africa","population":0,"currencies":["SZL","ZAR"],"languages":["English","Swazi"],"borders":["MOZ","ZAF"],"area":17364,"difficulty":"hard"},{"iso3":"ETH","iso2":"ET","name":"Ethiopia","capital":"Addis Ababa","flagCode":"et","coordinates":[8,38],"capitalCoords":[8,38],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["ETB"],"languages":["Amharic"],"borders":["DJI","ERI","KEN","SOM","SSD","SDN"],"area":1104300,"difficulty":"easy"},{"iso3":"FJI","iso2":"FJ","name":"Fiji","capital":"Suva","flagCode":"fj","coordinates":[-18,175],"capitalCoords":[-18,175],"continent":"Oceania","subregion":"Melanesia","population":0,"currencies":["FJD"],"languages":["English","Fijian","Fiji Hindi"],"borders":[],"area":18272,"difficulty":"hard"},{"iso3":"FIN","iso2":"FI","name":"Finland","capital":"Helsinki","flagCode":"fi","coordinates":[64,26],"capitalCoords":[64,26],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["EUR"],"languages":["Finnish","Swedish"],"borders":["NOR","SWE","RUS"],"area":338424,"difficulty":"hard"},{"iso3":"FRA","iso2":"FR","name":"France","capital":"Paris","flagCode":"fr","coordinates":[46,2],"capitalCoords":[46,2],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["French"],"borders":["AND","BEL","DEU","ITA","LUX","MCO","ESP","CHE"],"area":551695,"difficulty":"easy"},{"iso3":"GAB","iso2":"GA","name":"Gabon","capital":"Libreville","flagCode":"ga","coordinates":[-1,11.75],"capitalCoords":[-1,11.75],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["XAF"],"languages":["French"],"borders":["CMR","COG","GNQ"],"area":267668,"difficulty":"hard"},{"iso3":"GMB","iso2":"GM","name":"Gambia","capital":"Banjul","flagCode":"gm","coordinates":[13.46666666,-16.56666666],"capitalCoords":[13.46666666,-16.56666666],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["GMD"],"languages":["English"],"borders":["SEN"],"area":10689,"difficulty":"hard"},{"iso3":"GEO","iso2":"GE","name":"Georgia","capital":"Tbilisi","flagCode":"ge","coordinates":[42,43.5],"capitalCoords":[42,43.5],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["GEL"],"languages":["Georgian"],"borders":["ARM","AZE","RUS","TUR"],"area":69700,"difficulty":"hard"},{"iso3":"DEU","iso2":"DE","name":"Germany","capital":"Berlin","flagCode":"de","coordinates":[51,9],"capitalCoords":[51,9],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["German"],"borders":["AUT","BEL","CZE","DNK","FRA","LUX","NLD","POL","CHE"],"area":357114,"difficulty":"hard"},{"iso3":"GHA","iso2":"GH","name":"Ghana","capital":"Accra","flagCode":"gh","coordinates":[8,-2],"capitalCoords":[8,-2],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["GHS"],"languages":["English"],"borders":["BFA","CIV","TGO"],"area":238533,"difficulty":"hard"},{"iso3":"GRC","iso2":"GR","name":"Greece","capital":"Athens","flagCode":"gr","coordinates":[39,22],"capitalCoords":[39,22],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Greek"],"borders":["ALB","BGR","TUR","MKD"],"area":131990,"difficulty":"hard"},{"iso3":"GRD","iso2":"GD","name":"Grenada","capital":"St. George's","flagCode":"gd","coordinates":[12.11666666,-61.66666666],"capitalCoords":[12.11666666,-61.66666666],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":344,"difficulty":"hard"},{"iso3":"GTM","iso2":"GT","name":"Guatemala","capital":"Guatemala City","flagCode":"gt","coordinates":[15.5,-90.25],"capitalCoords":[15.5,-90.25],"continent":"Americas","subregion":"Central America","population":0,"currencies":["GTQ"],"languages":["Spanish"],"borders":["BLZ","SLV","HND","MEX"],"area":108889,"difficulty":"hard"},{"iso3":"GIN","iso2":"GN","name":"Guinea","capital":"Conakry","flagCode":"gn","coordinates":[11,-10],"capitalCoords":[11,-10],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["GNF"],"languages":["French"],"borders":["CIV","GNB","LBR","MLI","SEN","SLE"],"area":245857,"difficulty":"hard"},{"iso3":"GNB","iso2":"GW","name":"Guinea-Bissau","capital":"Bissau","flagCode":"gw","coordinates":[12,-15],"capitalCoords":[12,-15],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["Portuguese","Upper Guinea Creole"],"borders":["GIN","SEN"],"area":36125,"difficulty":"hard"},{"iso3":"GUY","iso2":"GY","name":"Guyana","capital":"Georgetown","flagCode":"gy","coordinates":[5,-59],"capitalCoords":[5,-59],"continent":"Americas","subregion":"South America","population":0,"currencies":["GYD"],"languages":["English"],"borders":["BRA","SUR","VEN"],"area":214969,"difficulty":"hard"},{"iso3":"HTI","iso2":"HT","name":"Haiti","capital":"Port-au-Prince","flagCode":"ht","coordinates":[19,-72.41666666],"capitalCoords":[19,-72.41666666],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["HTG"],"languages":["French","Haitian Creole"],"borders":["DOM"],"area":27750,"difficulty":"hard"},{"iso3":"HND","iso2":"HN","name":"Honduras","capital":"Tegucigalpa","flagCode":"hn","coordinates":[15,-86.5],"capitalCoords":[15,-86.5],"continent":"Americas","subregion":"Central America","population":0,"currencies":["HNL"],"languages":["Spanish"],"borders":["GTM","SLV","NIC"],"area":112492,"difficulty":"hard"},{"iso3":"HUN","iso2":"HU","name":"Hungary","capital":"Budapest","flagCode":"hu","coordinates":[47,20],"capitalCoords":[47,20],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["HUF"],"languages":["Hungarian"],"borders":["AUT","HRV","ROU","SRB","SVK","SVN","UKR"],"area":93028,"difficulty":"hard"},{"iso3":"ISL","iso2":"IS","name":"Iceland","capital":"Reykjavik","flagCode":"is","coordinates":[65,-18],"capitalCoords":[65,-18],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["ISK"],"languages":["Icelandic"],"borders":[],"area":103000,"difficulty":"hard"},{"iso3":"IND","iso2":"IN","name":"India","capital":"New Delhi","flagCode":"in","coordinates":[20,77],"capitalCoords":[20,77],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["INR"],"languages":["English","Hindi","Tamil"],"borders":["BGD","BTN","MMR","CHN","NPL","PAK"],"area":3287590,"difficulty":"easy"},{"iso3":"IDN","iso2":"ID","name":"Indonesia","capital":"Jakarta","flagCode":"id","coordinates":[-5,120],"capitalCoords":[-5,120],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["IDR"],"languages":["Indonesian"],"borders":["TLS","MYS","PNG"],"area":1904569,"difficulty":"easy"},{"iso3":"IRN","iso2":"IR","name":"Iran","capital":"Tehran","flagCode":"ir","coordinates":[32,53],"capitalCoords":[32,53],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["IRR"],"languages":["Persian (Farsi)"],"borders":["AFG","ARM","AZE","IRQ","PAK","TUR","TKM"],"area":1648195,"difficulty":"easy"},{"iso3":"IRQ","iso2":"IQ","name":"Iraq","capital":"Baghdad","flagCode":"iq","coordinates":[33,44],"capitalCoords":[33,44],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["IQD"],"languages":["Arabic","Aramaic","Sorani"],"borders":["IRN","JOR","KWT","SAU","SYR","TUR"],"area":438317,"difficulty":"hard"},{"iso3":"IRL","iso2":"IE","name":"Ireland","capital":"Dublin","flagCode":"ie","coordinates":[53,-8],"capitalCoords":[53,-8],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["EUR"],"languages":["English","Irish"],"borders":["GBR"],"area":70273,"difficulty":"hard"},{"iso3":"ISR","iso2":"IL","name":"Israel","capital":"Jerusalem","flagCode":"il","coordinates":[31.47,35.13],"capitalCoords":[31.47,35.13],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["ILS"],"languages":["Arabic","Hebrew"],"borders":["EGY","JOR","LBN","PSE","SYR"],"area":20770,"difficulty":"hard"},{"iso3":"ITA","iso2":"IT","name":"Italy","capital":"Rome","flagCode":"it","coordinates":[42.83333333,12.83333333],"capitalCoords":[42.83333333,12.83333333],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Italian"],"borders":["AUT","FRA","SMR","SVN","CHE","VAT"],"area":301336,"difficulty":"hard"},{"iso3":"CIV","iso2":"CI","name":"Ivory Coast","capital":"Yamoussoukro","flagCode":"ci","coordinates":[8,-5],"capitalCoords":[8,-5],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["BFA","GHA","GIN","LBR","MLI"],"area":322463,"difficulty":"hard"},{"iso3":"JAM","iso2":"JM","name":"Jamaica","capital":"Kingston","flagCode":"jm","coordinates":[18.25,-77.5],"capitalCoords":[18.25,-77.5],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["JMD"],"languages":["English","Jamaican Patois"],"borders":[],"area":10991,"difficulty":"hard"},{"iso3":"JPN","iso2":"JP","name":"Japan","capital":"Tokyo","flagCode":"jp","coordinates":[36,138],"capitalCoords":[36,138],"continent":"Asia","subregion":"Eastern Asia","population":0,"currencies":["JPY"],"languages":["Japanese"],"borders":[],"area":377930,"difficulty":"hard"},{"iso3":"JOR","iso2":"JO","name":"Jordan","capital":"Amman","flagCode":"jo","coordinates":[31,36],"capitalCoords":[31,36],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["JOD"],"languages":["Arabic"],"borders":["IRQ","ISR","PSE","SAU","SYR"],"area":89342,"difficulty":"hard"},{"iso3":"KAZ","iso2":"KZ","name":"Kazakhstan","capital":"Astana","flagCode":"kz","coordinates":[48,68],"capitalCoords":[48,68],"continent":"Asia","subregion":"Central Asia","population":0,"currencies":["KZT"],"languages":["Kazakh","Russian"],"borders":["CHN","KGZ","RUS","TKM","UZB"],"area":2724900,"difficulty":"easy"},{"iso3":"KEN","iso2":"KE","name":"Kenya","capital":"Nairobi","flagCode":"ke","coordinates":[1,38],"capitalCoords":[1,38],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["KES"],"languages":["English","Swahili"],"borders":["ETH","SOM","SSD","TZA","UGA"],"area":580367,"difficulty":"easy"},{"iso3":"KIR","iso2":"KI","name":"Kiribati","capital":"South Tarawa","flagCode":"ki","coordinates":[1.41666666,173],"capitalCoords":[1.41666666,173],"continent":"Oceania","subregion":"Micronesia","population":0,"currencies":["AUD","KID"],"languages":["English","Gilbertese"],"borders":[],"area":811,"difficulty":"hard"},{"iso3":"KWT","iso2":"KW","name":"Kuwait","capital":"Kuwait City","flagCode":"kw","coordinates":[29.5,45.75],"capitalCoords":[29.5,45.75],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["KWD"],"languages":["Arabic"],"borders":["IRQ","SAU"],"area":17818,"difficulty":"hard"},{"iso3":"KGZ","iso2":"KG","name":"Kyrgyzstan","capital":"Bishkek","flagCode":"kg","coordinates":[41,75],"capitalCoords":[41,75],"continent":"Asia","subregion":"Central Asia","population":0,"currencies":["KGS"],"languages":["Kyrgyz","Russian"],"borders":["CHN","KAZ","TJK","UZB"],"area":199951,"difficulty":"hard"},{"iso3":"LAO","iso2":"LA","name":"Laos","capital":"Vientiane","flagCode":"la","coordinates":[18,105],"capitalCoords":[18,105],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["LAK"],"languages":["Lao"],"borders":["MMR","KHM","CHN","THA","VNM"],"area":236800,"difficulty":"hard"},{"iso3":"LVA","iso2":"LV","name":"Latvia","capital":"Riga","flagCode":"lv","coordinates":[57,25],"capitalCoords":[57,25],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["EUR"],"languages":["Latvian"],"borders":["BLR","EST","LTU","RUS"],"area":64559,"difficulty":"hard"},{"iso3":"LBN","iso2":"LB","name":"Lebanon","capital":"Beirut","flagCode":"lb","coordinates":[33.83333333,35.83333333],"capitalCoords":[33.83333333,35.83333333],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["LBP"],"languages":["Arabic","French"],"borders":["ISR","SYR"],"area":10452,"difficulty":"hard"},{"iso3":"LSO","iso2":"LS","name":"Lesotho","capital":"Maseru","flagCode":"ls","coordinates":[-29.5,28.5],"capitalCoords":[-29.5,28.5],"continent":"Africa","subregion":"Southern Africa","population":0,"currencies":["LSL","ZAR"],"languages":["English","Sotho"],"borders":["ZAF"],"area":30355,"difficulty":"hard"},{"iso3":"LBR","iso2":"LR","name":"Liberia","capital":"Monrovia","flagCode":"lr","coordinates":[6.5,-9.5],"capitalCoords":[6.5,-9.5],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["LRD"],"languages":["English"],"borders":["GIN","CIV","SLE"],"area":111369,"difficulty":"hard"},{"iso3":"LBY","iso2":"LY","name":"Libya","capital":"Tripoli","flagCode":"ly","coordinates":[25,17],"capitalCoords":[25,17],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["LYD"],"languages":["Arabic"],"borders":["DZA","TCD","EGY","NER","SDN","TUN"],"area":1759540,"difficulty":"easy"},{"iso3":"LIE","iso2":"LI","name":"Liechtenstein","capital":"Vaduz","flagCode":"li","coordinates":[47.26666666,9.53333333],"capitalCoords":[47.26666666,9.53333333],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["CHF"],"languages":["German"],"borders":["AUT","CHE"],"area":160,"difficulty":"hard"},{"iso3":"LTU","iso2":"LT","name":"Lithuania","capital":"Vilnius","flagCode":"lt","coordinates":[56,24],"capitalCoords":[56,24],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["EUR"],"languages":["Lithuanian"],"borders":["BLR","LVA","POL","RUS"],"area":65300,"difficulty":"hard"},{"iso3":"LUX","iso2":"LU","name":"Luxembourg","capital":"Luxembourg","flagCode":"lu","coordinates":[49.75,6.16666666],"capitalCoords":[49.75,6.16666666],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["German","French","Luxembourgish"],"borders":["BEL","FRA","DEU"],"area":2586,"difficulty":"hard"},{"iso3":"MDG","iso2":"MG","name":"Madagascar","capital":"Antananarivo","flagCode":"mg","coordinates":[-20,47],"capitalCoords":[-20,47],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["MGA"],"languages":["French","Malagasy"],"borders":[],"area":587041,"difficulty":"easy"},{"iso3":"MWI","iso2":"MW","name":"Malawi","capital":"Lilongwe","flagCode":"mw","coordinates":[-13.5,34],"capitalCoords":[-13.5,34],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["MWK"],"languages":["English","Chewa"],"borders":["MOZ","TZA","ZMB"],"area":118484,"difficulty":"hard"},{"iso3":"MYS","iso2":"MY","name":"Malaysia","capital":"Kuala Lumpur","flagCode":"my","coordinates":[2.5,112.5],"capitalCoords":[2.5,112.5],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["MYR"],"languages":["English","Malay"],"borders":["BRN","IDN","THA"],"area":330803,"difficulty":"hard"},{"iso3":"MDV","iso2":"MV","name":"Maldives","capital":"Mal\u00e9","flagCode":"mv","coordinates":[3.25,73],"capitalCoords":[3.25,73],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["MVR"],"languages":["Maldivian"],"borders":[],"area":300,"difficulty":"hard"},{"iso3":"MLI","iso2":"ML","name":"Mali","capital":"Bamako","flagCode":"ml","coordinates":[17,-4],"capitalCoords":[17,-4],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["DZA","BFA","GIN","CIV","MRT","NER","SEN"],"area":1240192,"difficulty":"easy"},{"iso3":"MLT","iso2":"MT","name":"Malta","capital":"Valletta","flagCode":"mt","coordinates":[35.83333333,14.58333333],"capitalCoords":[35.83333333,14.58333333],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["English","Maltese"],"borders":[],"area":316,"difficulty":"hard"},{"iso3":"MHL","iso2":"MH","name":"Marshall Islands","capital":"Majuro","flagCode":"mh","coordinates":[9,168],"capitalCoords":[9,168],"continent":"Oceania","subregion":"Micronesia","population":0,"currencies":["USD"],"languages":["English","Marshallese"],"borders":[],"area":181,"difficulty":"hard"},{"iso3":"MRT","iso2":"MR","name":"Mauritania","capital":"Nouakchott","flagCode":"mr","coordinates":[20,-12],"capitalCoords":[20,-12],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["MRU"],"languages":["Arabic"],"borders":["DZA","MLI","SEN","ESH"],"area":1030700,"difficulty":"easy"},{"iso3":"MUS","iso2":"MU","name":"Mauritius","capital":"Port Louis","flagCode":"mu","coordinates":[-20.28333333,57.55],"capitalCoords":[-20.28333333,57.55],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["MUR"],"languages":["English","French","Mauritian Creole"],"borders":[],"area":2040,"difficulty":"hard"},{"iso3":"MEX","iso2":"MX","name":"Mexico","capital":"Mexico City","flagCode":"mx","coordinates":[23,-102],"capitalCoords":[23,-102],"continent":"Americas","subregion":"North America","population":0,"currencies":["MXN"],"languages":["Spanish"],"borders":["BLZ","GTM","USA"],"area":1964375,"difficulty":"easy"},{"iso3":"FSM","iso2":"FM","name":"Micronesia","capital":"Palikir","flagCode":"fm","coordinates":[6.91666666,158.25],"capitalCoords":[6.91666666,158.25],"continent":"Oceania","subregion":"Micronesia","population":0,"currencies":[],"languages":["English"],"borders":[],"area":702,"difficulty":"hard"},{"iso3":"MDA","iso2":"MD","name":"Moldova","capital":"Chi\u0219in\u0103u","flagCode":"md","coordinates":[47,29],"capitalCoords":[47,29],"continent":"Europe","subregion":"Eastern Europe","population":0,"currencies":["MDL"],"languages":["Moldavian"],"borders":["ROU","UKR"],"area":33846,"difficulty":"hard"},{"iso3":"MCO","iso2":"MC","name":"Monaco","capital":"Monaco","flagCode":"mc","coordinates":[43.73333333,7.4],"capitalCoords":[43.73333333,7.4],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["French"],"borders":["FRA"],"area":2.02,"difficulty":"hard"},{"iso3":"MNG","iso2":"MN","name":"Mongolia","capital":"Ulan Bator","flagCode":"mn","coordinates":[46,105],"capitalCoords":[46,105],"continent":"Asia","subregion":"Eastern Asia","population":0,"currencies":["MNT"],"languages":["Mongolian"],"borders":["CHN","RUS"],"area":1564110,"difficulty":"easy"},{"iso3":"MNE","iso2":"ME","name":"Montenegro","capital":"Podgorica","flagCode":"me","coordinates":[42.5,19.3],"capitalCoords":[42.5,19.3],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["EUR"],"languages":["Montenegrin"],"borders":["ALB","BIH","HRV","UNK","SRB"],"area":13812,"difficulty":"hard"},{"iso3":"MAR","iso2":"MA","name":"Morocco","capital":"Rabat","flagCode":"ma","coordinates":[32,-5],"capitalCoords":[32,-5],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["MAD"],"languages":["Arabic","Berber"],"borders":["DZA","ESH","ESP"],"area":446550,"difficulty":"hard"},{"iso3":"MOZ","iso2":"MZ","name":"Mozambique","capital":"Maputo","flagCode":"mz","coordinates":[-18.25,35],"capitalCoords":[-18.25,35],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["MZN"],"languages":["Portuguese"],"borders":["MWI","ZAF","SWZ","TZA","ZMB","ZWE"],"area":801590,"difficulty":"easy"},{"iso3":"MMR","iso2":"MM","name":"Myanmar","capital":"Naypyidaw","flagCode":"mm","coordinates":[22,98],"capitalCoords":[22,98],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["MMK"],"languages":["Burmese"],"borders":["BGD","CHN","IND","LAO","THA"],"area":676578,"difficulty":"easy"},{"iso3":"NAM","iso2":"NA","name":"Namibia","capital":"Windhoek","flagCode":"na","coordinates":[-22,17],"capitalCoords":[-22,17],"continent":"Africa","subregion":"Southern Africa","population":0,"currencies":["NAD","ZAR"],"languages":["Afrikaans","German","English","Herero","Khoekhoe","Kwangali","Lozi","Ndonga","Tswana"],"borders":["AGO","BWA","ZAF","ZMB"],"area":825615,"difficulty":"easy"},{"iso3":"NRU","iso2":"NR","name":"Nauru","capital":"Yaren","flagCode":"nr","coordinates":[-0.53333333,166.91666666],"capitalCoords":[-0.53333333,166.91666666],"continent":"Oceania","subregion":"Micronesia","population":0,"currencies":["AUD"],"languages":["English","Nauru"],"borders":[],"area":21,"difficulty":"hard"},{"iso3":"NPL","iso2":"NP","name":"Nepal","capital":"Kathmandu","flagCode":"np","coordinates":[28,84],"capitalCoords":[28,84],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["NPR"],"languages":["Nepali"],"borders":["CHN","IND"],"area":147181,"difficulty":"hard"},{"iso3":"NLD","iso2":"NL","name":"Netherlands","capital":"Amsterdam","flagCode":"nl","coordinates":[52.5,5.75],"capitalCoords":[52.5,5.75],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["EUR"],"languages":["Dutch"],"borders":["BEL","DEU"],"area":41850,"difficulty":"hard"},{"iso3":"NZL","iso2":"NZ","name":"New Zealand","capital":"Wellington","flagCode":"nz","coordinates":[-41,174],"capitalCoords":[-41,174],"continent":"Oceania","subregion":"Australia and New Zealand","population":0,"currencies":["NZD"],"languages":["English","M\u0101ori","New Zealand Sign Language"],"borders":[],"area":270467,"difficulty":"hard"},{"iso3":"NIC","iso2":"NI","name":"Nicaragua","capital":"Managua","flagCode":"ni","coordinates":[13,-85],"capitalCoords":[13,-85],"continent":"Americas","subregion":"Central America","population":0,"currencies":["NIO"],"languages":["Spanish"],"borders":["CRI","HND"],"area":130373,"difficulty":"hard"},{"iso3":"NER","iso2":"NE","name":"Niger","capital":"Niamey","flagCode":"ne","coordinates":[16,8],"capitalCoords":[16,8],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["DZA","BEN","BFA","TCD","LBY","MLI","NGA"],"area":1267000,"difficulty":"easy"},{"iso3":"NGA","iso2":"NG","name":"Nigeria","capital":"Abuja","flagCode":"ng","coordinates":[10,8],"capitalCoords":[10,8],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["NGN"],"languages":["English"],"borders":["BEN","CMR","TCD","NER"],"area":923768,"difficulty":"easy"},{"iso3":"PRK","iso2":"KP","name":"North Korea","capital":"Pyongyang","flagCode":"kp","coordinates":[40,127],"capitalCoords":[40,127],"continent":"Asia","subregion":"Eastern Asia","population":0,"currencies":["KPW"],"languages":["Korean"],"borders":["CHN","KOR","RUS"],"area":120538,"difficulty":"hard"},{"iso3":"MKD","iso2":"MK","name":"North Macedonia","capital":"Skopje","flagCode":"mk","coordinates":[41.83333333,22],"capitalCoords":[41.83333333,22],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["MKD"],"languages":["Macedonian"],"borders":["ALB","BGR","GRC","UNK","SRB"],"area":25713,"difficulty":"hard"},{"iso3":"NOR","iso2":"NO","name":"Norway","capital":"Oslo","flagCode":"no","coordinates":[62,10],"capitalCoords":[62,10],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["NOK"],"languages":["Norwegian Nynorsk","Norwegian Bokm\u00e5l","Sami"],"borders":["FIN","SWE","RUS"],"area":323802,"difficulty":"hard"},{"iso3":"OMN","iso2":"OM","name":"Oman","capital":"Muscat","flagCode":"om","coordinates":[21,57],"capitalCoords":[21,57],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["OMR"],"languages":["Arabic"],"borders":["SAU","ARE","YEM"],"area":309500,"difficulty":"hard"},{"iso3":"PAK","iso2":"PK","name":"Pakistan","capital":"Islamabad","flagCode":"pk","coordinates":[30,70],"capitalCoords":[30,70],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["PKR"],"languages":["English","Urdu"],"borders":["AFG","CHN","IND","IRN"],"area":881912,"difficulty":"easy"},{"iso3":"PLW","iso2":"PW","name":"Palau","capital":"Ngerulmud","flagCode":"pw","coordinates":[7.5,134.5],"capitalCoords":[7.5,134.5],"continent":"Oceania","subregion":"Micronesia","population":0,"currencies":["USD"],"languages":["English","Palauan"],"borders":[],"area":459,"difficulty":"hard"},{"iso3":"PAN","iso2":"PA","name":"Panama","capital":"Panama City","flagCode":"pa","coordinates":[9,-80],"capitalCoords":[9,-80],"continent":"Americas","subregion":"Central America","population":0,"currencies":["PAB","USD"],"languages":["Spanish"],"borders":["COL","CRI"],"area":75417,"difficulty":"hard"},{"iso3":"PNG","iso2":"PG","name":"Papua New Guinea","capital":"Port Moresby","flagCode":"pg","coordinates":[-6,147],"capitalCoords":[-6,147],"continent":"Oceania","subregion":"Melanesia","population":0,"currencies":["PGK"],"languages":["English","Hiri Motu","Tok Pisin"],"borders":["IDN"],"area":462840,"difficulty":"hard"},{"iso3":"PRY","iso2":"PY","name":"Paraguay","capital":"Asunci\u00f3n","flagCode":"py","coordinates":[-23,-58],"capitalCoords":[-23,-58],"continent":"Americas","subregion":"South America","population":0,"currencies":["PYG"],"languages":["Guaran\u00ed","Spanish"],"borders":["ARG","BOL","BRA"],"area":406752,"difficulty":"hard"},{"iso3":"PER","iso2":"PE","name":"Peru","capital":"Lima","flagCode":"pe","coordinates":[-10,-76],"capitalCoords":[-10,-76],"continent":"Americas","subregion":"South America","population":0,"currencies":["PEN"],"languages":["Aymara","Quechua","Spanish"],"borders":["BOL","BRA","CHL","COL","ECU"],"area":1285216,"difficulty":"easy"},{"iso3":"PHL","iso2":"PH","name":"Philippines","capital":"Manila","flagCode":"ph","coordinates":[13,122],"capitalCoords":[13,122],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["PHP"],"languages":["English","Filipino"],"borders":[],"area":342353,"difficulty":"hard"},{"iso3":"POL","iso2":"PL","name":"Poland","capital":"Warsaw","flagCode":"pl","coordinates":[52,20],"capitalCoords":[52,20],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["PLN"],"languages":["Polish"],"borders":["BLR","CZE","DEU","LTU","RUS","SVK","UKR"],"area":312679,"difficulty":"hard"},{"iso3":"PRT","iso2":"PT","name":"Portugal","capital":"Lisbon","flagCode":"pt","coordinates":[39.5,-8],"capitalCoords":[39.5,-8],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Portuguese"],"borders":["ESP"],"area":92090,"difficulty":"hard"},{"iso3":"QAT","iso2":"QA","name":"Qatar","capital":"Doha","flagCode":"qa","coordinates":[25.5,51.25],"capitalCoords":[25.5,51.25],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["QAR"],"languages":["Arabic"],"borders":["SAU"],"area":11586,"difficulty":"hard"},{"iso3":"ROU","iso2":"RO","name":"Romania","capital":"Bucharest","flagCode":"ro","coordinates":[46,25],"capitalCoords":[46,25],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["RON"],"languages":["Romanian"],"borders":["BGR","HUN","MDA","SRB","UKR"],"area":238391,"difficulty":"hard"},{"iso3":"RUS","iso2":"RU","name":"Russia","capital":"Moscow","flagCode":"ru","coordinates":[60,100],"capitalCoords":[60,100],"continent":"Europe","subregion":"Eastern Europe","population":0,"currencies":["RUB"],"languages":["Russian"],"borders":["AZE","BLR","CHN","EST","FIN","GEO","KAZ","PRK","LVA","LTU","MNG","NOR","POL","UKR"],"area":17098242,"difficulty":"easy"},{"iso3":"RWA","iso2":"RW","name":"Rwanda","capital":"Kigali","flagCode":"rw","coordinates":[-2,30],"capitalCoords":[-2,30],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["RWF"],"languages":["English","French","Kinyarwanda"],"borders":["BDI","COD","TZA","UGA"],"area":26338,"difficulty":"hard"},{"iso3":"KNA","iso2":"KN","name":"Saint Kitts and Nevis","capital":"Basseterre","flagCode":"kn","coordinates":[17.33333333,-62.75],"capitalCoords":[17.33333333,-62.75],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":261,"difficulty":"hard"},{"iso3":"LCA","iso2":"LC","name":"Saint Lucia","capital":"Castries","flagCode":"lc","coordinates":[13.88333333,-60.96666666],"capitalCoords":[13.88333333,-60.96666666],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":616,"difficulty":"hard"},{"iso3":"VCT","iso2":"VC","name":"Saint Vincent and the Grenadines","capital":"Kingstown","flagCode":"vc","coordinates":[13.25,-61.2],"capitalCoords":[13.25,-61.2],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["XCD"],"languages":["English"],"borders":[],"area":389,"difficulty":"hard"},{"iso3":"WSM","iso2":"WS","name":"Samoa","capital":"Apia","flagCode":"ws","coordinates":[-13.58333333,-172.33333333],"capitalCoords":[-13.58333333,-172.33333333],"continent":"Oceania","subregion":"Polynesia","population":0,"currencies":["WST"],"languages":["English","Samoan"],"borders":[],"area":2842,"difficulty":"hard"},{"iso3":"SMR","iso2":"SM","name":"San Marino","capital":"City of San Marino","flagCode":"sm","coordinates":[43.76666666,12.41666666],"capitalCoords":[43.76666666,12.41666666],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Italian"],"borders":["ITA"],"area":61,"difficulty":"hard"},{"iso3":"SAU","iso2":"SA","name":"Saudi Arabia","capital":"Riyadh","flagCode":"sa","coordinates":[25,45],"capitalCoords":[25,45],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["SAR"],"languages":["Arabic"],"borders":["IRQ","JOR","KWT","OMN","QAT","ARE","YEM"],"area":2149690,"difficulty":"easy"},{"iso3":"SEN","iso2":"SN","name":"Senegal","capital":"Dakar","flagCode":"sn","coordinates":[14,-14],"capitalCoords":[14,-14],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["GMB","GIN","GNB","MLI","MRT"],"area":196722,"difficulty":"hard"},{"iso3":"SRB","iso2":"RS","name":"Serbia","capital":"Belgrade","flagCode":"rs","coordinates":[44,21],"capitalCoords":[44,21],"continent":"Europe","subregion":"Southeast Europe","population":0,"currencies":["RSD"],"languages":["Serbian"],"borders":["BIH","BGR","HRV","HUN","UNK","MKD","MNE","ROU"],"area":88361,"difficulty":"hard"},{"iso3":"SYC","iso2":"SC","name":"Seychelles","capital":"Victoria","flagCode":"sc","coordinates":[-4.58333333,55.66666666],"capitalCoords":[-4.58333333,55.66666666],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["SCR"],"languages":["Seychellois Creole","English","French"],"borders":[],"area":452,"difficulty":"hard"},{"iso3":"SLE","iso2":"SL","name":"Sierra Leone","capital":"Freetown","flagCode":"sl","coordinates":[8.5,-11.5],"capitalCoords":[8.5,-11.5],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["SLL"],"languages":["English"],"borders":["GIN","LBR"],"area":71740,"difficulty":"hard"},{"iso3":"SGP","iso2":"SG","name":"Singapore","capital":"Singapore","flagCode":"sg","coordinates":[1.36666666,103.8],"capitalCoords":[1.36666666,103.8],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["SGD"],"languages":["English","Malay","Tamil","Chinese"],"borders":[],"area":710,"difficulty":"hard"},{"iso3":"SVK","iso2":"SK","name":"Slovakia","capital":"Bratislava","flagCode":"sk","coordinates":[48.66666666,19.5],"capitalCoords":[48.66666666,19.5],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["EUR"],"languages":["Slovak"],"borders":["AUT","CZE","HUN","POL","UKR"],"area":49037,"difficulty":"hard"},{"iso3":"SVN","iso2":"SI","name":"Slovenia","capital":"Ljubljana","flagCode":"si","coordinates":[46.11666666,14.81666666],"capitalCoords":[46.11666666,14.81666666],"continent":"Europe","subregion":"Central Europe","population":0,"currencies":["EUR"],"languages":["Slovene"],"borders":["AUT","HRV","ITA","HUN"],"area":20273,"difficulty":"hard"},{"iso3":"SLB","iso2":"SB","name":"Solomon Islands","capital":"Honiara","flagCode":"sb","coordinates":[-8,159],"capitalCoords":[-8,159],"continent":"Oceania","subregion":"Melanesia","population":0,"currencies":["SBD"],"languages":["English"],"borders":[],"area":28896,"difficulty":"hard"},{"iso3":"SOM","iso2":"SO","name":"Somalia","capital":"Mogadishu","flagCode":"so","coordinates":[10,49],"capitalCoords":[10,49],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["SOS"],"languages":["Arabic","Somali"],"borders":["DJI","ETH","KEN"],"area":637657,"difficulty":"easy"},{"iso3":"ZAF","iso2":"ZA","name":"South Africa","capital":"Pretoria","flagCode":"za","coordinates":[-29,24],"capitalCoords":[-29,24],"continent":"Africa","subregion":"Southern Africa","population":0,"currencies":["ZAR"],"languages":["Afrikaans","English","Southern Ndebele","Northern Sotho","Southern Sotho","Swazi","Tswana","Tsonga","Venda","Xhosa","Zulu"],"borders":["BWA","LSO","MOZ","NAM","SWZ","ZWE"],"area":1221037,"difficulty":"easy"},{"iso3":"KOR","iso2":"KR","name":"South Korea","capital":"Seoul","flagCode":"kr","coordinates":[37,127.5],"capitalCoords":[37,127.5],"continent":"Asia","subregion":"Eastern Asia","population":0,"currencies":["KRW"],"languages":["Korean"],"borders":["PRK"],"area":100210,"difficulty":"hard"},{"iso3":"SSD","iso2":"SS","name":"South Sudan","capital":"Juba","flagCode":"ss","coordinates":[7,30],"capitalCoords":[7,30],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["SSP"],"languages":["English"],"borders":["CAF","COD","ETH","KEN","SDN","UGA"],"area":619745,"difficulty":"easy"},{"iso3":"ESP","iso2":"ES","name":"Spain","capital":"Madrid","flagCode":"es","coordinates":[40,-4],"capitalCoords":[40,-4],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Spanish"],"borders":["AND","FRA","GIB","PRT","MAR"],"area":505992,"difficulty":"easy"},{"iso3":"LKA","iso2":"LK","name":"Sri Lanka","capital":"Colombo","flagCode":"lk","coordinates":[7,81],"capitalCoords":[7,81],"continent":"Asia","subregion":"Southern Asia","population":0,"currencies":["LKR"],"languages":["Sinhala","Tamil"],"borders":["IND"],"area":65610,"difficulty":"hard"},{"iso3":"SDN","iso2":"SD","name":"Sudan","capital":"Khartoum","flagCode":"sd","coordinates":[15,30],"capitalCoords":[15,30],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["SDG"],"languages":["Arabic","English"],"borders":["CAF","TCD","EGY","ERI","ETH","LBY","SSD"],"area":1886068,"difficulty":"easy"},{"iso3":"SUR","iso2":"SR","name":"Suriname","capital":"Paramaribo","flagCode":"sr","coordinates":[4,-56],"capitalCoords":[4,-56],"continent":"Americas","subregion":"South America","population":0,"currencies":["SRD"],"languages":["Dutch"],"borders":["BRA","GUF","GUY"],"area":163820,"difficulty":"hard"},{"iso3":"SWE","iso2":"SE","name":"Sweden","capital":"Stockholm","flagCode":"se","coordinates":[62,15],"capitalCoords":[62,15],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["SEK"],"languages":["Swedish"],"borders":["FIN","NOR"],"area":450295,"difficulty":"hard"},{"iso3":"CHE","iso2":"CH","name":"Switzerland","capital":"Bern","flagCode":"ch","coordinates":[47,8],"capitalCoords":[47,8],"continent":"Europe","subregion":"Western Europe","population":0,"currencies":["CHF"],"languages":["French","Swiss German","Italian","Romansh"],"borders":["AUT","FRA","ITA","LIE","DEU"],"area":41284,"difficulty":"hard"},{"iso3":"SYR","iso2":"SY","name":"Syria","capital":"Damascus","flagCode":"sy","coordinates":[35,38],"capitalCoords":[35,38],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["SYP"],"languages":["Arabic"],"borders":["IRQ","ISR","JOR","LBN","TUR"],"area":185180,"difficulty":"hard"},{"iso3":"STP","iso2":"ST","name":"S\u00e3o Tom\u00e9 and Pr\u00edncipe","capital":"S\u00e3o Tom\u00e9","flagCode":"st","coordinates":[1,7],"capitalCoords":[1,7],"continent":"Africa","subregion":"Middle Africa","population":0,"currencies":["STN"],"languages":["Portuguese"],"borders":[],"area":964,"difficulty":"hard"},{"iso3":"TJK","iso2":"TJ","name":"Tajikistan","capital":"Dushanbe","flagCode":"tj","coordinates":[39,71],"capitalCoords":[39,71],"continent":"Asia","subregion":"Central Asia","population":0,"currencies":["TJS"],"languages":["Russian","Tajik"],"borders":["AFG","CHN","KGZ","UZB"],"area":143100,"difficulty":"hard"},{"iso3":"TZA","iso2":"TZ","name":"Tanzania","capital":"Dodoma","flagCode":"tz","coordinates":[-6,35],"capitalCoords":[-6,35],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["TZS"],"languages":["English","Swahili"],"borders":["BDI","COD","KEN","MWI","MOZ","RWA","UGA","ZMB"],"area":945087,"difficulty":"easy"},{"iso3":"THA","iso2":"TH","name":"Thailand","capital":"Bangkok","flagCode":"th","coordinates":[15,100],"capitalCoords":[15,100],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["THB"],"languages":["Thai"],"borders":["MMR","KHM","LAO","MYS"],"area":513120,"difficulty":"easy"},{"iso3":"TLS","iso2":"TL","name":"Timor-Leste","capital":"Dili","flagCode":"tl","coordinates":[-8.83333333,125.91666666],"capitalCoords":[-8.83333333,125.91666666],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["USD"],"languages":["Portuguese","Tetum"],"borders":["IDN"],"area":14874,"difficulty":"hard"},{"iso3":"TGO","iso2":"TG","name":"Togo","capital":"Lom\u00e9","flagCode":"tg","coordinates":[8,1.16666666],"capitalCoords":[8,1.16666666],"continent":"Africa","subregion":"Western Africa","population":0,"currencies":["XOF"],"languages":["French"],"borders":["BEN","BFA","GHA"],"area":56785,"difficulty":"hard"},{"iso3":"TON","iso2":"TO","name":"Tonga","capital":"Nuku'alofa","flagCode":"to","coordinates":[-20,-175],"capitalCoords":[-20,-175],"continent":"Oceania","subregion":"Polynesia","population":0,"currencies":["TOP"],"languages":["English","Tongan"],"borders":[],"area":747,"difficulty":"hard"},{"iso3":"TTO","iso2":"TT","name":"Trinidad and Tobago","capital":"Port of Spain","flagCode":"tt","coordinates":[11,-61],"capitalCoords":[11,-61],"continent":"Americas","subregion":"Caribbean","population":0,"currencies":["TTD"],"languages":["English"],"borders":[],"area":5130,"difficulty":"hard"},{"iso3":"TUN","iso2":"TN","name":"Tunisia","capital":"Tunis","flagCode":"tn","coordinates":[34,9],"capitalCoords":[34,9],"continent":"Africa","subregion":"Northern Africa","population":0,"currencies":["TND"],"languages":["Arabic"],"borders":["DZA","LBY"],"area":163610,"difficulty":"hard"},{"iso3":"TKM","iso2":"TM","name":"Turkmenistan","capital":"Ashgabat","flagCode":"tm","coordinates":[40,60],"capitalCoords":[40,60],"continent":"Asia","subregion":"Central Asia","population":0,"currencies":["TMT"],"languages":["Russian","Turkmen"],"borders":["AFG","IRN","KAZ","UZB"],"area":488100,"difficulty":"hard"},{"iso3":"TUV","iso2":"TV","name":"Tuvalu","capital":"Funafuti","flagCode":"tv","coordinates":[-8,178],"capitalCoords":[-8,178],"continent":"Oceania","subregion":"Polynesia","population":0,"currencies":["AUD","TVD"],"languages":["English","Tuvaluan"],"borders":[],"area":26,"difficulty":"hard"},{"iso3":"TUR","iso2":"TR","name":"T\u00fcrkiye","capital":"Ankara","flagCode":"tr","coordinates":[39,35],"capitalCoords":[39,35],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["TRY"],"languages":["Turkish"],"borders":["ARM","AZE","BGR","GEO","GRC","IRN","IRQ","SYR"],"area":783562,"difficulty":"easy"},{"iso3":"UGA","iso2":"UG","name":"Uganda","capital":"Kampala","flagCode":"ug","coordinates":[1,32],"capitalCoords":[1,32],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["UGX"],"languages":["English","Swahili"],"borders":["COD","KEN","RWA","SSD","TZA"],"area":241550,"difficulty":"hard"},{"iso3":"UKR","iso2":"UA","name":"Ukraine","capital":"Kyiv","flagCode":"ua","coordinates":[49,32],"capitalCoords":[49,32],"continent":"Europe","subregion":"Eastern Europe","population":0,"currencies":["UAH"],"languages":["Ukrainian"],"borders":["BLR","HUN","MDA","POL","ROU","RUS","SVK"],"area":603500,"difficulty":"easy"},{"iso3":"ARE","iso2":"AE","name":"United Arab Emirates","capital":"Abu Dhabi","flagCode":"ae","coordinates":[24,54],"capitalCoords":[24,54],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["AED"],"languages":["Arabic"],"borders":["OMN","SAU"],"area":83600,"difficulty":"hard"},{"iso3":"GBR","iso2":"GB","name":"United Kingdom","capital":"London","flagCode":"gb","coordinates":[54,-2],"capitalCoords":[54,-2],"continent":"Europe","subregion":"Northern Europe","population":0,"currencies":["GBP"],"languages":["English"],"borders":["IRL"],"area":242900,"difficulty":"hard"},{"iso3":"USA","iso2":"US","name":"United States","capital":"Washington D.C.","flagCode":"us","coordinates":[38,-97],"capitalCoords":[38,-97],"continent":"Americas","subregion":"North America","population":0,"currencies":["USD"],"languages":["English"],"borders":["CAN","MEX"],"area":9372610,"difficulty":"easy"},{"iso3":"URY","iso2":"UY","name":"Uruguay","capital":"Montevideo","flagCode":"uy","coordinates":[-33,-56],"capitalCoords":[-33,-56],"continent":"Americas","subregion":"South America","population":0,"currencies":["UYU"],"languages":["Spanish"],"borders":["ARG","BRA"],"area":181034,"difficulty":"hard"},{"iso3":"UZB","iso2":"UZ","name":"Uzbekistan","capital":"Tashkent","flagCode":"uz","coordinates":[41,64],"capitalCoords":[41,64],"continent":"Asia","subregion":"Central Asia","population":0,"currencies":["UZS"],"languages":["Russian","Uzbek"],"borders":["AFG","KAZ","KGZ","TJK","TKM"],"area":447400,"difficulty":"hard"},{"iso3":"VUT","iso2":"VU","name":"Vanuatu","capital":"Port Vila","flagCode":"vu","coordinates":[-16,167],"capitalCoords":[-16,167],"continent":"Oceania","subregion":"Melanesia","population":0,"currencies":["VUV"],"languages":["Bislama","English","French"],"borders":[],"area":12189,"difficulty":"hard"},{"iso3":"VAT","iso2":"VA","name":"Vatican City","capital":"Vatican City","flagCode":"va","coordinates":[41.9,12.45],"capitalCoords":[41.9,12.45],"continent":"Europe","subregion":"Southern Europe","population":0,"currencies":["EUR"],"languages":["Italian","Latin"],"borders":["ITA"],"area":0.44,"difficulty":"hard"},{"iso3":"VEN","iso2":"VE","name":"Venezuela","capital":"Caracas","flagCode":"ve","coordinates":[8,-66],"capitalCoords":[8,-66],"continent":"Americas","subregion":"South America","population":0,"currencies":["VES"],"languages":["Spanish"],"borders":["BRA","COL","GUY"],"area":916445,"difficulty":"easy"},{"iso3":"VNM","iso2":"VN","name":"Vietnam","capital":"Hanoi","flagCode":"vn","coordinates":[16.16666666,107.83333333],"capitalCoords":[16.16666666,107.83333333],"continent":"Asia","subregion":"South-Eastern Asia","population":0,"currencies":["VND"],"languages":["Vietnamese"],"borders":["KHM","CHN","LAO"],"area":331212,"difficulty":"hard"},{"iso3":"YEM","iso2":"YE","name":"Yemen","capital":"Sana'a","flagCode":"ye","coordinates":[15,48],"capitalCoords":[15,48],"continent":"Asia","subregion":"Western Asia","population":0,"currencies":["YER"],"languages":["Arabic"],"borders":["OMN","SAU"],"area":527968,"difficulty":"easy"},{"iso3":"ZMB","iso2":"ZM","name":"Zambia","capital":"Lusaka","flagCode":"zm","coordinates":[-15,30],"capitalCoords":[-15,30],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["ZMW"],"languages":["English"],"borders":["AGO","BWA","COD","MWI","MOZ","NAM","TZA","ZWE"],"area":752612,"difficulty":"easy"},{"iso3":"ZWE","iso2":"ZW","name":"Zimbabwe","capital":"Harare","flagCode":"zw","coordinates":[-20,30],"capitalCoords":[-20,30],"continent":"Africa","subregion":"Eastern Africa","population":0,"currencies":["BWP","CNY","EUR","GBP","INR","JPY","USD","ZAR","ZWB"],"languages":["Chibarwe","English","Kalanga","Khoisan","Ndau","Northern Ndebele","Chewa","Shona","Sotho","Tonga","Tswana","Tsonga","Venda","Xhosa","Zimbabwean Sign Language"],"borders":["BWA","MOZ","ZAF","ZMB"],"area":390757,"difficulty":"hard"}]}
+{
+  "version": 2,
+  "count": 194,
+  "countries": [
+    {
+      "iso3": "AFG",
+      "iso2": "AF",
+      "name": "Afghanistan",
+      "capital": "Kabul",
+      "flagCode": "af",
+      "coordinates": [
+        33,
+        65
+      ],
+      "capitalCoords": [
+        33,
+        65
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 37172386,
+      "currencies": [
+        "AFN"
+      ],
+      "languages": [
+        "Dari",
+        "Pashto",
+        "Turkmen"
+      ],
+      "borders": [
+        "IRN",
+        "PAK",
+        "TKM",
+        "UZB",
+        "TJK",
+        "CHN"
+      ],
+      "area": 652230,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ALB",
+      "iso2": "AL",
+      "name": "Albania",
+      "capital": "Tirana",
+      "flagCode": "al",
+      "coordinates": [
+        41,
+        20
+      ],
+      "capitalCoords": [
+        41,
+        20
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 2866376,
+      "currencies": [
+        "ALL"
+      ],
+      "languages": [
+        "Albanian"
+      ],
+      "borders": [
+        "MNE",
+        "GRC",
+        "MKD",
+        "UNK"
+      ],
+      "area": 28748,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "DZA",
+      "iso2": "DZ",
+      "name": "Algeria",
+      "capital": "Algiers",
+      "flagCode": "dz",
+      "coordinates": [
+        28,
+        3
+      ],
+      "capitalCoords": [
+        28,
+        3
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 42228429,
+      "currencies": [
+        "DZD"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "TUN",
+        "LBY",
+        "NER",
+        "ESH",
+        "MRT",
+        "MLI",
+        "MAR"
+      ],
+      "area": 2381741,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "AND",
+      "iso2": "AD",
+      "name": "Andorra",
+      "capital": "Andorra la Vella",
+      "flagCode": "ad",
+      "coordinates": [
+        42.5,
+        1.5
+      ],
+      "capitalCoords": [
+        42.5,
+        1.5
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 77006,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Catalan"
+      ],
+      "borders": [
+        "FRA",
+        "ESP"
+      ],
+      "area": 468,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "AGO",
+      "iso2": "AO",
+      "name": "Angola",
+      "capital": "Luanda",
+      "flagCode": "ao",
+      "coordinates": [
+        -12.5,
+        18.5
+      ],
+      "capitalCoords": [
+        -12.5,
+        18.5
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 30809762,
+      "currencies": [
+        "AOA"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [
+        "COG",
+        "COD",
+        "ZMB",
+        "NAM"
+      ],
+      "area": 1246700,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ATG",
+      "iso2": "AG",
+      "name": "Antigua and Barbuda",
+      "capital": "Saint John's",
+      "flagCode": "ag",
+      "coordinates": [
+        17.05,
+        -61.8
+      ],
+      "capitalCoords": [
+        17.05,
+        -61.8
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 96286,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 442,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ARG",
+      "iso2": "AR",
+      "name": "Argentina",
+      "capital": "Buenos Aires",
+      "flagCode": "ar",
+      "coordinates": [
+        -34,
+        -64
+      ],
+      "capitalCoords": [
+        -34,
+        -64
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 44494502,
+      "currencies": [
+        "ARS"
+      ],
+      "languages": [
+        "Guaraní",
+        "Spanish"
+      ],
+      "borders": [
+        "BOL",
+        "BRA",
+        "CHL",
+        "PRY",
+        "URY"
+      ],
+      "area": 2780400,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ARM",
+      "iso2": "AM",
+      "name": "Armenia",
+      "capital": "Yerevan",
+      "flagCode": "am",
+      "coordinates": [
+        40,
+        45
+      ],
+      "capitalCoords": [
+        40,
+        45
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 2951776,
+      "currencies": [
+        "AMD"
+      ],
+      "languages": [
+        "Armenian"
+      ],
+      "borders": [
+        "AZE",
+        "GEO",
+        "IRN",
+        "TUR"
+      ],
+      "area": 29743,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "AUS",
+      "iso2": "AU",
+      "name": "Australia",
+      "capital": "Canberra",
+      "flagCode": "au",
+      "coordinates": [
+        -27,
+        133
+      ],
+      "capitalCoords": [
+        -27,
+        133
+      ],
+      "continent": "Oceania",
+      "subregion": "Australia and New Zealand",
+      "population": 24982688,
+      "currencies": [
+        "AUD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 7692024,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "AUT",
+      "iso2": "AT",
+      "name": "Austria",
+      "capital": "Vienna",
+      "flagCode": "at",
+      "coordinates": [
+        47.33333333,
+        13.33333333
+      ],
+      "capitalCoords": [
+        47.33333333,
+        13.33333333
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 8840521,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Austro-Bavarian German"
+      ],
+      "borders": [
+        "CZE",
+        "DEU",
+        "HUN",
+        "ITA",
+        "LIE",
+        "SVK",
+        "SVN",
+        "CHE"
+      ],
+      "area": 83871,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "AZE",
+      "iso2": "AZ",
+      "name": "Azerbaijan",
+      "capital": "Baku",
+      "flagCode": "az",
+      "coordinates": [
+        40.5,
+        47.5
+      ],
+      "capitalCoords": [
+        40.5,
+        47.5
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 9939800,
+      "currencies": [
+        "AZN"
+      ],
+      "languages": [
+        "Azerbaijani",
+        "Russian"
+      ],
+      "borders": [
+        "ARM",
+        "GEO",
+        "IRN",
+        "RUS",
+        "TUR"
+      ],
+      "area": 86600,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BHS",
+      "iso2": "BS",
+      "name": "Bahamas",
+      "capital": "Nassau",
+      "flagCode": "bs",
+      "coordinates": [
+        24.25,
+        -76
+      ],
+      "capitalCoords": [
+        24.25,
+        -76
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 385640,
+      "currencies": [
+        "BSD",
+        "USD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 13943,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BHR",
+      "iso2": "BH",
+      "name": "Bahrain",
+      "capital": "Manama",
+      "flagCode": "bh",
+      "coordinates": [
+        26,
+        50.55
+      ],
+      "capitalCoords": [
+        26,
+        50.55
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 1569439,
+      "currencies": [
+        "BHD"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [],
+      "area": 765,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BGD",
+      "iso2": "BD",
+      "name": "Bangladesh",
+      "capital": "Dhaka",
+      "flagCode": "bd",
+      "coordinates": [
+        24,
+        90
+      ],
+      "capitalCoords": [
+        24,
+        90
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 161356039,
+      "currencies": [
+        "BDT"
+      ],
+      "languages": [
+        "Bengali"
+      ],
+      "borders": [
+        "MMR",
+        "IND"
+      ],
+      "area": 147570,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BRB",
+      "iso2": "BB",
+      "name": "Barbados",
+      "capital": "Bridgetown",
+      "flagCode": "bb",
+      "coordinates": [
+        13.16666666,
+        -59.53333333
+      ],
+      "capitalCoords": [
+        13.16666666,
+        -59.53333333
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 286641,
+      "currencies": [
+        "BBD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 430,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BLR",
+      "iso2": "BY",
+      "name": "Belarus",
+      "capital": "Minsk",
+      "flagCode": "by",
+      "coordinates": [
+        53,
+        28
+      ],
+      "capitalCoords": [
+        53,
+        28
+      ],
+      "continent": "Europe",
+      "subregion": "Eastern Europe",
+      "population": 9483499,
+      "currencies": [
+        "BYN"
+      ],
+      "languages": [
+        "Belarusian",
+        "Russian"
+      ],
+      "borders": [
+        "LVA",
+        "LTU",
+        "POL",
+        "RUS",
+        "UKR"
+      ],
+      "area": 207600,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BEL",
+      "iso2": "BE",
+      "name": "Belgium",
+      "capital": "Brussels",
+      "flagCode": "be",
+      "coordinates": [
+        50.83333333,
+        4
+      ],
+      "capitalCoords": [
+        50.83333333,
+        4
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 11433256,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "German",
+        "French",
+        "Dutch"
+      ],
+      "borders": [
+        "FRA",
+        "DEU",
+        "LUX",
+        "NLD"
+      ],
+      "area": 30528,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BLZ",
+      "iso2": "BZ",
+      "name": "Belize",
+      "capital": "Belmopan",
+      "flagCode": "bz",
+      "coordinates": [
+        17.25,
+        -88.75
+      ],
+      "capitalCoords": [
+        17.25,
+        -88.75
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 383071,
+      "currencies": [
+        "BZD"
+      ],
+      "languages": [
+        "Belizean Creole",
+        "English",
+        "Spanish"
+      ],
+      "borders": [
+        "GTM",
+        "MEX"
+      ],
+      "area": 22966,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BEN",
+      "iso2": "BJ",
+      "name": "Benin",
+      "capital": "Porto-Novo",
+      "flagCode": "bj",
+      "coordinates": [
+        9.5,
+        2.25
+      ],
+      "capitalCoords": [
+        9.5,
+        2.25
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 11485048,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "BFA",
+        "NER",
+        "NGA",
+        "TGO"
+      ],
+      "area": 112622,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BTN",
+      "iso2": "BT",
+      "name": "Bhutan",
+      "capital": "Thimphu",
+      "flagCode": "bt",
+      "coordinates": [
+        27.5,
+        90.5
+      ],
+      "capitalCoords": [
+        27.5,
+        90.5
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 754394,
+      "currencies": [
+        "BTN",
+        "INR"
+      ],
+      "languages": [
+        "Dzongkha"
+      ],
+      "borders": [
+        "CHN",
+        "IND"
+      ],
+      "area": 38394,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BOL",
+      "iso2": "BO",
+      "name": "Bolivia",
+      "capital": "Sucre",
+      "flagCode": "bo",
+      "coordinates": [
+        -17,
+        -65
+      ],
+      "capitalCoords": [
+        -17,
+        -65
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 11353142,
+      "currencies": [
+        "BOB"
+      ],
+      "languages": [
+        "Aymara",
+        "Guaraní",
+        "Quechua",
+        "Spanish"
+      ],
+      "borders": [
+        "ARG",
+        "BRA",
+        "CHL",
+        "PRY",
+        "PER"
+      ],
+      "area": 1098581,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "BIH",
+      "iso2": "BA",
+      "name": "Bosnia and Herzegovina",
+      "capital": "Sarajevo",
+      "flagCode": "ba",
+      "coordinates": [
+        44,
+        18
+      ],
+      "capitalCoords": [
+        44,
+        18
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 3323929,
+      "currencies": [
+        "BAM"
+      ],
+      "languages": [
+        "Bosnian",
+        "Croatian",
+        "Serbian"
+      ],
+      "borders": [
+        "HRV",
+        "MNE",
+        "SRB"
+      ],
+      "area": 51209,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BWA",
+      "iso2": "BW",
+      "name": "Botswana",
+      "capital": "Gaborone",
+      "flagCode": "bw",
+      "coordinates": [
+        -22,
+        24
+      ],
+      "capitalCoords": [
+        -22,
+        24
+      ],
+      "continent": "Africa",
+      "subregion": "Southern Africa",
+      "population": 2254126,
+      "currencies": [
+        "BWP"
+      ],
+      "languages": [
+        "English",
+        "Tswana"
+      ],
+      "borders": [
+        "NAM",
+        "ZAF",
+        "ZMB",
+        "ZWE"
+      ],
+      "area": 582000,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "BRA",
+      "iso2": "BR",
+      "name": "Brazil",
+      "capital": "Brasília",
+      "flagCode": "br",
+      "coordinates": [
+        -10,
+        -55
+      ],
+      "capitalCoords": [
+        -10,
+        -55
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 209469333,
+      "currencies": [
+        "BRL"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [
+        "ARG",
+        "BOL",
+        "COL",
+        "GUF",
+        "GUY",
+        "PRY",
+        "PER",
+        "SUR",
+        "URY",
+        "VEN"
+      ],
+      "area": 8515767,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "BRN",
+      "iso2": "BN",
+      "name": "Brunei",
+      "capital": "Bandar Seri Begawan",
+      "flagCode": "bn",
+      "coordinates": [
+        4.5,
+        114.66666666
+      ],
+      "capitalCoords": [
+        4.5,
+        114.66666666
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 428962,
+      "currencies": [
+        "BND",
+        "SGD"
+      ],
+      "languages": [
+        "Malay"
+      ],
+      "borders": [
+        "MYS"
+      ],
+      "area": 5765,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BGR",
+      "iso2": "BG",
+      "name": "Bulgaria",
+      "capital": "Sofia",
+      "flagCode": "bg",
+      "coordinates": [
+        43,
+        25
+      ],
+      "capitalCoords": [
+        43,
+        25
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 7025037,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Bulgarian"
+      ],
+      "borders": [
+        "GRC",
+        "MKD",
+        "ROU",
+        "SRB",
+        "TUR"
+      ],
+      "area": 110879,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BFA",
+      "iso2": "BF",
+      "name": "Burkina Faso",
+      "capital": "Ouagadougou",
+      "flagCode": "bf",
+      "coordinates": [
+        13,
+        -2
+      ],
+      "capitalCoords": [
+        13,
+        -2
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 19751535,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "BEN",
+        "CIV",
+        "GHA",
+        "MLI",
+        "NER",
+        "TGO"
+      ],
+      "area": 272967,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "BDI",
+      "iso2": "BI",
+      "name": "Burundi",
+      "capital": "Gitega",
+      "flagCode": "bi",
+      "coordinates": [
+        -3.5,
+        30
+      ],
+      "capitalCoords": [
+        -3.5,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 11175378,
+      "currencies": [
+        "BIF"
+      ],
+      "languages": [
+        "French",
+        "Kirundi"
+      ],
+      "borders": [
+        "COD",
+        "RWA",
+        "TZA"
+      ],
+      "area": 27834,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "KHM",
+      "iso2": "KH",
+      "name": "Cambodia",
+      "capital": "Phnom Penh",
+      "flagCode": "kh",
+      "coordinates": [
+        13,
+        105
+      ],
+      "capitalCoords": [
+        13,
+        105
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 16249798,
+      "currencies": [
+        "KHR",
+        "USD"
+      ],
+      "languages": [
+        "Khmer"
+      ],
+      "borders": [
+        "LAO",
+        "THA",
+        "VNM"
+      ],
+      "area": 181035,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CMR",
+      "iso2": "CM",
+      "name": "Cameroon",
+      "capital": "Yaoundé",
+      "flagCode": "cm",
+      "coordinates": [
+        6,
+        12
+      ],
+      "capitalCoords": [
+        6,
+        12
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 25216237,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "English",
+        "French"
+      ],
+      "borders": [
+        "CAF",
+        "TCD",
+        "COG",
+        "GNQ",
+        "GAB",
+        "NGA"
+      ],
+      "area": 475442,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CAN",
+      "iso2": "CA",
+      "name": "Canada",
+      "capital": "Ottawa",
+      "flagCode": "ca",
+      "coordinates": [
+        60,
+        -95
+      ],
+      "capitalCoords": [
+        60,
+        -95
+      ],
+      "continent": "Americas",
+      "subregion": "North America",
+      "population": 37057765,
+      "currencies": [
+        "CAD"
+      ],
+      "languages": [
+        "English",
+        "French"
+      ],
+      "borders": [
+        "USA"
+      ],
+      "area": 9984670,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "CPV",
+      "iso2": "CV",
+      "name": "Cape Verde",
+      "capital": "Praia",
+      "flagCode": "cv",
+      "coordinates": [
+        16,
+        -24
+      ],
+      "capitalCoords": [
+        16,
+        -24
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 555987,
+      "currencies": [
+        "CVE"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [],
+      "area": 4033,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CAF",
+      "iso2": "CF",
+      "name": "Central African Republic",
+      "capital": "Bangui",
+      "flagCode": "cf",
+      "coordinates": [
+        7,
+        21
+      ],
+      "capitalCoords": [
+        7,
+        21
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 4666377,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "French",
+        "Sango"
+      ],
+      "borders": [
+        "CMR",
+        "TCD",
+        "COD",
+        "COG",
+        "SSD",
+        "SDN"
+      ],
+      "area": 622984,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "TCD",
+      "iso2": "TD",
+      "name": "Chad",
+      "capital": "N'Djamena",
+      "flagCode": "td",
+      "coordinates": [
+        15,
+        19
+      ],
+      "capitalCoords": [
+        15,
+        19
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 15477751,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "Arabic",
+        "French"
+      ],
+      "borders": [
+        "CMR",
+        "CAF",
+        "LBY",
+        "NER",
+        "NGA",
+        "SDN"
+      ],
+      "area": 1284000,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "CHL",
+      "iso2": "CL",
+      "name": "Chile",
+      "capital": "Santiago",
+      "flagCode": "cl",
+      "coordinates": [
+        -30,
+        -71
+      ],
+      "capitalCoords": [
+        -30,
+        -71
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 18729160,
+      "currencies": [
+        "CLP"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "ARG",
+        "BOL",
+        "PER"
+      ],
+      "area": 756102,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "CHN",
+      "iso2": "CN",
+      "name": "China",
+      "capital": "Beijing",
+      "flagCode": "cn",
+      "coordinates": [
+        35,
+        105
+      ],
+      "capitalCoords": [
+        35,
+        105
+      ],
+      "continent": "Asia",
+      "subregion": "Eastern Asia",
+      "population": 1392730000,
+      "currencies": [
+        "CNY"
+      ],
+      "languages": [
+        "Chinese"
+      ],
+      "borders": [
+        "AFG",
+        "BTN",
+        "MMR",
+        "HKG",
+        "IND",
+        "KAZ",
+        "NPL",
+        "PRK",
+        "KGZ",
+        "LAO",
+        "MAC",
+        "MNG",
+        "PAK",
+        "RUS",
+        "TJK",
+        "VNM"
+      ],
+      "area": 9706961,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "COL",
+      "iso2": "CO",
+      "name": "Colombia",
+      "capital": "Bogotá",
+      "flagCode": "co",
+      "coordinates": [
+        4,
+        -72
+      ],
+      "capitalCoords": [
+        4,
+        -72
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 49648685,
+      "currencies": [
+        "COP"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "BRA",
+        "ECU",
+        "PAN",
+        "PER",
+        "VEN"
+      ],
+      "area": 1141748,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "COM",
+      "iso2": "KM",
+      "name": "Comoros",
+      "capital": "Moroni",
+      "flagCode": "km",
+      "coordinates": [
+        -12.16666666,
+        44.25
+      ],
+      "capitalCoords": [
+        -12.16666666,
+        44.25
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 832322,
+      "currencies": [
+        "KMF"
+      ],
+      "languages": [
+        "Arabic",
+        "French",
+        "Comorian"
+      ],
+      "borders": [],
+      "area": 1862,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "COG",
+      "iso2": "CG",
+      "name": "Congo",
+      "capital": "Brazzaville",
+      "flagCode": "cg",
+      "coordinates": [
+        -1,
+        15
+      ],
+      "capitalCoords": [
+        -1,
+        15
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 5244363,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "French",
+        "Kikongo",
+        "Lingala"
+      ],
+      "borders": [
+        "AGO",
+        "CMR",
+        "CAF",
+        "COD",
+        "GAB"
+      ],
+      "area": 342000,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CRI",
+      "iso2": "CR",
+      "name": "Costa Rica",
+      "capital": "San José",
+      "flagCode": "cr",
+      "coordinates": [
+        10,
+        -84
+      ],
+      "capitalCoords": [
+        10,
+        -84
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 4999441,
+      "currencies": [
+        "CRC"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "NIC",
+        "PAN"
+      ],
+      "area": 51100,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "HRV",
+      "iso2": "HR",
+      "name": "Croatia",
+      "capital": "Zagreb",
+      "flagCode": "hr",
+      "coordinates": [
+        45.16666666,
+        15.5
+      ],
+      "capitalCoords": [
+        45.16666666,
+        15.5
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 4087843,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Croatian"
+      ],
+      "borders": [
+        "BIH",
+        "HUN",
+        "MNE",
+        "SRB",
+        "SVN"
+      ],
+      "area": 56594,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CUB",
+      "iso2": "CU",
+      "name": "Cuba",
+      "capital": "Havana",
+      "flagCode": "cu",
+      "coordinates": [
+        21.5,
+        -80
+      ],
+      "capitalCoords": [
+        21.5,
+        -80
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 11338138,
+      "currencies": [
+        "CUC",
+        "CUP"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [],
+      "area": 109884,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CYP",
+      "iso2": "CY",
+      "name": "Cyprus",
+      "capital": "Nicosia",
+      "flagCode": "cy",
+      "coordinates": [
+        35,
+        33
+      ],
+      "capitalCoords": [
+        35,
+        33
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 1189265,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Greek",
+        "Turkish"
+      ],
+      "borders": [],
+      "area": 9251,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CZE",
+      "iso2": "CZ",
+      "name": "Czechia",
+      "capital": "Prague",
+      "flagCode": "cz",
+      "coordinates": [
+        49.75,
+        15.5
+      ],
+      "capitalCoords": [
+        49.75,
+        15.5
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 10629928,
+      "currencies": [
+        "CZK"
+      ],
+      "languages": [
+        "Czech",
+        "Slovak"
+      ],
+      "borders": [
+        "AUT",
+        "DEU",
+        "POL",
+        "SVK"
+      ],
+      "area": 78865,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "COD",
+      "iso2": "CD",
+      "name": "DR Congo",
+      "capital": "Kinshasa",
+      "flagCode": "cd",
+      "coordinates": [
+        0,
+        25
+      ],
+      "capitalCoords": [
+        0,
+        25
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 5244363,
+      "currencies": [
+        "CDF"
+      ],
+      "languages": [
+        "French",
+        "Kikongo",
+        "Lingala",
+        "Tshiluba",
+        "Swahili"
+      ],
+      "borders": [
+        "AGO",
+        "BDI",
+        "CAF",
+        "COG",
+        "RWA",
+        "SSD",
+        "TZA",
+        "UGA",
+        "ZMB"
+      ],
+      "area": 2344858,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "DNK",
+      "iso2": "DK",
+      "name": "Denmark",
+      "capital": "Copenhagen",
+      "flagCode": "dk",
+      "coordinates": [
+        56,
+        10
+      ],
+      "capitalCoords": [
+        56,
+        10
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 5793636,
+      "currencies": [
+        "DKK"
+      ],
+      "languages": [
+        "Danish"
+      ],
+      "borders": [
+        "DEU"
+      ],
+      "area": 43094,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "DJI",
+      "iso2": "DJ",
+      "name": "Djibouti",
+      "capital": "Djibouti",
+      "flagCode": "dj",
+      "coordinates": [
+        11.5,
+        43
+      ],
+      "capitalCoords": [
+        11.5,
+        43
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 958920,
+      "currencies": [
+        "DJF"
+      ],
+      "languages": [
+        "Arabic",
+        "French"
+      ],
+      "borders": [
+        "ERI",
+        "ETH",
+        "SOM"
+      ],
+      "area": 23200,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "DMA",
+      "iso2": "DM",
+      "name": "Dominica",
+      "capital": "Roseau",
+      "flagCode": "dm",
+      "coordinates": [
+        15.41666666,
+        -61.33333333
+      ],
+      "capitalCoords": [
+        15.41666666,
+        -61.33333333
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 71625,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 751,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "DOM",
+      "iso2": "DO",
+      "name": "Dominican Republic",
+      "capital": "Santo Domingo",
+      "flagCode": "do",
+      "coordinates": [
+        19,
+        -70.66666666
+      ],
+      "capitalCoords": [
+        19,
+        -70.66666666
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 10627165,
+      "currencies": [
+        "DOP"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "HTI"
+      ],
+      "area": 48671,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ECU",
+      "iso2": "EC",
+      "name": "Ecuador",
+      "capital": "Quito",
+      "flagCode": "ec",
+      "coordinates": [
+        -2,
+        -77.5
+      ],
+      "capitalCoords": [
+        -2,
+        -77.5
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 17084357,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "COL",
+        "PER"
+      ],
+      "area": 276841,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "EGY",
+      "iso2": "EG",
+      "name": "Egypt",
+      "capital": "Cairo",
+      "flagCode": "eg",
+      "coordinates": [
+        27,
+        30
+      ],
+      "capitalCoords": [
+        27,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 98423595,
+      "currencies": [
+        "EGP"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "ISR",
+        "LBY",
+        "PSE",
+        "SDN"
+      ],
+      "area": 1002450,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "SLV",
+      "iso2": "SV",
+      "name": "El Salvador",
+      "capital": "San Salvador",
+      "flagCode": "sv",
+      "coordinates": [
+        13.83333333,
+        -88.91666666
+      ],
+      "capitalCoords": [
+        13.83333333,
+        -88.91666666
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 6420744,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "GTM",
+        "HND"
+      ],
+      "area": 21041,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GNQ",
+      "iso2": "GQ",
+      "name": "Equatorial Guinea",
+      "capital": "Malabo",
+      "flagCode": "gq",
+      "coordinates": [
+        2,
+        10
+      ],
+      "capitalCoords": [
+        2,
+        10
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 1308974,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "French",
+        "Portuguese",
+        "Spanish"
+      ],
+      "borders": [
+        "CMR",
+        "GAB"
+      ],
+      "area": 28051,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ERI",
+      "iso2": "ER",
+      "name": "Eritrea",
+      "capital": "Asmara",
+      "flagCode": "er",
+      "coordinates": [
+        15,
+        39
+      ],
+      "capitalCoords": [
+        15,
+        39
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 6213972,
+      "currencies": [
+        "ERN"
+      ],
+      "languages": [
+        "Arabic",
+        "English",
+        "Tigrinya"
+      ],
+      "borders": [
+        "DJI",
+        "ETH",
+        "SDN"
+      ],
+      "area": 117600,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "EST",
+      "iso2": "EE",
+      "name": "Estonia",
+      "capital": "Tallinn",
+      "flagCode": "ee",
+      "coordinates": [
+        59,
+        26
+      ],
+      "capitalCoords": [
+        59,
+        26
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 1321977,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Estonian"
+      ],
+      "borders": [
+        "LVA",
+        "RUS"
+      ],
+      "area": 45227,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SWZ",
+      "iso2": "SZ",
+      "name": "Eswatini",
+      "capital": "Lobamba",
+      "flagCode": "sz",
+      "coordinates": [
+        -26.5,
+        31.5
+      ],
+      "capitalCoords": [
+        -26.5,
+        31.5
+      ],
+      "continent": "Africa",
+      "subregion": "Southern Africa",
+      "population": 1136191,
+      "currencies": [
+        "SZL",
+        "ZAR"
+      ],
+      "languages": [
+        "English",
+        "Swazi"
+      ],
+      "borders": [
+        "MOZ",
+        "ZAF"
+      ],
+      "area": 17364,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ETH",
+      "iso2": "ET",
+      "name": "Ethiopia",
+      "capital": "Addis Ababa",
+      "flagCode": "et",
+      "coordinates": [
+        8,
+        38
+      ],
+      "capitalCoords": [
+        8,
+        38
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 109224559,
+      "currencies": [
+        "ETB"
+      ],
+      "languages": [
+        "Amharic"
+      ],
+      "borders": [
+        "DJI",
+        "ERI",
+        "KEN",
+        "SOM",
+        "SSD",
+        "SDN"
+      ],
+      "area": 1104300,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "FJI",
+      "iso2": "FJ",
+      "name": "Fiji",
+      "capital": "Suva",
+      "flagCode": "fj",
+      "coordinates": [
+        -18,
+        175
+      ],
+      "capitalCoords": [
+        -18,
+        175
+      ],
+      "continent": "Oceania",
+      "subregion": "Melanesia",
+      "population": 883483,
+      "currencies": [
+        "FJD"
+      ],
+      "languages": [
+        "English",
+        "Fijian",
+        "Fiji Hindi"
+      ],
+      "borders": [],
+      "area": 18272,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "FIN",
+      "iso2": "FI",
+      "name": "Finland",
+      "capital": "Helsinki",
+      "flagCode": "fi",
+      "coordinates": [
+        64,
+        26
+      ],
+      "capitalCoords": [
+        64,
+        26
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 5515525,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Finnish",
+        "Swedish"
+      ],
+      "borders": [
+        "NOR",
+        "SWE",
+        "RUS"
+      ],
+      "area": 338424,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "FRA",
+      "iso2": "FR",
+      "name": "France",
+      "capital": "Paris",
+      "flagCode": "fr",
+      "coordinates": [
+        46,
+        2
+      ],
+      "capitalCoords": [
+        46,
+        2
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 66977107,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "AND",
+        "BEL",
+        "DEU",
+        "ITA",
+        "LUX",
+        "MCO",
+        "ESP",
+        "CHE"
+      ],
+      "area": 551695,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "GAB",
+      "iso2": "GA",
+      "name": "Gabon",
+      "capital": "Libreville",
+      "flagCode": "ga",
+      "coordinates": [
+        -1,
+        11.75
+      ],
+      "capitalCoords": [
+        -1,
+        11.75
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 2119275,
+      "currencies": [
+        "XAF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "CMR",
+        "COG",
+        "GNQ"
+      ],
+      "area": 267668,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GMB",
+      "iso2": "GM",
+      "name": "Gambia",
+      "capital": "Banjul",
+      "flagCode": "gm",
+      "coordinates": [
+        13.46666666,
+        -16.56666666
+      ],
+      "capitalCoords": [
+        13.46666666,
+        -16.56666666
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 2280102,
+      "currencies": [
+        "GMD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "SEN"
+      ],
+      "area": 10689,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GEO",
+      "iso2": "GE",
+      "name": "Georgia",
+      "capital": "Tbilisi",
+      "flagCode": "ge",
+      "coordinates": [
+        42,
+        43.5
+      ],
+      "capitalCoords": [
+        42,
+        43.5
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 3726549,
+      "currencies": [
+        "GEL"
+      ],
+      "languages": [
+        "Georgian"
+      ],
+      "borders": [
+        "ARM",
+        "AZE",
+        "RUS",
+        "TUR"
+      ],
+      "area": 69700,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "DEU",
+      "iso2": "DE",
+      "name": "Germany",
+      "capital": "Berlin",
+      "flagCode": "de",
+      "coordinates": [
+        51,
+        9
+      ],
+      "capitalCoords": [
+        51,
+        9
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 82905782,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "German"
+      ],
+      "borders": [
+        "AUT",
+        "BEL",
+        "CZE",
+        "DNK",
+        "FRA",
+        "LUX",
+        "NLD",
+        "POL",
+        "CHE"
+      ],
+      "area": 357114,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GHA",
+      "iso2": "GH",
+      "name": "Ghana",
+      "capital": "Accra",
+      "flagCode": "gh",
+      "coordinates": [
+        8,
+        -2
+      ],
+      "capitalCoords": [
+        8,
+        -2
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 29767108,
+      "currencies": [
+        "GHS"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "BFA",
+        "CIV",
+        "TGO"
+      ],
+      "area": 238533,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GRC",
+      "iso2": "GR",
+      "name": "Greece",
+      "capital": "Athens",
+      "flagCode": "gr",
+      "coordinates": [
+        39,
+        22
+      ],
+      "capitalCoords": [
+        39,
+        22
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 10731726,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Greek"
+      ],
+      "borders": [
+        "ALB",
+        "BGR",
+        "TUR",
+        "MKD"
+      ],
+      "area": 131990,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GRD",
+      "iso2": "GD",
+      "name": "Grenada",
+      "capital": "St. George's",
+      "flagCode": "gd",
+      "coordinates": [
+        12.11666666,
+        -61.66666666
+      ],
+      "capitalCoords": [
+        12.11666666,
+        -61.66666666
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 111454,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 344,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GTM",
+      "iso2": "GT",
+      "name": "Guatemala",
+      "capital": "Guatemala City",
+      "flagCode": "gt",
+      "coordinates": [
+        15.5,
+        -90.25
+      ],
+      "capitalCoords": [
+        15.5,
+        -90.25
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 17247807,
+      "currencies": [
+        "GTQ"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "BLZ",
+        "SLV",
+        "HND",
+        "MEX"
+      ],
+      "area": 108889,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GIN",
+      "iso2": "GN",
+      "name": "Guinea",
+      "capital": "Conakry",
+      "flagCode": "gn",
+      "coordinates": [
+        11,
+        -10
+      ],
+      "capitalCoords": [
+        11,
+        -10
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 12414318,
+      "currencies": [
+        "GNF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "CIV",
+        "GNB",
+        "LBR",
+        "MLI",
+        "SEN",
+        "SLE"
+      ],
+      "area": 245857,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GNB",
+      "iso2": "GW",
+      "name": "Guinea-Bissau",
+      "capital": "Bissau",
+      "flagCode": "gw",
+      "coordinates": [
+        12,
+        -15
+      ],
+      "capitalCoords": [
+        12,
+        -15
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 1874309,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "Portuguese",
+        "Upper Guinea Creole"
+      ],
+      "borders": [
+        "GIN",
+        "SEN"
+      ],
+      "area": 36125,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GUY",
+      "iso2": "GY",
+      "name": "Guyana",
+      "capital": "Georgetown",
+      "flagCode": "gy",
+      "coordinates": [
+        5,
+        -59
+      ],
+      "capitalCoords": [
+        5,
+        -59
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 779004,
+      "currencies": [
+        "GYD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "BRA",
+        "SUR",
+        "VEN"
+      ],
+      "area": 214969,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "HTI",
+      "iso2": "HT",
+      "name": "Haiti",
+      "capital": "Port-au-Prince",
+      "flagCode": "ht",
+      "coordinates": [
+        19,
+        -72.41666666
+      ],
+      "capitalCoords": [
+        19,
+        -72.41666666
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 11123176,
+      "currencies": [
+        "HTG"
+      ],
+      "languages": [
+        "French",
+        "Haitian Creole"
+      ],
+      "borders": [
+        "DOM"
+      ],
+      "area": 27750,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "HND",
+      "iso2": "HN",
+      "name": "Honduras",
+      "capital": "Tegucigalpa",
+      "flagCode": "hn",
+      "coordinates": [
+        15,
+        -86.5
+      ],
+      "capitalCoords": [
+        15,
+        -86.5
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 9587522,
+      "currencies": [
+        "HNL"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "GTM",
+        "SLV",
+        "NIC"
+      ],
+      "area": 112492,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "HUN",
+      "iso2": "HU",
+      "name": "Hungary",
+      "capital": "Budapest",
+      "flagCode": "hu",
+      "coordinates": [
+        47,
+        20
+      ],
+      "capitalCoords": [
+        47,
+        20
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 9775564,
+      "currencies": [
+        "HUF"
+      ],
+      "languages": [
+        "Hungarian"
+      ],
+      "borders": [
+        "AUT",
+        "HRV",
+        "ROU",
+        "SRB",
+        "SVK",
+        "SVN",
+        "UKR"
+      ],
+      "area": 93028,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ISL",
+      "iso2": "IS",
+      "name": "Iceland",
+      "capital": "Reykjavik",
+      "flagCode": "is",
+      "coordinates": [
+        65,
+        -18
+      ],
+      "capitalCoords": [
+        65,
+        -18
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 352721,
+      "currencies": [
+        "ISK"
+      ],
+      "languages": [
+        "Icelandic"
+      ],
+      "borders": [],
+      "area": 103000,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "IND",
+      "iso2": "IN",
+      "name": "India",
+      "capital": "New Delhi",
+      "flagCode": "in",
+      "coordinates": [
+        20,
+        77
+      ],
+      "capitalCoords": [
+        20,
+        77
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 1352617328,
+      "currencies": [
+        "INR"
+      ],
+      "languages": [
+        "English",
+        "Hindi",
+        "Tamil"
+      ],
+      "borders": [
+        "BGD",
+        "BTN",
+        "MMR",
+        "CHN",
+        "NPL",
+        "PAK"
+      ],
+      "area": 3287590,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "IDN",
+      "iso2": "ID",
+      "name": "Indonesia",
+      "capital": "Jakarta",
+      "flagCode": "id",
+      "coordinates": [
+        -5,
+        120
+      ],
+      "capitalCoords": [
+        -5,
+        120
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 267663435,
+      "currencies": [
+        "IDR"
+      ],
+      "languages": [
+        "Indonesian"
+      ],
+      "borders": [
+        "TLS",
+        "MYS",
+        "PNG"
+      ],
+      "area": 1904569,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "IRN",
+      "iso2": "IR",
+      "name": "Iran",
+      "capital": "Tehran",
+      "flagCode": "ir",
+      "coordinates": [
+        32,
+        53
+      ],
+      "capitalCoords": [
+        32,
+        53
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 81800269,
+      "currencies": [
+        "IRR"
+      ],
+      "languages": [
+        "Persian (Farsi)"
+      ],
+      "borders": [
+        "AFG",
+        "ARM",
+        "AZE",
+        "IRQ",
+        "PAK",
+        "TUR",
+        "TKM"
+      ],
+      "area": 1648195,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "IRQ",
+      "iso2": "IQ",
+      "name": "Iraq",
+      "capital": "Baghdad",
+      "flagCode": "iq",
+      "coordinates": [
+        33,
+        44
+      ],
+      "capitalCoords": [
+        33,
+        44
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 38433600,
+      "currencies": [
+        "IQD"
+      ],
+      "languages": [
+        "Arabic",
+        "Aramaic",
+        "Sorani"
+      ],
+      "borders": [
+        "IRN",
+        "JOR",
+        "KWT",
+        "SAU",
+        "SYR",
+        "TUR"
+      ],
+      "area": 438317,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "IRL",
+      "iso2": "IE",
+      "name": "Ireland",
+      "capital": "Dublin",
+      "flagCode": "ie",
+      "coordinates": [
+        53,
+        -8
+      ],
+      "capitalCoords": [
+        53,
+        -8
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 4867309,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "English",
+        "Irish"
+      ],
+      "borders": [
+        "GBR"
+      ],
+      "area": 70273,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ISR",
+      "iso2": "IL",
+      "name": "Israel",
+      "capital": "Jerusalem",
+      "flagCode": "il",
+      "coordinates": [
+        31.47,
+        35.13
+      ],
+      "capitalCoords": [
+        31.47,
+        35.13
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 8882800,
+      "currencies": [
+        "ILS"
+      ],
+      "languages": [
+        "Arabic",
+        "Hebrew"
+      ],
+      "borders": [
+        "EGY",
+        "JOR",
+        "LBN",
+        "PSE",
+        "SYR"
+      ],
+      "area": 20770,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ITA",
+      "iso2": "IT",
+      "name": "Italy",
+      "capital": "Rome",
+      "flagCode": "it",
+      "coordinates": [
+        42.83333333,
+        12.83333333
+      ],
+      "capitalCoords": [
+        42.83333333,
+        12.83333333
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 60421760,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Italian"
+      ],
+      "borders": [
+        "AUT",
+        "FRA",
+        "SMR",
+        "SVN",
+        "CHE",
+        "VAT"
+      ],
+      "area": 301336,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CIV",
+      "iso2": "CI",
+      "name": "Ivory Coast",
+      "capital": "Yamoussoukro",
+      "flagCode": "ci",
+      "coordinates": [
+        8,
+        -5
+      ],
+      "capitalCoords": [
+        8,
+        -5
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 25069229,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "BFA",
+        "GHA",
+        "GIN",
+        "LBR",
+        "MLI"
+      ],
+      "area": 322463,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "JAM",
+      "iso2": "JM",
+      "name": "Jamaica",
+      "capital": "Kingston",
+      "flagCode": "jm",
+      "coordinates": [
+        18.25,
+        -77.5
+      ],
+      "capitalCoords": [
+        18.25,
+        -77.5
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 2934855,
+      "currencies": [
+        "JMD"
+      ],
+      "languages": [
+        "English",
+        "Jamaican Patois"
+      ],
+      "borders": [],
+      "area": 10991,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "JPN",
+      "iso2": "JP",
+      "name": "Japan",
+      "capital": "Tokyo",
+      "flagCode": "jp",
+      "coordinates": [
+        36,
+        138
+      ],
+      "capitalCoords": [
+        36,
+        138
+      ],
+      "continent": "Asia",
+      "subregion": "Eastern Asia",
+      "population": 126529100,
+      "currencies": [
+        "JPY"
+      ],
+      "languages": [
+        "Japanese"
+      ],
+      "borders": [],
+      "area": 377930,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "JOR",
+      "iso2": "JO",
+      "name": "Jordan",
+      "capital": "Amman",
+      "flagCode": "jo",
+      "coordinates": [
+        31,
+        36
+      ],
+      "capitalCoords": [
+        31,
+        36
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 9956011,
+      "currencies": [
+        "JOD"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "IRQ",
+        "ISR",
+        "PSE",
+        "SAU",
+        "SYR"
+      ],
+      "area": 89342,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "KAZ",
+      "iso2": "KZ",
+      "name": "Kazakhstan",
+      "capital": "Astana",
+      "flagCode": "kz",
+      "coordinates": [
+        48,
+        68
+      ],
+      "capitalCoords": [
+        48,
+        68
+      ],
+      "continent": "Asia",
+      "subregion": "Central Asia",
+      "population": 18272430,
+      "currencies": [
+        "KZT"
+      ],
+      "languages": [
+        "Kazakh",
+        "Russian"
+      ],
+      "borders": [
+        "CHN",
+        "KGZ",
+        "RUS",
+        "TKM",
+        "UZB"
+      ],
+      "area": 2724900,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "KEN",
+      "iso2": "KE",
+      "name": "Kenya",
+      "capital": "Nairobi",
+      "flagCode": "ke",
+      "coordinates": [
+        1,
+        38
+      ],
+      "capitalCoords": [
+        1,
+        38
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 51393010,
+      "currencies": [
+        "KES"
+      ],
+      "languages": [
+        "English",
+        "Swahili"
+      ],
+      "borders": [
+        "ETH",
+        "SOM",
+        "SSD",
+        "TZA",
+        "UGA"
+      ],
+      "area": 580367,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "KIR",
+      "iso2": "KI",
+      "name": "Kiribati",
+      "capital": "South Tarawa",
+      "flagCode": "ki",
+      "coordinates": [
+        1.41666666,
+        173
+      ],
+      "capitalCoords": [
+        1.41666666,
+        173
+      ],
+      "continent": "Oceania",
+      "subregion": "Micronesia",
+      "population": 115847,
+      "currencies": [
+        "AUD",
+        "KID"
+      ],
+      "languages": [
+        "English",
+        "Gilbertese"
+      ],
+      "borders": [],
+      "area": 811,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "KWT",
+      "iso2": "KW",
+      "name": "Kuwait",
+      "capital": "Kuwait City",
+      "flagCode": "kw",
+      "coordinates": [
+        29.5,
+        45.75
+      ],
+      "capitalCoords": [
+        29.5,
+        45.75
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 4137309,
+      "currencies": [
+        "KWD"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "IRQ",
+        "SAU"
+      ],
+      "area": 17818,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "KGZ",
+      "iso2": "KG",
+      "name": "Kyrgyzstan",
+      "capital": "Bishkek",
+      "flagCode": "kg",
+      "coordinates": [
+        41,
+        75
+      ],
+      "capitalCoords": [
+        41,
+        75
+      ],
+      "continent": "Asia",
+      "subregion": "Central Asia",
+      "population": 6322800,
+      "currencies": [
+        "KGS"
+      ],
+      "languages": [
+        "Kyrgyz",
+        "Russian"
+      ],
+      "borders": [
+        "CHN",
+        "KAZ",
+        "TJK",
+        "UZB"
+      ],
+      "area": 199951,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LAO",
+      "iso2": "LA",
+      "name": "Laos",
+      "capital": "Vientiane",
+      "flagCode": "la",
+      "coordinates": [
+        18,
+        105
+      ],
+      "capitalCoords": [
+        18,
+        105
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 7061507,
+      "currencies": [
+        "LAK"
+      ],
+      "languages": [
+        "Lao"
+      ],
+      "borders": [
+        "MMR",
+        "KHM",
+        "CHN",
+        "THA",
+        "VNM"
+      ],
+      "area": 236800,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LVA",
+      "iso2": "LV",
+      "name": "Latvia",
+      "capital": "Riga",
+      "flagCode": "lv",
+      "coordinates": [
+        57,
+        25
+      ],
+      "capitalCoords": [
+        57,
+        25
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 1927174,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Latvian"
+      ],
+      "borders": [
+        "BLR",
+        "EST",
+        "LTU",
+        "RUS"
+      ],
+      "area": 64559,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LBN",
+      "iso2": "LB",
+      "name": "Lebanon",
+      "capital": "Beirut",
+      "flagCode": "lb",
+      "coordinates": [
+        33.83333333,
+        35.83333333
+      ],
+      "capitalCoords": [
+        33.83333333,
+        35.83333333
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 6848925,
+      "currencies": [
+        "LBP"
+      ],
+      "languages": [
+        "Arabic",
+        "French"
+      ],
+      "borders": [
+        "ISR",
+        "SYR"
+      ],
+      "area": 10452,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LSO",
+      "iso2": "LS",
+      "name": "Lesotho",
+      "capital": "Maseru",
+      "flagCode": "ls",
+      "coordinates": [
+        -29.5,
+        28.5
+      ],
+      "capitalCoords": [
+        -29.5,
+        28.5
+      ],
+      "continent": "Africa",
+      "subregion": "Southern Africa",
+      "population": 2108132,
+      "currencies": [
+        "LSL",
+        "ZAR"
+      ],
+      "languages": [
+        "English",
+        "Sotho"
+      ],
+      "borders": [
+        "ZAF"
+      ],
+      "area": 30355,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LBR",
+      "iso2": "LR",
+      "name": "Liberia",
+      "capital": "Monrovia",
+      "flagCode": "lr",
+      "coordinates": [
+        6.5,
+        -9.5
+      ],
+      "capitalCoords": [
+        6.5,
+        -9.5
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 4818977,
+      "currencies": [
+        "LRD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "GIN",
+        "CIV",
+        "SLE"
+      ],
+      "area": 111369,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LBY",
+      "iso2": "LY",
+      "name": "Libya",
+      "capital": "Tripoli",
+      "flagCode": "ly",
+      "coordinates": [
+        25,
+        17
+      ],
+      "capitalCoords": [
+        25,
+        17
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 6678567,
+      "currencies": [
+        "LYD"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "DZA",
+        "TCD",
+        "EGY",
+        "NER",
+        "SDN",
+        "TUN"
+      ],
+      "area": 1759540,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "LIE",
+      "iso2": "LI",
+      "name": "Liechtenstein",
+      "capital": "Vaduz",
+      "flagCode": "li",
+      "coordinates": [
+        47.26666666,
+        9.53333333
+      ],
+      "capitalCoords": [
+        47.26666666,
+        9.53333333
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 37910,
+      "currencies": [
+        "CHF"
+      ],
+      "languages": [
+        "German"
+      ],
+      "borders": [
+        "AUT",
+        "CHE"
+      ],
+      "area": 160,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LTU",
+      "iso2": "LT",
+      "name": "Lithuania",
+      "capital": "Vilnius",
+      "flagCode": "lt",
+      "coordinates": [
+        56,
+        24
+      ],
+      "capitalCoords": [
+        56,
+        24
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 2801543,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Lithuanian"
+      ],
+      "borders": [
+        "BLR",
+        "LVA",
+        "POL",
+        "RUS"
+      ],
+      "area": 65300,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LUX",
+      "iso2": "LU",
+      "name": "Luxembourg",
+      "capital": "Luxembourg",
+      "flagCode": "lu",
+      "coordinates": [
+        49.75,
+        6.16666666
+      ],
+      "capitalCoords": [
+        49.75,
+        6.16666666
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 607950,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "German",
+        "French",
+        "Luxembourgish"
+      ],
+      "borders": [
+        "BEL",
+        "FRA",
+        "DEU"
+      ],
+      "area": 2586,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MDG",
+      "iso2": "MG",
+      "name": "Madagascar",
+      "capital": "Antananarivo",
+      "flagCode": "mg",
+      "coordinates": [
+        -20,
+        47
+      ],
+      "capitalCoords": [
+        -20,
+        47
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 26262368,
+      "currencies": [
+        "MGA"
+      ],
+      "languages": [
+        "French",
+        "Malagasy"
+      ],
+      "borders": [],
+      "area": 587041,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "MWI",
+      "iso2": "MW",
+      "name": "Malawi",
+      "capital": "Lilongwe",
+      "flagCode": "mw",
+      "coordinates": [
+        -13.5,
+        34
+      ],
+      "capitalCoords": [
+        -13.5,
+        34
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 18143315,
+      "currencies": [
+        "MWK"
+      ],
+      "languages": [
+        "English",
+        "Chewa"
+      ],
+      "borders": [
+        "MOZ",
+        "TZA",
+        "ZMB"
+      ],
+      "area": 118484,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MYS",
+      "iso2": "MY",
+      "name": "Malaysia",
+      "capital": "Kuala Lumpur",
+      "flagCode": "my",
+      "coordinates": [
+        2.5,
+        112.5
+      ],
+      "capitalCoords": [
+        2.5,
+        112.5
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 31528585,
+      "currencies": [
+        "MYR"
+      ],
+      "languages": [
+        "English",
+        "Malay"
+      ],
+      "borders": [
+        "BRN",
+        "IDN",
+        "THA"
+      ],
+      "area": 330803,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MDV",
+      "iso2": "MV",
+      "name": "Maldives",
+      "capital": "Malé",
+      "flagCode": "mv",
+      "coordinates": [
+        3.25,
+        73
+      ],
+      "capitalCoords": [
+        3.25,
+        73
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 515696,
+      "currencies": [
+        "MVR"
+      ],
+      "languages": [
+        "Maldivian"
+      ],
+      "borders": [],
+      "area": 300,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MLI",
+      "iso2": "ML",
+      "name": "Mali",
+      "capital": "Bamako",
+      "flagCode": "ml",
+      "coordinates": [
+        17,
+        -4
+      ],
+      "capitalCoords": [
+        17,
+        -4
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 19077690,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "DZA",
+        "BFA",
+        "GIN",
+        "CIV",
+        "MRT",
+        "NER",
+        "SEN"
+      ],
+      "area": 1240192,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "MLT",
+      "iso2": "MT",
+      "name": "Malta",
+      "capital": "Valletta",
+      "flagCode": "mt",
+      "coordinates": [
+        35.83333333,
+        14.58333333
+      ],
+      "capitalCoords": [
+        35.83333333,
+        14.58333333
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 484630,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "English",
+        "Maltese"
+      ],
+      "borders": [],
+      "area": 316,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MHL",
+      "iso2": "MH",
+      "name": "Marshall Islands",
+      "capital": "Majuro",
+      "flagCode": "mh",
+      "coordinates": [
+        9,
+        168
+      ],
+      "capitalCoords": [
+        9,
+        168
+      ],
+      "continent": "Oceania",
+      "subregion": "Micronesia",
+      "population": 58413,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "English",
+        "Marshallese"
+      ],
+      "borders": [],
+      "area": 181,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MRT",
+      "iso2": "MR",
+      "name": "Mauritania",
+      "capital": "Nouakchott",
+      "flagCode": "mr",
+      "coordinates": [
+        20,
+        -12
+      ],
+      "capitalCoords": [
+        20,
+        -12
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 4403319,
+      "currencies": [
+        "MRU"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "DZA",
+        "MLI",
+        "SEN",
+        "ESH"
+      ],
+      "area": 1030700,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "MUS",
+      "iso2": "MU",
+      "name": "Mauritius",
+      "capital": "Port Louis",
+      "flagCode": "mu",
+      "coordinates": [
+        -20.28333333,
+        57.55
+      ],
+      "capitalCoords": [
+        -20.28333333,
+        57.55
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 1265303,
+      "currencies": [
+        "MUR"
+      ],
+      "languages": [
+        "English",
+        "French",
+        "Mauritian Creole"
+      ],
+      "borders": [],
+      "area": 2040,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MEX",
+      "iso2": "MX",
+      "name": "Mexico",
+      "capital": "Mexico City",
+      "flagCode": "mx",
+      "coordinates": [
+        23,
+        -102
+      ],
+      "capitalCoords": [
+        23,
+        -102
+      ],
+      "continent": "Americas",
+      "subregion": "North America",
+      "population": 126190788,
+      "currencies": [
+        "MXN"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "BLZ",
+        "GTM",
+        "USA"
+      ],
+      "area": 1964375,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "FSM",
+      "iso2": "FM",
+      "name": "Micronesia",
+      "capital": "Palikir",
+      "flagCode": "fm",
+      "coordinates": [
+        6.91666666,
+        158.25
+      ],
+      "capitalCoords": [
+        6.91666666,
+        158.25
+      ],
+      "continent": "Oceania",
+      "subregion": "Micronesia",
+      "population": 112640,
+      "currencies": [],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 702,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MDA",
+      "iso2": "MD",
+      "name": "Moldova",
+      "capital": "Chișinău",
+      "flagCode": "md",
+      "coordinates": [
+        47,
+        29
+      ],
+      "capitalCoords": [
+        47,
+        29
+      ],
+      "continent": "Europe",
+      "subregion": "Eastern Europe",
+      "population": 2706049,
+      "currencies": [
+        "MDL"
+      ],
+      "languages": [
+        "Moldavian"
+      ],
+      "borders": [
+        "ROU",
+        "UKR"
+      ],
+      "area": 33846,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MCO",
+      "iso2": "MC",
+      "name": "Monaco",
+      "capital": "Monaco",
+      "flagCode": "mc",
+      "coordinates": [
+        43.73333333,
+        7.4
+      ],
+      "capitalCoords": [
+        43.73333333,
+        7.4
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 38682,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "FRA"
+      ],
+      "area": 2.02,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MNG",
+      "iso2": "MN",
+      "name": "Mongolia",
+      "capital": "Ulan Bator",
+      "flagCode": "mn",
+      "coordinates": [
+        46,
+        105
+      ],
+      "capitalCoords": [
+        46,
+        105
+      ],
+      "continent": "Asia",
+      "subregion": "Eastern Asia",
+      "population": 3170208,
+      "currencies": [
+        "MNT"
+      ],
+      "languages": [
+        "Mongolian"
+      ],
+      "borders": [
+        "CHN",
+        "RUS"
+      ],
+      "area": 1564110,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "MNE",
+      "iso2": "ME",
+      "name": "Montenegro",
+      "capital": "Podgorica",
+      "flagCode": "me",
+      "coordinates": [
+        42.5,
+        19.3
+      ],
+      "capitalCoords": [
+        42.5,
+        19.3
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 631219,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Montenegrin"
+      ],
+      "borders": [
+        "ALB",
+        "BIH",
+        "HRV",
+        "UNK",
+        "SRB"
+      ],
+      "area": 13812,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MAR",
+      "iso2": "MA",
+      "name": "Morocco",
+      "capital": "Rabat",
+      "flagCode": "ma",
+      "coordinates": [
+        32,
+        -5
+      ],
+      "capitalCoords": [
+        32,
+        -5
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 36029138,
+      "currencies": [
+        "MAD"
+      ],
+      "languages": [
+        "Arabic",
+        "Berber"
+      ],
+      "borders": [
+        "DZA",
+        "ESH",
+        "ESP"
+      ],
+      "area": 446550,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MOZ",
+      "iso2": "MZ",
+      "name": "Mozambique",
+      "capital": "Maputo",
+      "flagCode": "mz",
+      "coordinates": [
+        -18.25,
+        35
+      ],
+      "capitalCoords": [
+        -18.25,
+        35
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 29495962,
+      "currencies": [
+        "MZN"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [
+        "MWI",
+        "ZAF",
+        "SWZ",
+        "TZA",
+        "ZMB",
+        "ZWE"
+      ],
+      "area": 801590,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "MMR",
+      "iso2": "MM",
+      "name": "Myanmar",
+      "capital": "Naypyidaw",
+      "flagCode": "mm",
+      "coordinates": [
+        22,
+        98
+      ],
+      "capitalCoords": [
+        22,
+        98
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 53708395,
+      "currencies": [
+        "MMK"
+      ],
+      "languages": [
+        "Burmese"
+      ],
+      "borders": [
+        "BGD",
+        "CHN",
+        "IND",
+        "LAO",
+        "THA"
+      ],
+      "area": 676578,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "NAM",
+      "iso2": "NA",
+      "name": "Namibia",
+      "capital": "Windhoek",
+      "flagCode": "na",
+      "coordinates": [
+        -22,
+        17
+      ],
+      "capitalCoords": [
+        -22,
+        17
+      ],
+      "continent": "Africa",
+      "subregion": "Southern Africa",
+      "population": 2448255,
+      "currencies": [
+        "NAD",
+        "ZAR"
+      ],
+      "languages": [
+        "Afrikaans",
+        "German",
+        "English",
+        "Herero",
+        "Khoekhoe",
+        "Kwangali",
+        "Lozi",
+        "Ndonga",
+        "Tswana"
+      ],
+      "borders": [
+        "AGO",
+        "BWA",
+        "ZAF",
+        "ZMB"
+      ],
+      "area": 825615,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "NRU",
+      "iso2": "NR",
+      "name": "Nauru",
+      "capital": "Yaren",
+      "flagCode": "nr",
+      "coordinates": [
+        -0.53333333,
+        166.91666666
+      ],
+      "capitalCoords": [
+        -0.53333333,
+        166.91666666
+      ],
+      "continent": "Oceania",
+      "subregion": "Micronesia",
+      "population": 12704,
+      "currencies": [
+        "AUD"
+      ],
+      "languages": [
+        "English",
+        "Nauru"
+      ],
+      "borders": [],
+      "area": 21,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NPL",
+      "iso2": "NP",
+      "name": "Nepal",
+      "capital": "Kathmandu",
+      "flagCode": "np",
+      "coordinates": [
+        28,
+        84
+      ],
+      "capitalCoords": [
+        28,
+        84
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 28087871,
+      "currencies": [
+        "NPR"
+      ],
+      "languages": [
+        "Nepali"
+      ],
+      "borders": [
+        "CHN",
+        "IND"
+      ],
+      "area": 147181,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NLD",
+      "iso2": "NL",
+      "name": "Netherlands",
+      "capital": "Amsterdam",
+      "flagCode": "nl",
+      "coordinates": [
+        52.5,
+        5.75
+      ],
+      "capitalCoords": [
+        52.5,
+        5.75
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 17231624,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Dutch"
+      ],
+      "borders": [
+        "BEL",
+        "DEU"
+      ],
+      "area": 41850,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NZL",
+      "iso2": "NZ",
+      "name": "New Zealand",
+      "capital": "Wellington",
+      "flagCode": "nz",
+      "coordinates": [
+        -41,
+        174
+      ],
+      "capitalCoords": [
+        -41,
+        174
+      ],
+      "continent": "Oceania",
+      "subregion": "Australia and New Zealand",
+      "population": 4841000,
+      "currencies": [
+        "NZD"
+      ],
+      "languages": [
+        "English",
+        "Māori",
+        "New Zealand Sign Language"
+      ],
+      "borders": [],
+      "area": 270467,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NIC",
+      "iso2": "NI",
+      "name": "Nicaragua",
+      "capital": "Managua",
+      "flagCode": "ni",
+      "coordinates": [
+        13,
+        -85
+      ],
+      "capitalCoords": [
+        13,
+        -85
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 6465513,
+      "currencies": [
+        "NIO"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "CRI",
+        "HND"
+      ],
+      "area": 130373,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NER",
+      "iso2": "NE",
+      "name": "Niger",
+      "capital": "Niamey",
+      "flagCode": "ne",
+      "coordinates": [
+        16,
+        8
+      ],
+      "capitalCoords": [
+        16,
+        8
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 22442948,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "DZA",
+        "BEN",
+        "BFA",
+        "TCD",
+        "LBY",
+        "MLI",
+        "NGA"
+      ],
+      "area": 1267000,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "NGA",
+      "iso2": "NG",
+      "name": "Nigeria",
+      "capital": "Abuja",
+      "flagCode": "ng",
+      "coordinates": [
+        10,
+        8
+      ],
+      "capitalCoords": [
+        10,
+        8
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 195874740,
+      "currencies": [
+        "NGN"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "BEN",
+        "CMR",
+        "TCD",
+        "NER"
+      ],
+      "area": 923768,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "PRK",
+      "iso2": "KP",
+      "name": "North Korea",
+      "capital": "Pyongyang",
+      "flagCode": "kp",
+      "coordinates": [
+        40,
+        127
+      ],
+      "capitalCoords": [
+        40,
+        127
+      ],
+      "continent": "Asia",
+      "subregion": "Eastern Asia",
+      "population": 25549819,
+      "currencies": [
+        "KPW"
+      ],
+      "languages": [
+        "Korean"
+      ],
+      "borders": [
+        "CHN",
+        "KOR",
+        "RUS"
+      ],
+      "area": 120538,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "MKD",
+      "iso2": "MK",
+      "name": "North Macedonia",
+      "capital": "Skopje",
+      "flagCode": "mk",
+      "coordinates": [
+        41.83333333,
+        22
+      ],
+      "capitalCoords": [
+        41.83333333,
+        22
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 2084367,
+      "currencies": [
+        "MKD"
+      ],
+      "languages": [
+        "Macedonian"
+      ],
+      "borders": [
+        "ALB",
+        "BGR",
+        "GRC",
+        "UNK",
+        "SRB"
+      ],
+      "area": 25713,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "NOR",
+      "iso2": "NO",
+      "name": "Norway",
+      "capital": "Oslo",
+      "flagCode": "no",
+      "coordinates": [
+        62,
+        10
+      ],
+      "capitalCoords": [
+        62,
+        10
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 5311916,
+      "currencies": [
+        "NOK"
+      ],
+      "languages": [
+        "Norwegian Nynorsk",
+        "Norwegian Bokmål",
+        "Sami"
+      ],
+      "borders": [
+        "FIN",
+        "SWE",
+        "RUS"
+      ],
+      "area": 323802,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "OMN",
+      "iso2": "OM",
+      "name": "Oman",
+      "capital": "Muscat",
+      "flagCode": "om",
+      "coordinates": [
+        21,
+        57
+      ],
+      "capitalCoords": [
+        21,
+        57
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 4829483,
+      "currencies": [
+        "OMR"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "SAU",
+        "ARE",
+        "YEM"
+      ],
+      "area": 309500,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PAK",
+      "iso2": "PK",
+      "name": "Pakistan",
+      "capital": "Islamabad",
+      "flagCode": "pk",
+      "coordinates": [
+        30,
+        70
+      ],
+      "capitalCoords": [
+        30,
+        70
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 212215030,
+      "currencies": [
+        "PKR"
+      ],
+      "languages": [
+        "English",
+        "Urdu"
+      ],
+      "borders": [
+        "AFG",
+        "CHN",
+        "IND",
+        "IRN"
+      ],
+      "area": 881912,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "PLW",
+      "iso2": "PW",
+      "name": "Palau",
+      "capital": "Ngerulmud",
+      "flagCode": "pw",
+      "coordinates": [
+        7.5,
+        134.5
+      ],
+      "capitalCoords": [
+        7.5,
+        134.5
+      ],
+      "continent": "Oceania",
+      "subregion": "Micronesia",
+      "population": 17907,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "English",
+        "Palauan"
+      ],
+      "borders": [],
+      "area": 459,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PAN",
+      "iso2": "PA",
+      "name": "Panama",
+      "capital": "Panama City",
+      "flagCode": "pa",
+      "coordinates": [
+        9,
+        -80
+      ],
+      "capitalCoords": [
+        9,
+        -80
+      ],
+      "continent": "Americas",
+      "subregion": "Central America",
+      "population": 4176873,
+      "currencies": [
+        "PAB",
+        "USD"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "COL",
+        "CRI"
+      ],
+      "area": 75417,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PNG",
+      "iso2": "PG",
+      "name": "Papua New Guinea",
+      "capital": "Port Moresby",
+      "flagCode": "pg",
+      "coordinates": [
+        -6,
+        147
+      ],
+      "capitalCoords": [
+        -6,
+        147
+      ],
+      "continent": "Oceania",
+      "subregion": "Melanesia",
+      "population": 8606316,
+      "currencies": [
+        "PGK"
+      ],
+      "languages": [
+        "English",
+        "Hiri Motu",
+        "Tok Pisin"
+      ],
+      "borders": [
+        "IDN"
+      ],
+      "area": 462840,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PRY",
+      "iso2": "PY",
+      "name": "Paraguay",
+      "capital": "Asunción",
+      "flagCode": "py",
+      "coordinates": [
+        -23,
+        -58
+      ],
+      "capitalCoords": [
+        -23,
+        -58
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 6956071,
+      "currencies": [
+        "PYG"
+      ],
+      "languages": [
+        "Guaraní",
+        "Spanish"
+      ],
+      "borders": [
+        "ARG",
+        "BOL",
+        "BRA"
+      ],
+      "area": 406752,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PER",
+      "iso2": "PE",
+      "name": "Peru",
+      "capital": "Lima",
+      "flagCode": "pe",
+      "coordinates": [
+        -10,
+        -76
+      ],
+      "capitalCoords": [
+        -10,
+        -76
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 31989256,
+      "currencies": [
+        "PEN"
+      ],
+      "languages": [
+        "Aymara",
+        "Quechua",
+        "Spanish"
+      ],
+      "borders": [
+        "BOL",
+        "BRA",
+        "CHL",
+        "COL",
+        "ECU"
+      ],
+      "area": 1285216,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "PHL",
+      "iso2": "PH",
+      "name": "Philippines",
+      "capital": "Manila",
+      "flagCode": "ph",
+      "coordinates": [
+        13,
+        122
+      ],
+      "capitalCoords": [
+        13,
+        122
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 106651922,
+      "currencies": [
+        "PHP"
+      ],
+      "languages": [
+        "English",
+        "Filipino"
+      ],
+      "borders": [],
+      "area": 342353,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "POL",
+      "iso2": "PL",
+      "name": "Poland",
+      "capital": "Warsaw",
+      "flagCode": "pl",
+      "coordinates": [
+        52,
+        20
+      ],
+      "capitalCoords": [
+        52,
+        20
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 37974750,
+      "currencies": [
+        "PLN"
+      ],
+      "languages": [
+        "Polish"
+      ],
+      "borders": [
+        "BLR",
+        "CZE",
+        "DEU",
+        "LTU",
+        "RUS",
+        "SVK",
+        "UKR"
+      ],
+      "area": 312679,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "PRT",
+      "iso2": "PT",
+      "name": "Portugal",
+      "capital": "Lisbon",
+      "flagCode": "pt",
+      "coordinates": [
+        39.5,
+        -8
+      ],
+      "capitalCoords": [
+        39.5,
+        -8
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 10283822,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [
+        "ESP"
+      ],
+      "area": 92090,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "QAT",
+      "iso2": "QA",
+      "name": "Qatar",
+      "capital": "Doha",
+      "flagCode": "qa",
+      "coordinates": [
+        25.5,
+        51.25
+      ],
+      "capitalCoords": [
+        25.5,
+        51.25
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 2781677,
+      "currencies": [
+        "QAR"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "SAU"
+      ],
+      "area": 11586,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "ROU",
+      "iso2": "RO",
+      "name": "Romania",
+      "capital": "Bucharest",
+      "flagCode": "ro",
+      "coordinates": [
+        46,
+        25
+      ],
+      "capitalCoords": [
+        46,
+        25
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 19466145,
+      "currencies": [
+        "RON"
+      ],
+      "languages": [
+        "Romanian"
+      ],
+      "borders": [
+        "BGR",
+        "HUN",
+        "MDA",
+        "SRB",
+        "UKR"
+      ],
+      "area": 238391,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "RUS",
+      "iso2": "RU",
+      "name": "Russia",
+      "capital": "Moscow",
+      "flagCode": "ru",
+      "coordinates": [
+        60,
+        100
+      ],
+      "capitalCoords": [
+        60,
+        100
+      ],
+      "continent": "Europe",
+      "subregion": "Eastern Europe",
+      "population": 144478050,
+      "currencies": [
+        "RUB"
+      ],
+      "languages": [
+        "Russian"
+      ],
+      "borders": [
+        "AZE",
+        "BLR",
+        "CHN",
+        "EST",
+        "FIN",
+        "GEO",
+        "KAZ",
+        "PRK",
+        "LVA",
+        "LTU",
+        "MNG",
+        "NOR",
+        "POL",
+        "UKR"
+      ],
+      "area": 17098242,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "RWA",
+      "iso2": "RW",
+      "name": "Rwanda",
+      "capital": "Kigali",
+      "flagCode": "rw",
+      "coordinates": [
+        -2,
+        30
+      ],
+      "capitalCoords": [
+        -2,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 12301939,
+      "currencies": [
+        "RWF"
+      ],
+      "languages": [
+        "English",
+        "French",
+        "Kinyarwanda"
+      ],
+      "borders": [
+        "BDI",
+        "COD",
+        "TZA",
+        "UGA"
+      ],
+      "area": 26338,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "KNA",
+      "iso2": "KN",
+      "name": "Saint Kitts and Nevis",
+      "capital": "Basseterre",
+      "flagCode": "kn",
+      "coordinates": [
+        17.33333333,
+        -62.75
+      ],
+      "capitalCoords": [
+        17.33333333,
+        -62.75
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 52441,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 261,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "LCA",
+      "iso2": "LC",
+      "name": "Saint Lucia",
+      "capital": "Castries",
+      "flagCode": "lc",
+      "coordinates": [
+        13.88333333,
+        -60.96666666
+      ],
+      "capitalCoords": [
+        13.88333333,
+        -60.96666666
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 181889,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 616,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "VCT",
+      "iso2": "VC",
+      "name": "Saint Vincent and the Grenadines",
+      "capital": "Kingstown",
+      "flagCode": "vc",
+      "coordinates": [
+        13.25,
+        -61.2
+      ],
+      "capitalCoords": [
+        13.25,
+        -61.2
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 110210,
+      "currencies": [
+        "XCD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 389,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "WSM",
+      "iso2": "WS",
+      "name": "Samoa",
+      "capital": "Apia",
+      "flagCode": "ws",
+      "coordinates": [
+        -13.58333333,
+        -172.33333333
+      ],
+      "capitalCoords": [
+        -13.58333333,
+        -172.33333333
+      ],
+      "continent": "Oceania",
+      "subregion": "Polynesia",
+      "population": 196130,
+      "currencies": [
+        "WST"
+      ],
+      "languages": [
+        "English",
+        "Samoan"
+      ],
+      "borders": [],
+      "area": 2842,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SMR",
+      "iso2": "SM",
+      "name": "San Marino",
+      "capital": "City of San Marino",
+      "flagCode": "sm",
+      "coordinates": [
+        43.76666666,
+        12.41666666
+      ],
+      "capitalCoords": [
+        43.76666666,
+        12.41666666
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 33785,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Italian"
+      ],
+      "borders": [
+        "ITA"
+      ],
+      "area": 61,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SAU",
+      "iso2": "SA",
+      "name": "Saudi Arabia",
+      "capital": "Riyadh",
+      "flagCode": "sa",
+      "coordinates": [
+        25,
+        45
+      ],
+      "capitalCoords": [
+        25,
+        45
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 33699947,
+      "currencies": [
+        "SAR"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "IRQ",
+        "JOR",
+        "KWT",
+        "OMN",
+        "QAT",
+        "ARE",
+        "YEM"
+      ],
+      "area": 2149690,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "SEN",
+      "iso2": "SN",
+      "name": "Senegal",
+      "capital": "Dakar",
+      "flagCode": "sn",
+      "coordinates": [
+        14,
+        -14
+      ],
+      "capitalCoords": [
+        14,
+        -14
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 15854360,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "GMB",
+        "GIN",
+        "GNB",
+        "MLI",
+        "MRT"
+      ],
+      "area": 196722,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SRB",
+      "iso2": "RS",
+      "name": "Serbia",
+      "capital": "Belgrade",
+      "flagCode": "rs",
+      "coordinates": [
+        44,
+        21
+      ],
+      "capitalCoords": [
+        44,
+        21
+      ],
+      "continent": "Europe",
+      "subregion": "Southeast Europe",
+      "population": 6963764,
+      "currencies": [
+        "RSD"
+      ],
+      "languages": [
+        "Serbian"
+      ],
+      "borders": [
+        "BIH",
+        "BGR",
+        "HRV",
+        "HUN",
+        "UNK",
+        "MKD",
+        "MNE",
+        "ROU"
+      ],
+      "area": 88361,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SYC",
+      "iso2": "SC",
+      "name": "Seychelles",
+      "capital": "Victoria",
+      "flagCode": "sc",
+      "coordinates": [
+        -4.58333333,
+        55.66666666
+      ],
+      "capitalCoords": [
+        -4.58333333,
+        55.66666666
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 96762,
+      "currencies": [
+        "SCR"
+      ],
+      "languages": [
+        "Seychellois Creole",
+        "English",
+        "French"
+      ],
+      "borders": [],
+      "area": 452,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SLE",
+      "iso2": "SL",
+      "name": "Sierra Leone",
+      "capital": "Freetown",
+      "flagCode": "sl",
+      "coordinates": [
+        8.5,
+        -11.5
+      ],
+      "capitalCoords": [
+        8.5,
+        -11.5
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 7650154,
+      "currencies": [
+        "SLL"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "GIN",
+        "LBR"
+      ],
+      "area": 71740,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SGP",
+      "iso2": "SG",
+      "name": "Singapore",
+      "capital": "Singapore",
+      "flagCode": "sg",
+      "coordinates": [
+        1.36666666,
+        103.8
+      ],
+      "capitalCoords": [
+        1.36666666,
+        103.8
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 5638676,
+      "currencies": [
+        "SGD"
+      ],
+      "languages": [
+        "English",
+        "Malay",
+        "Tamil",
+        "Chinese"
+      ],
+      "borders": [],
+      "area": 710,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SVK",
+      "iso2": "SK",
+      "name": "Slovakia",
+      "capital": "Bratislava",
+      "flagCode": "sk",
+      "coordinates": [
+        48.66666666,
+        19.5
+      ],
+      "capitalCoords": [
+        48.66666666,
+        19.5
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 5446771,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Slovak"
+      ],
+      "borders": [
+        "AUT",
+        "CZE",
+        "HUN",
+        "POL",
+        "UKR"
+      ],
+      "area": 49037,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SVN",
+      "iso2": "SI",
+      "name": "Slovenia",
+      "capital": "Ljubljana",
+      "flagCode": "si",
+      "coordinates": [
+        46.11666666,
+        14.81666666
+      ],
+      "capitalCoords": [
+        46.11666666,
+        14.81666666
+      ],
+      "continent": "Europe",
+      "subregion": "Central Europe",
+      "population": 2073894,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Slovene"
+      ],
+      "borders": [
+        "AUT",
+        "HRV",
+        "ITA",
+        "HUN"
+      ],
+      "area": 20273,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SLB",
+      "iso2": "SB",
+      "name": "Solomon Islands",
+      "capital": "Honiara",
+      "flagCode": "sb",
+      "coordinates": [
+        -8,
+        159
+      ],
+      "capitalCoords": [
+        -8,
+        159
+      ],
+      "continent": "Oceania",
+      "subregion": "Melanesia",
+      "population": 652858,
+      "currencies": [
+        "SBD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 28896,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SOM",
+      "iso2": "SO",
+      "name": "Somalia",
+      "capital": "Mogadishu",
+      "flagCode": "so",
+      "coordinates": [
+        10,
+        49
+      ],
+      "capitalCoords": [
+        10,
+        49
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 15008154,
+      "currencies": [
+        "SOS"
+      ],
+      "languages": [
+        "Arabic",
+        "Somali"
+      ],
+      "borders": [
+        "DJI",
+        "ETH",
+        "KEN"
+      ],
+      "area": 637657,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ZAF",
+      "iso2": "ZA",
+      "name": "South Africa",
+      "capital": "Pretoria",
+      "flagCode": "za",
+      "coordinates": [
+        -29,
+        24
+      ],
+      "capitalCoords": [
+        -29,
+        24
+      ],
+      "continent": "Africa",
+      "subregion": "Southern Africa",
+      "population": 57779622,
+      "currencies": [
+        "ZAR"
+      ],
+      "languages": [
+        "Afrikaans",
+        "English",
+        "Southern Ndebele",
+        "Northern Sotho",
+        "Southern Sotho",
+        "Swazi",
+        "Tswana",
+        "Tsonga",
+        "Venda",
+        "Xhosa",
+        "Zulu"
+      ],
+      "borders": [
+        "BWA",
+        "LSO",
+        "MOZ",
+        "NAM",
+        "SWZ",
+        "ZWE"
+      ],
+      "area": 1221037,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "KOR",
+      "iso2": "KR",
+      "name": "South Korea",
+      "capital": "Seoul",
+      "flagCode": "kr",
+      "coordinates": [
+        37,
+        127.5
+      ],
+      "capitalCoords": [
+        37,
+        127.5
+      ],
+      "continent": "Asia",
+      "subregion": "Eastern Asia",
+      "population": 51606633,
+      "currencies": [
+        "KRW"
+      ],
+      "languages": [
+        "Korean"
+      ],
+      "borders": [
+        "PRK"
+      ],
+      "area": 100210,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SSD",
+      "iso2": "SS",
+      "name": "South Sudan",
+      "capital": "Juba",
+      "flagCode": "ss",
+      "coordinates": [
+        7,
+        30
+      ],
+      "capitalCoords": [
+        7,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 10975920,
+      "currencies": [
+        "SSP"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "CAF",
+        "COD",
+        "ETH",
+        "KEN",
+        "SDN",
+        "UGA"
+      ],
+      "area": 619745,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ESP",
+      "iso2": "ES",
+      "name": "Spain",
+      "capital": "Madrid",
+      "flagCode": "es",
+      "coordinates": [
+        40,
+        -4
+      ],
+      "capitalCoords": [
+        40,
+        -4
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 46796540,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "AND",
+        "FRA",
+        "GIB",
+        "PRT",
+        "MAR"
+      ],
+      "area": 505992,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "LKA",
+      "iso2": "LK",
+      "name": "Sri Lanka",
+      "capital": "Colombo",
+      "flagCode": "lk",
+      "coordinates": [
+        7,
+        81
+      ],
+      "capitalCoords": [
+        7,
+        81
+      ],
+      "continent": "Asia",
+      "subregion": "Southern Asia",
+      "population": 21670000,
+      "currencies": [
+        "LKR"
+      ],
+      "languages": [
+        "Sinhala",
+        "Tamil"
+      ],
+      "borders": [
+        "IND"
+      ],
+      "area": 65610,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SDN",
+      "iso2": "SD",
+      "name": "Sudan",
+      "capital": "Khartoum",
+      "flagCode": "sd",
+      "coordinates": [
+        15,
+        30
+      ],
+      "capitalCoords": [
+        15,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 41801533,
+      "currencies": [
+        "SDG"
+      ],
+      "languages": [
+        "Arabic",
+        "English"
+      ],
+      "borders": [
+        "CAF",
+        "TCD",
+        "EGY",
+        "ERI",
+        "ETH",
+        "LBY",
+        "SSD"
+      ],
+      "area": 1886068,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "SUR",
+      "iso2": "SR",
+      "name": "Suriname",
+      "capital": "Paramaribo",
+      "flagCode": "sr",
+      "coordinates": [
+        4,
+        -56
+      ],
+      "capitalCoords": [
+        4,
+        -56
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 575991,
+      "currencies": [
+        "SRD"
+      ],
+      "languages": [
+        "Dutch"
+      ],
+      "borders": [
+        "BRA",
+        "GUF",
+        "GUY"
+      ],
+      "area": 163820,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SWE",
+      "iso2": "SE",
+      "name": "Sweden",
+      "capital": "Stockholm",
+      "flagCode": "se",
+      "coordinates": [
+        62,
+        15
+      ],
+      "capitalCoords": [
+        62,
+        15
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 10175214,
+      "currencies": [
+        "SEK"
+      ],
+      "languages": [
+        "Swedish"
+      ],
+      "borders": [
+        "FIN",
+        "NOR"
+      ],
+      "area": 450295,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "CHE",
+      "iso2": "CH",
+      "name": "Switzerland",
+      "capital": "Bern",
+      "flagCode": "ch",
+      "coordinates": [
+        47,
+        8
+      ],
+      "capitalCoords": [
+        47,
+        8
+      ],
+      "continent": "Europe",
+      "subregion": "Western Europe",
+      "population": 8513227,
+      "currencies": [
+        "CHF"
+      ],
+      "languages": [
+        "French",
+        "Swiss German",
+        "Italian",
+        "Romansh"
+      ],
+      "borders": [
+        "AUT",
+        "FRA",
+        "ITA",
+        "LIE",
+        "DEU"
+      ],
+      "area": 41284,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "SYR",
+      "iso2": "SY",
+      "name": "Syria",
+      "capital": "Damascus",
+      "flagCode": "sy",
+      "coordinates": [
+        35,
+        38
+      ],
+      "capitalCoords": [
+        35,
+        38
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 16906283,
+      "currencies": [
+        "SYP"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "IRQ",
+        "ISR",
+        "JOR",
+        "LBN",
+        "TUR"
+      ],
+      "area": 185180,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "STP",
+      "iso2": "ST",
+      "name": "São Tomé and Príncipe",
+      "capital": "São Tomé",
+      "flagCode": "st",
+      "coordinates": [
+        1,
+        7
+      ],
+      "capitalCoords": [
+        1,
+        7
+      ],
+      "continent": "Africa",
+      "subregion": "Middle Africa",
+      "population": 4829483,
+      "currencies": [
+        "STN"
+      ],
+      "languages": [
+        "Portuguese"
+      ],
+      "borders": [],
+      "area": 964,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TJK",
+      "iso2": "TJ",
+      "name": "Tajikistan",
+      "capital": "Dushanbe",
+      "flagCode": "tj",
+      "coordinates": [
+        39,
+        71
+      ],
+      "capitalCoords": [
+        39,
+        71
+      ],
+      "continent": "Asia",
+      "subregion": "Central Asia",
+      "population": 9100837,
+      "currencies": [
+        "TJS"
+      ],
+      "languages": [
+        "Russian",
+        "Tajik"
+      ],
+      "borders": [
+        "AFG",
+        "CHN",
+        "KGZ",
+        "UZB"
+      ],
+      "area": 143100,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TZA",
+      "iso2": "TZ",
+      "name": "Tanzania",
+      "capital": "Dodoma",
+      "flagCode": "tz",
+      "coordinates": [
+        -6,
+        35
+      ],
+      "capitalCoords": [
+        -6,
+        35
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 56318348,
+      "currencies": [
+        "TZS"
+      ],
+      "languages": [
+        "English",
+        "Swahili"
+      ],
+      "borders": [
+        "BDI",
+        "COD",
+        "KEN",
+        "MWI",
+        "MOZ",
+        "RWA",
+        "UGA",
+        "ZMB"
+      ],
+      "area": 945087,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "THA",
+      "iso2": "TH",
+      "name": "Thailand",
+      "capital": "Bangkok",
+      "flagCode": "th",
+      "coordinates": [
+        15,
+        100
+      ],
+      "capitalCoords": [
+        15,
+        100
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 69428524,
+      "currencies": [
+        "THB"
+      ],
+      "languages": [
+        "Thai"
+      ],
+      "borders": [
+        "MMR",
+        "KHM",
+        "LAO",
+        "MYS"
+      ],
+      "area": 513120,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "TLS",
+      "iso2": "TL",
+      "name": "Timor-Leste",
+      "capital": "Dili",
+      "flagCode": "tl",
+      "coordinates": [
+        -8.83333333,
+        125.91666666
+      ],
+      "capitalCoords": [
+        -8.83333333,
+        125.91666666
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 1267972,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "Portuguese",
+        "Tetum"
+      ],
+      "borders": [
+        "IDN"
+      ],
+      "area": 14874,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TGO",
+      "iso2": "TG",
+      "name": "Togo",
+      "capital": "Lomé",
+      "flagCode": "tg",
+      "coordinates": [
+        8,
+        1.16666666
+      ],
+      "capitalCoords": [
+        8,
+        1.16666666
+      ],
+      "continent": "Africa",
+      "subregion": "Western Africa",
+      "population": 7889094,
+      "currencies": [
+        "XOF"
+      ],
+      "languages": [
+        "French"
+      ],
+      "borders": [
+        "BEN",
+        "BFA",
+        "GHA"
+      ],
+      "area": 56785,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TON",
+      "iso2": "TO",
+      "name": "Tonga",
+      "capital": "Nuku'alofa",
+      "flagCode": "to",
+      "coordinates": [
+        -20,
+        -175
+      ],
+      "capitalCoords": [
+        -20,
+        -175
+      ],
+      "continent": "Oceania",
+      "subregion": "Polynesia",
+      "population": 103197,
+      "currencies": [
+        "TOP"
+      ],
+      "languages": [
+        "English",
+        "Tongan"
+      ],
+      "borders": [],
+      "area": 747,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TTO",
+      "iso2": "TT",
+      "name": "Trinidad and Tobago",
+      "capital": "Port of Spain",
+      "flagCode": "tt",
+      "coordinates": [
+        11,
+        -61
+      ],
+      "capitalCoords": [
+        11,
+        -61
+      ],
+      "continent": "Americas",
+      "subregion": "Caribbean",
+      "population": 1389858,
+      "currencies": [
+        "TTD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [],
+      "area": 5130,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TUN",
+      "iso2": "TN",
+      "name": "Tunisia",
+      "capital": "Tunis",
+      "flagCode": "tn",
+      "coordinates": [
+        34,
+        9
+      ],
+      "capitalCoords": [
+        34,
+        9
+      ],
+      "continent": "Africa",
+      "subregion": "Northern Africa",
+      "population": 11565204,
+      "currencies": [
+        "TND"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "DZA",
+        "LBY"
+      ],
+      "area": 163610,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TKM",
+      "iso2": "TM",
+      "name": "Turkmenistan",
+      "capital": "Ashgabat",
+      "flagCode": "tm",
+      "coordinates": [
+        40,
+        60
+      ],
+      "capitalCoords": [
+        40,
+        60
+      ],
+      "continent": "Asia",
+      "subregion": "Central Asia",
+      "population": 5850908,
+      "currencies": [
+        "TMT"
+      ],
+      "languages": [
+        "Russian",
+        "Turkmen"
+      ],
+      "borders": [
+        "AFG",
+        "IRN",
+        "KAZ",
+        "UZB"
+      ],
+      "area": 488100,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TUV",
+      "iso2": "TV",
+      "name": "Tuvalu",
+      "capital": "Funafuti",
+      "flagCode": "tv",
+      "coordinates": [
+        -8,
+        178
+      ],
+      "capitalCoords": [
+        -8,
+        178
+      ],
+      "continent": "Oceania",
+      "subregion": "Polynesia",
+      "population": 11508,
+      "currencies": [
+        "AUD",
+        "TVD"
+      ],
+      "languages": [
+        "English",
+        "Tuvaluan"
+      ],
+      "borders": [],
+      "area": 26,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "TUR",
+      "iso2": "TR",
+      "name": "Türkiye",
+      "capital": "Ankara",
+      "flagCode": "tr",
+      "coordinates": [
+        39,
+        35
+      ],
+      "capitalCoords": [
+        39,
+        35
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 0,
+      "currencies": [
+        "TRY"
+      ],
+      "languages": [
+        "Turkish"
+      ],
+      "borders": [
+        "ARM",
+        "AZE",
+        "BGR",
+        "GEO",
+        "GRC",
+        "IRN",
+        "IRQ",
+        "SYR"
+      ],
+      "area": 783562,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "UGA",
+      "iso2": "UG",
+      "name": "Uganda",
+      "capital": "Kampala",
+      "flagCode": "ug",
+      "coordinates": [
+        1,
+        32
+      ],
+      "capitalCoords": [
+        1,
+        32
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 42723139,
+      "currencies": [
+        "UGX"
+      ],
+      "languages": [
+        "English",
+        "Swahili"
+      ],
+      "borders": [
+        "COD",
+        "KEN",
+        "RWA",
+        "SSD",
+        "TZA"
+      ],
+      "area": 241550,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "UKR",
+      "iso2": "UA",
+      "name": "Ukraine",
+      "capital": "Kyiv",
+      "flagCode": "ua",
+      "coordinates": [
+        49,
+        32
+      ],
+      "capitalCoords": [
+        49,
+        32
+      ],
+      "continent": "Europe",
+      "subregion": "Eastern Europe",
+      "population": 44622516,
+      "currencies": [
+        "UAH"
+      ],
+      "languages": [
+        "Ukrainian"
+      ],
+      "borders": [
+        "BLR",
+        "HUN",
+        "MDA",
+        "POL",
+        "ROU",
+        "RUS",
+        "SVK"
+      ],
+      "area": 603500,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ARE",
+      "iso2": "AE",
+      "name": "United Arab Emirates",
+      "capital": "Abu Dhabi",
+      "flagCode": "ae",
+      "coordinates": [
+        24,
+        54
+      ],
+      "capitalCoords": [
+        24,
+        54
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 9630959,
+      "currencies": [
+        "AED"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "OMN",
+        "SAU"
+      ],
+      "area": 83600,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "GBR",
+      "iso2": "GB",
+      "name": "United Kingdom",
+      "capital": "London",
+      "flagCode": "gb",
+      "coordinates": [
+        54,
+        -2
+      ],
+      "capitalCoords": [
+        54,
+        -2
+      ],
+      "continent": "Europe",
+      "subregion": "Northern Europe",
+      "population": 66460344,
+      "currencies": [
+        "GBP"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "IRL"
+      ],
+      "area": 242900,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "USA",
+      "iso2": "US",
+      "name": "United States",
+      "capital": "Washington D.C.",
+      "flagCode": "us",
+      "coordinates": [
+        38,
+        -97
+      ],
+      "capitalCoords": [
+        38,
+        -97
+      ],
+      "continent": "Americas",
+      "subregion": "North America",
+      "population": 326687501,
+      "currencies": [
+        "USD"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "CAN",
+        "MEX"
+      ],
+      "area": 9372610,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "URY",
+      "iso2": "UY",
+      "name": "Uruguay",
+      "capital": "Montevideo",
+      "flagCode": "uy",
+      "coordinates": [
+        -33,
+        -56
+      ],
+      "capitalCoords": [
+        -33,
+        -56
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 3449299,
+      "currencies": [
+        "UYU"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "ARG",
+        "BRA"
+      ],
+      "area": 181034,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "UZB",
+      "iso2": "UZ",
+      "name": "Uzbekistan",
+      "capital": "Tashkent",
+      "flagCode": "uz",
+      "coordinates": [
+        41,
+        64
+      ],
+      "capitalCoords": [
+        41,
+        64
+      ],
+      "continent": "Asia",
+      "subregion": "Central Asia",
+      "population": 32955400,
+      "currencies": [
+        "UZS"
+      ],
+      "languages": [
+        "Russian",
+        "Uzbek"
+      ],
+      "borders": [
+        "AFG",
+        "KAZ",
+        "KGZ",
+        "TJK",
+        "TKM"
+      ],
+      "area": 447400,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "VUT",
+      "iso2": "VU",
+      "name": "Vanuatu",
+      "capital": "Port Vila",
+      "flagCode": "vu",
+      "coordinates": [
+        -16,
+        167
+      ],
+      "capitalCoords": [
+        -16,
+        167
+      ],
+      "continent": "Oceania",
+      "subregion": "Melanesia",
+      "population": 292680,
+      "currencies": [
+        "VUV"
+      ],
+      "languages": [
+        "Bislama",
+        "English",
+        "French"
+      ],
+      "borders": [],
+      "area": 12189,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "VAT",
+      "iso2": "VA",
+      "name": "Vatican City",
+      "capital": "Vatican City",
+      "flagCode": "va",
+      "coordinates": [
+        41.9,
+        12.45
+      ],
+      "capitalCoords": [
+        41.9,
+        12.45
+      ],
+      "continent": "Europe",
+      "subregion": "Southern Europe",
+      "population": 825,
+      "currencies": [
+        "EUR"
+      ],
+      "languages": [
+        "Italian",
+        "Latin"
+      ],
+      "borders": [
+        "ITA"
+      ],
+      "area": 0.44,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "VEN",
+      "iso2": "VE",
+      "name": "Venezuela",
+      "capital": "Caracas",
+      "flagCode": "ve",
+      "coordinates": [
+        8,
+        -66
+      ],
+      "capitalCoords": [
+        8,
+        -66
+      ],
+      "continent": "Americas",
+      "subregion": "South America",
+      "population": 28870195,
+      "currencies": [
+        "VES"
+      ],
+      "languages": [
+        "Spanish"
+      ],
+      "borders": [
+        "BRA",
+        "COL",
+        "GUY"
+      ],
+      "area": 916445,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "VNM",
+      "iso2": "VN",
+      "name": "Vietnam",
+      "capital": "Hanoi",
+      "flagCode": "vn",
+      "coordinates": [
+        16.16666666,
+        107.83333333
+      ],
+      "capitalCoords": [
+        16.16666666,
+        107.83333333
+      ],
+      "continent": "Asia",
+      "subregion": "South-Eastern Asia",
+      "population": 95540395,
+      "currencies": [
+        "VND"
+      ],
+      "languages": [
+        "Vietnamese"
+      ],
+      "borders": [
+        "KHM",
+        "CHN",
+        "LAO"
+      ],
+      "area": 331212,
+      "difficulty": "hard"
+    },
+    {
+      "iso3": "YEM",
+      "iso2": "YE",
+      "name": "Yemen",
+      "capital": "Sana'a",
+      "flagCode": "ye",
+      "coordinates": [
+        15,
+        48
+      ],
+      "capitalCoords": [
+        15,
+        48
+      ],
+      "continent": "Asia",
+      "subregion": "Western Asia",
+      "population": 28498687,
+      "currencies": [
+        "YER"
+      ],
+      "languages": [
+        "Arabic"
+      ],
+      "borders": [
+        "OMN",
+        "SAU"
+      ],
+      "area": 527968,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ZMB",
+      "iso2": "ZM",
+      "name": "Zambia",
+      "capital": "Lusaka",
+      "flagCode": "zm",
+      "coordinates": [
+        -15,
+        30
+      ],
+      "capitalCoords": [
+        -15,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 17351822,
+      "currencies": [
+        "ZMW"
+      ],
+      "languages": [
+        "English"
+      ],
+      "borders": [
+        "AGO",
+        "BWA",
+        "COD",
+        "MWI",
+        "MOZ",
+        "NAM",
+        "TZA",
+        "ZWE"
+      ],
+      "area": 752612,
+      "difficulty": "easy"
+    },
+    {
+      "iso3": "ZWE",
+      "iso2": "ZW",
+      "name": "Zimbabwe",
+      "capital": "Harare",
+      "flagCode": "zw",
+      "coordinates": [
+        -20,
+        30
+      ],
+      "capitalCoords": [
+        -20,
+        30
+      ],
+      "continent": "Africa",
+      "subregion": "Eastern Africa",
+      "population": 14439018,
+      "currencies": [
+        "BWP",
+        "CNY",
+        "EUR",
+        "GBP",
+        "INR",
+        "JPY",
+        "USD",
+        "ZAR",
+        "ZWB"
+      ],
+      "languages": [
+        "Chibarwe",
+        "English",
+        "Kalanga",
+        "Khoisan",
+        "Ndau",
+        "Northern Ndebele",
+        "Chewa",
+        "Shona",
+        "Sotho",
+        "Tonga",
+        "Tswana",
+        "Tsonga",
+        "Venda",
+        "Xhosa",
+        "Zimbabwean Sign Language"
+      ],
+      "borders": [
+        "BWA",
+        "MOZ",
+        "ZAF",
+        "ZMB"
+      ],
+      "area": 390757,
+      "difficulty": "hard"
+    }
+  ]
+}

@@ -125,13 +125,28 @@ function Active() {
   const skip = useSpeedRuntime((s) => s.skip);
   const reset = useSpeedRuntime((s) => s.reset);
 
+  // Numeric 1–4 hotkeys — capture phase so transitions / overlays / focus
+  // changes can't intercept. Ignores typing in inputs and open dialogs.
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
+      if (e.metaKey || e.ctrlKey || e.altKey) return;
+      const active = document.activeElement as HTMLElement | null;
+      if (
+        active &&
+        (active.tagName === "INPUT" ||
+          active.tagName === "TEXTAREA" ||
+          active.isContentEditable)
+      )
+        return;
+      if (document.querySelector('[role="dialog"][data-state="open"]')) return;
       const n = Number(e.key);
-      if (n >= 1 && n <= 4 && item) answer(item.options[n - 1]!.iso3);
+      if (Number.isInteger(n) && n >= 1 && n <= 4 && item) {
+        e.preventDefault();
+        answer(item.options[n - 1]!.iso3);
+      }
     }
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
   }, [item, answer]);
 
   const onSkip = useCallback(() => skip(), [skip]);
@@ -149,7 +164,7 @@ function Active() {
 
   return (
     <div className="min-h-dvh pt-24 px-4 pb-10 flex flex-col items-center">
-      <TopBar />
+      <TopBar onExit={reset} />
       <div className="mt-8 w-full max-w-2xl flex flex-col items-center">
         <PromptForItem item={item} />
         <OptionsGrid item={item} onPick={(iso3) => answer(iso3)} />
@@ -158,12 +173,23 @@ function Active() {
   );
 }
 
-function TopBar() {
+function TopBar({ onExit }: { onExit: () => void }) {
   return (
     <div className="w-full max-w-3xl flex items-center justify-between gap-4">
       <ScoreCombo />
       <TimerRing />
-      <LivesOrEmpty />
+      <div className="flex items-center gap-2">
+        <LivesOrEmpty />
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={onExit}
+          aria-label="Exit Speed mode"
+          className="shrink-0"
+        >
+          ✕ Exit
+        </Button>
+      </div>
     </div>
   );
 }

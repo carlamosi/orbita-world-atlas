@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useMemo, useCallback } from "react";
-import { motion } from "framer-motion";
 import { COUNTRIES } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
@@ -10,8 +9,11 @@ import { SessionEnd } from "@/features/engine/SessionEnd";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { Button } from "@/components/ui/orbita-button";
-import { Badge } from "@/components/ui/orbita-badge";
-import { spring } from "@/lib/motion";
+import {
+  ContinentSelect,
+  useContinentPref,
+  type ContinentChoice,
+} from "@/features/engine/ContinentSelect";
 
 const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 
@@ -19,11 +21,14 @@ const useFindSession = createSessionStore({ mode: "find", skill: "location" });
 
 export default function FindPage() {
   const s = useFindSession();
+  const [continent, setContinent] = useContinentPref();
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) s.start();
+    if (s.queue.length === 0 && !s.loading) {
+      s.start({ continent: continent === "All" ? undefined : continent });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -37,6 +42,14 @@ export default function FindPage() {
     if (!finished && current && s.answerState === "idle") s.reveal();
   }, [finished, current, s]);
   useSkipHotkey(onSkip);
+
+  const restartWithContinent = useCallback(
+    (c: ContinentChoice) => {
+      setContinent(c);
+      void s.start({ continent: c === "All" ? undefined : c });
+    },
+    [s, setContinent],
+  );
 
   const pov = useMemo(() => {
     if (s.answerState !== "idle" && current) {
@@ -76,7 +89,7 @@ export default function FindPage() {
             />
           </div>
 
-          <div className="absolute top-24 left-4 md:left-6 z-20">
+          <div className="absolute top-24 left-4 md:left-6 z-20 flex flex-col gap-2">
             <SessionHud
               score={s.score}
               combo={s.combo}
@@ -85,6 +98,7 @@ export default function FindPage() {
               index={s.index}
               total={s.queue.length}
             />
+            <ContinentSelect value={continent} onChange={restartWithContinent} />
           </div>
 
           <div className="absolute top-24 right-4 md:right-6 z-20">
@@ -97,16 +111,6 @@ export default function FindPage() {
               {s.hintUsed ? "Hint used" : "Hint"}
             </Button>
           </div>
-
-          {s.hintUsed && s.answerState === "idle" && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute bottom-32 left-1/2 -translate-x-1/2 z-20"
-            >
-              <Badge tone="neon">Hint: {current.continent}</Badge>
-            </motion.div>
-          )}
 
           <div className="absolute bottom-8 inset-x-0 z-30">
             <FeedbackBar
@@ -130,7 +134,7 @@ export default function FindPage() {
         wrong={s.wrong}
         bestCombo={s.bestCombo}
         durationMs={(s.endedAt ?? 0) - s.startedAt}
-        onReplay={() => s.start()}
+        onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
     </div>
   );

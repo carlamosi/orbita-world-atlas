@@ -618,9 +618,9 @@ export default function Globe3D({
         pointsData={hitboxPoints}
         pointLat={(d: object) => (d as { lat: number }).lat}
         pointLng={(d: object) => (d as { lng: number }).lng}
-        pointColor={() => "rgba(0,0,0,0)"}
-        pointAltitude={0}
-        pointRadius={(d: object) => (d as { radius: number }).radius}
+        pointColor={pointColorFn}
+        pointAltitude={pointAltitudeFn}
+        pointRadius={pointRadiusFn}
         pointsMerge={false}
         onPointClick={handleHitboxClick}
         onPointHover={handleHitboxHover}

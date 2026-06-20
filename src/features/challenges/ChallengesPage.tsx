@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Skill } from "@/lib/db/orbita-db";
@@ -13,6 +13,9 @@ import { confidenceAfter } from "@/lib/mastery";
 import { dateKey, weekKey } from "@/lib/streak";
 import type { Country } from "@/types/country";
 import { pickRandomCountries } from "@/lib/countries";
+import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 
 type Active = {
   set: ChallengeSet;

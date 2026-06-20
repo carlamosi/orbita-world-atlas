@@ -254,6 +254,27 @@ export default function Globe3D({
 
   const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
 
+  // Microstate marker styling — visible glow on tiny territories.
+  const pointColorFn = useCallback(
+    (d: object) => {
+      const p = d as { iso3: string; micro: boolean };
+      if (!p.micro) return "rgba(0,0,0,0)";
+      if (p.iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.95)`;
+      if (p.iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.95)`;
+      if (p.iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.95)`;
+      return `rgba(${COLOR_HIGHLIGHT}, 0.7)`;
+    },
+    [revealIso3, highlightIso3, effHoverIso3],
+  );
+  const pointRadiusFn = useCallback((d: object) => {
+    const p = d as { radius: number; micro: boolean };
+    return p.micro ? Math.max(0.18, p.radius * 0.35) : p.radius;
+  }, []);
+  const pointAltitudeFn = useCallback((d: object) => {
+    const p = d as { micro: boolean };
+    return p.micro ? 0.012 : 0;
+  }, []);
+
   // Clear stale hover when the active question/target changes so the previous
   // country doesn't keep glowing after auto-advance.
   useEffect(() => {

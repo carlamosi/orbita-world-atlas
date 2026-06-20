@@ -228,27 +228,8 @@ export default function Globe3D({
     return result;
   }, [features, missRates, altBand]);
 
-  // Color resolver — microstates render a soft cinematic glow; other hitboxes
-  // remain invisible (hit-only).
-  const pointColorFn = useCallback(
-    (d: object) => {
-      const p = d as { iso3: string; micro: boolean };
-      if (!p.micro) return "rgba(0,0,0,0)";
-      if (p.iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.95)`;
-      if (p.iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.95)`;
-      if (p.iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.95)`;
-      return `rgba(${COLOR_HIGHLIGHT}, 0.85)`;
-    },
-    [revealIso3, highlightIso3],
-  );
-  const pointRadiusFn = useCallback((d: object) => {
-    const p = d as { radius: number; micro: boolean };
-    return p.micro ? p.radius * 0.35 : p.radius;
-  }, []);
-  const pointAltitudeFn = useCallback((d: object) => {
-    const p = d as { micro: boolean };
-    return p.micro ? 0.012 : 0;
-  }, []);
+
+
 
 
   // ---- Polygon styling accessors (memoised) ----------------------------

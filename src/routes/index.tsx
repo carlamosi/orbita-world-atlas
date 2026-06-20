@@ -1,11 +1,15 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/orbita-card";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { fadeUp, spring, stagger } from "@/lib/motion";
 import { COUNTRIES } from "@/lib/countries";
+import {
+  OnboardingOverlay,
+  hasSeenOnboarding,
+} from "@/features/onboarding/OnboardingOverlay";
 
 export const Route = createFileRoute("/")({
   head: () => ({

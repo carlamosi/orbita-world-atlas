@@ -29,6 +29,7 @@ type SubMode = "flagToCountry" | "countryToFlag" | "flagToType";
 export default function FlagsPage() {
   const s = useFlagSession();
   const [sub, setSub] = useState<SubMode>("flagToCountry");
+  const [continent, setContinent] = useContinentPref();
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
@@ -40,7 +41,9 @@ export default function FlagsPage() {
   }, [sub]);
 
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) s.start();
+    if (s.queue.length === 0 && !s.loading) {
+      s.start({ continent: continent === "All" ? undefined : continent });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -50,6 +53,14 @@ export default function FlagsPage() {
     if (!finished && current && s.answerState === "idle") s.reveal();
   }, [finished, current, s]);
   useSkipHotkey(onSkip);
+
+  const restartWithContinent = useCallback(
+    (c: ContinentChoice) => {
+      setContinent(c);
+      void s.start({ continent: c === "All" ? undefined : c });
+    },
+    [s, setContinent],
+  );
 
   const options = useMemo(() => {
     if (!current) return [];
@@ -77,8 +88,17 @@ export default function FlagsPage() {
           {/* Sticky HUD bar */}
           <div className="sticky top-20 z-20 px-6">
             <div className="w-full max-w-5xl mx-auto flex items-center justify-between gap-4 flex-wrap">
-              <SessionHud {...stats(s)} />
-              <SubModeToggle value={sub} onChange={(v) => { setSub(v); s.start(); }} />
+              <div className="flex flex-col gap-2">
+                <SessionHud {...stats(s)} />
+                <ContinentSelect value={continent} onChange={restartWithContinent} />
+              </div>
+              <SubModeToggle
+                value={sub}
+                onChange={(v) => {
+                  setSub(v);
+                  void s.start({ continent: continent === "All" ? undefined : continent });
+                }}
+              />
               <Button
                 size="sm"
                 variant="secondary"
@@ -89,6 +109,7 @@ export default function FlagsPage() {
               </Button>
             </div>
           </div>
+
 
           {/* Centered gameplay region */}
           <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-6">

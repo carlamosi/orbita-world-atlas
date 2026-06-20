@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useMemo, useState, useCallback } from "react";
-import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
@@ -10,10 +9,15 @@ import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { HardInput } from "@/features/engine/HardInput";
 import { Button } from "@/components/ui/orbita-button";
-import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import {
+  ContinentSelect,
+  useContinentPref,
+  type ContinentChoice,
+} from "@/features/engine/ContinentSelect";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
 

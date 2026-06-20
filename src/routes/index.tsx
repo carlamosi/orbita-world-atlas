@@ -153,9 +153,7 @@ function CinematicScroll({ totalCountries, onBegin }: { totalCountries: number; 
             through a living, atmospheric atlas.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 justify-center">
-            <Link to="/find">
-              <Button size="lg">Begin orbit →</Button>
-            </Link>
+            <Button size="lg" onClick={onBegin}>Begin orbit →</Button>
             <Link to="/explorer">
               <Button variant="secondary" size="lg">
                 Explore the atlas

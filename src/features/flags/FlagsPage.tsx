@@ -266,7 +266,7 @@ function FlagToCountry({
             )}
           >
             <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
-              {i + 1} · {o.continent}
+              {i + 1}
             </div>
             <div className="font-display text-lg text-white tracking-tight">{o.name}</div>
           </button>

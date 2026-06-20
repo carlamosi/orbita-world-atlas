@@ -12,6 +12,11 @@ import { HardInput } from "@/features/engine/HardInput";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { Button } from "@/components/ui/orbita-button";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import {
+  ContinentSelect,
+  useContinentPref,
+  type ContinentChoice,
+} from "@/features/engine/ContinentSelect";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";

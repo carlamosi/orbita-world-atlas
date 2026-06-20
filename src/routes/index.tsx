@@ -414,11 +414,9 @@ function FinalCta({ onBegin }: { onBegin: () => void }) {
           Step into the orbit. The atlas is waiting.
         </p>
         <div className="mt-12">
-          <Link to="/find">
-            <Button size="lg" className="animate-pulse-glow">
-              Enter the orbit →
-            </Button>
-          </Link>
+          <Button size="lg" className="animate-pulse-glow" onClick={onBegin}>
+            Enter the orbit →
+          </Button>
         </div>
       </motion.div>
     </section>

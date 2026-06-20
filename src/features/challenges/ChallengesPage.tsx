@@ -272,8 +272,10 @@ function ChallengeRunner({
   );
   useAnswerHotkeys(hotkeyItems, pick);
   useSkipHotkey(useCallback(() => {
-    if (current && active.answerState === "idle") pick("__skip__");
-  }, [current, active.answerState, pick]));
+    if (current && active.answerState === "idle") {
+      setActive({ ...active, answerState: "wrong", wrong: active.wrong + 1, combo: 0 });
+    }
+  }, [current, active, setActive]));
   useAutoAdvance({
     answerState: active.answerState === "wrong" ? "wrong" : active.answerState === "correct" ? "correct" : "idle",
     finished: false,

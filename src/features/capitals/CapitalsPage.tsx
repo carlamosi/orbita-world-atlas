@@ -186,24 +186,20 @@ export default function CapitalsPage() {
             </Button>
           </div>
 
-          <Prompt
+          <PromptPill
             keyId={`${sub}-${current.iso3}`}
-            eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
+            index={s.index}
+            total={s.queue.length}
             title={
               sub === "countryToCap" ? (
-                <>
-                  What's the capital of{" "}
-                  <span className="text-glow-cyan">{current.name}</span>?
-                </>
+                <>What's the capital of <span className="text-glow-cyan">{current.name}</span>?</>
               ) : (
-                <>
-                  Which country's capital is{" "}
-                  <span className="text-glow-cyan">{current.capital}</span>?
-                </>
+                <>Which country's capital is <span className="text-glow-cyan">{current.capital}</span>?</>
               )
             }
-            subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
+            hint={s.hintUsed ? `Hint: ${current.continent}` : undefined}
           />
+
 
           <ChoiceGrid
             options={options}

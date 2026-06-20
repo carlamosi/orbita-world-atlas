@@ -3,7 +3,6 @@ import { COUNTRIES } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
-import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
@@ -90,16 +89,9 @@ export default function FindPage() {
           </div>
 
           <div className="absolute top-24 left-4 md:left-6 z-20 flex flex-col gap-2">
-            <SessionHud
-              score={s.score}
-              combo={s.combo}
-              correct={s.correct}
-              wrong={s.wrong}
-              index={s.index}
-              total={s.queue.length}
-            />
             <ContinentSelect value={continent} onChange={restartWithContinent} />
           </div>
+
 
           <div className="absolute top-24 right-4 md:right-6 z-20">
             <Button

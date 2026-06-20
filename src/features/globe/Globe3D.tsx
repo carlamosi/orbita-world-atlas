@@ -188,7 +188,10 @@ export default function Globe3D({
   // precision when the user zooms in.
   const hitboxPoints = useMemo(() => {
     if (!features) return [] as Array<{ iso3: string; lat: number; lng: number; radius: number }>;
-    if (altBand <= 3) return []; // close enough — polygons only
+    // Even at close zoom, tiny territories deserve adaptive targets. We only
+    // skip hitboxes at the tightest macro zoom (band 0) where polygons fill
+    // the viewport.
+    if (altBand <= 0) return [];
     const scored = features
       .map((f) => {
         const iso3 = f.properties.iso3;
@@ -199,11 +202,13 @@ export default function Globe3D({
         return { iso3, score, centroid: f.properties.centroid };
       })
       .sort((a, b) => a.score - b.score)
-      .slice(0, 50);
+      .slice(0, 80);
     const maxScore = scored[scored.length - 1]?.score || 1;
+    // Radius scales with zoom: more generous when far, tighter when close.
+    const zoomGain = altBand >= 4 ? 1 : altBand >= 3 ? 0.7 : altBand >= 2 ? 0.45 : 0.3;
     return scored.map(({ iso3, score, centroid }) => {
       const ease = 1 - Math.min(1, score / maxScore);
-      const radius = 0.18 + ease * 0.55; // 0.18–0.73
+      const radius = (0.22 + ease * 0.9) * zoomGain; // 0.07 – 1.12 deg
       return { iso3, lat: centroid[1], lng: centroid[0], radius };
     });
   }, [features, missRates, altBand]);

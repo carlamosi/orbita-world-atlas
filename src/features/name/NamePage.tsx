@@ -1,5 +1,4 @@
 import { lazy, Suspense, useEffect, useMemo, useState, useCallback } from "react";
-import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
@@ -10,10 +9,15 @@ import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { HardInput } from "@/features/engine/HardInput";
 import { Button } from "@/components/ui/orbita-button";
-import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import {
+  ContinentSelect,
+  useContinentPref,
+  type ContinentChoice,
+} from "@/features/engine/ContinentSelect";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
 
@@ -26,11 +30,14 @@ type Mode = "easy" | "hard";
 export default function NamePage() {
   const s = useNameSession();
   const [mode, setMode] = useState<Mode>("easy");
+  const [continent, setContinent] = useContinentPref();
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) s.start();
+    if (s.queue.length === 0 && !s.loading) {
+      s.start({ continent: continent === "All" ? undefined : continent });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -40,6 +47,14 @@ export default function NamePage() {
     if (!finished && current && s.answerState === "idle") s.reveal();
   }, [finished, current, s]);
   useSkipHotkey(onSkip);
+
+  const restartWithContinent = useCallback(
+    (c: ContinentChoice) => {
+      setContinent(c);
+      void s.start({ continent: c === "All" ? undefined : c });
+    },
+    [s, setContinent],
+  );
 
   // Tight POV on the mystery country — but never reveal its name in label form.
   const pov = useMemo(() => {
@@ -81,12 +96,19 @@ export default function NamePage() {
               index={s.index}
               total={s.queue.length}
               title="Name this country"
-              hint={mode === "easy" ? "Pick 1–4" : "Type to answer"}
+              hint={
+                s.hintUsed
+                  ? `Hint: ${current.continent}`
+                  : mode === "easy"
+                    ? "Pick 1–4"
+                    : "Type to answer"
+              }
             />
           </div>
 
-          <div className="absolute top-24 left-4 md:left-6 z-20">
+          <div className="absolute top-24 left-4 md:left-6 z-20 flex flex-col gap-2">
             <SessionHud {...stats(s)} />
+            <ContinentSelect value={continent} onChange={restartWithContinent} />
           </div>
 
           <div className="absolute top-24 right-4 md:right-6 z-20 flex flex-col gap-2 items-end">
@@ -101,15 +123,7 @@ export default function NamePage() {
             </Button>
           </div>
 
-          {s.hintUsed && s.answerState === "idle" && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="absolute bottom-56 left-1/2 -translate-x-1/2 z-20"
-            >
-              <Badge tone="neon">Hint: {current.continent}</Badge>
-            </motion.div>
-          )}
+
 
           {/* Answer surface */}
           <div className="absolute bottom-8 inset-x-0 z-30 px-4">
@@ -146,7 +160,7 @@ export default function NamePage() {
         wrong={s.wrong}
         bestCombo={s.bestCombo}
         durationMs={(s.endedAt ?? 0) - s.startedAt}
-        onReplay={() => s.start()}
+        onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
     </div>
   );

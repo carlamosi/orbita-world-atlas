@@ -32,7 +32,13 @@ type Layer = "explore" | "country" | "expedition";
  */
 export default function ExplorerPage() {
   const [layer, setLayer] = useState<Layer>("explore");
-  const [selectedIso3, setSelectedIso3] = useState<string>("FRA");
+  // Default POV opens on Spain (ESP). Last-selected country is persisted to
+  // localStorage so subsequent visits restore the user's prior camera focus.
+  const [selectedIso3, setSelectedIso3] = useState<string>(() => {
+    if (typeof window === "undefined") return "ESP";
+    const saved = window.localStorage.getItem("orbita.explorer.lastIso3");
+    return saved && COUNTRY_BY_ISO3.has(saved) ? saved : "ESP";
+  });
   const [continent, setContinent] = useState<string>("All");
   const [query, setQuery] = useState("");
   const [expeditionId, setExpeditionId] = useState<string | null>(null);
@@ -56,8 +62,10 @@ export default function ExplorerPage() {
     if (typeof window === "undefined") return;
     const url = new URL(window.location.href);
     url.searchParams.set("layer", layer);
-    if (selectedIso3) url.searchParams.set("iso", selectedIso3);
-    else url.searchParams.delete("iso");
+    if (selectedIso3) {
+      url.searchParams.set("iso", selectedIso3);
+      window.localStorage.setItem("orbita.explorer.lastIso3", selectedIso3);
+    } else url.searchParams.delete("iso");
     if (expeditionId) url.searchParams.set("exp", expeditionId);
     else url.searchParams.delete("exp");
     window.history.replaceState({}, "", url.toString());
@@ -189,7 +197,9 @@ export default function ExplorerPage() {
           )}
         </div>
 
-        {/* PANEL CELL — internally scrollable */}
+        {/* PANEL CELL — internally scrollable. The scroll container is stable
+            across country switches so scrollTop is preserved; only the inner
+            content swaps when the *layer* changes (not on every country). */}
         <aside className="min-h-0 lg:overflow-hidden">
           <div className="h-full lg:overflow-y-auto pr-1">
             <AnimatePresence mode="wait">
@@ -207,7 +217,7 @@ export default function ExplorerPage() {
                 />
               ) : layer === "country" && selected ? (
                 <CountryPanel
-                  key={selected.iso3}
+                  key="country-panel"
                   country={selected}
                   onSelect={setSelectedIso3}
                 />

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLiveQuery } from "dexie-react-hooks";
 import { db, type Skill } from "@/lib/db/orbita-db";
@@ -13,6 +13,9 @@ import { confidenceAfter } from "@/lib/mastery";
 import { dateKey, weekKey } from "@/lib/streak";
 import type { Country } from "@/types/country";
 import { pickRandomCountries } from "@/lib/countries";
+import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import { useSkipHotkey } from "@/hooks/useSkipHotkey";
+import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 
 type Active = {
   set: ChallengeSet;
@@ -233,29 +236,53 @@ function ChallengeRunner({
     );
   }
 
-  if (!current) return null;
+  const pick = useCallback(
+    (iso3: string) => {
+      if (!current || active.answerState !== "idle") return;
+      const correctPick = iso3 === current.country.iso3;
+      updateSkillProgress(current.country.iso3, current.skill as Skill, (prev) =>
+        confidenceAfter(prev, correctPick, false),
+      );
+      const combo = correctPick ? active.combo + 1 : 0;
+      const gained = correctPick ? 100 + Math.min(combo - 1, 9) * 20 : 0;
+      setActive({
+        ...active,
+        answerState: correctPick ? "correct" : "wrong",
+        score: active.score + gained,
+        combo,
+        bestCombo: Math.max(active.bestCombo, combo),
+        correct: active.correct + (correctPick ? 1 : 0),
+        wrong: active.wrong + (correctPick ? 0 : 1),
+      });
+    },
+    [active, current, setActive],
+  );
 
-  function pick(iso3: string) {
-    const correctPick = iso3 === current!.country.iso3;
-    updateSkillProgress(current!.country.iso3, current!.skill as Skill, (prev) =>
-      confidenceAfter(prev, correctPick, false),
-    );
-    const combo = correctPick ? active.combo + 1 : 0;
-    const gained = correctPick ? 100 + Math.min(combo - 1, 9) * 20 : 0;
-    setActive({
-      ...active,
-      answerState: correctPick ? "correct" : "wrong",
-      score: active.score + gained,
-      combo,
-      bestCombo: Math.max(active.bestCombo, combo),
-      correct: active.correct + (correctPick ? 1 : 0),
-      wrong: active.wrong + (correctPick ? 0 : 1),
-    });
-  }
-
-  function next() {
+  const next = useCallback(() => {
     setActive({ ...active, index: active.index + 1, answerState: "idle" });
-  }
+  }, [active, setActive]);
+
+  // Numeric 1–4 + auto-advance + space-to-skip — same architecture as Find/Name/Flags.
+  const hotkeyItems = useMemo(
+    () =>
+      current && active.answerState === "idle"
+        ? options.map((o) => ({ id: o.iso3 }))
+        : [],
+    [current, options, active.answerState],
+  );
+  useAnswerHotkeys(hotkeyItems, pick);
+  useSkipHotkey(useCallback(() => {
+    if (current && active.answerState === "idle") {
+      setActive({ ...active, answerState: "wrong", wrong: active.wrong + 1, combo: 0 });
+    }
+  }, [current, active, setActive]));
+  useAutoAdvance({
+    answerState: active.answerState === "wrong" ? "wrong" : active.answerState === "correct" ? "correct" : "idle",
+    finished: false,
+    next,
+  });
+
+  if (!current) return null;
 
   return (
     <div className="min-h-dvh pt-24 pb-10 px-6 flex flex-col items-center">
@@ -264,10 +291,16 @@ function ChallengeRunner({
           <Badge tone={active.set.kind === "daily" ? "cyan" : "neon"}>
             {active.set.kind} · {active.index + 1}/{active.set.items.length}
           </Badge>
-          <Button variant="ghost" size="sm" onClick={onExit}>
-            Exit
+          <Button
+            variant="secondary"
+            size="sm"
+            onClick={onExit}
+            aria-label="Exit challenge"
+          >
+            ✕ Exit
           </Button>
         </div>
+
 
         <motion.div
           key={active.index}

@@ -5,7 +5,6 @@ import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionEnd } from "@/features/engine/SessionEnd";
-import { Prompt } from "@/features/engine/Prompt";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
@@ -187,24 +186,20 @@ export default function CapitalsPage() {
             </Button>
           </div>
 
-          <Prompt
+          <PromptPill
             keyId={`${sub}-${current.iso3}`}
-            eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
+            index={s.index}
+            total={s.queue.length}
             title={
               sub === "countryToCap" ? (
-                <>
-                  What's the capital of{" "}
-                  <span className="text-glow-cyan">{current.name}</span>?
-                </>
+                <>What's the capital of <span className="text-glow-cyan">{current.name}</span>?</>
               ) : (
-                <>
-                  Which country's capital is{" "}
-                  <span className="text-glow-cyan">{current.capital}</span>?
-                </>
+                <>Which country's capital is <span className="text-glow-cyan">{current.capital}</span>?</>
               )
             }
-            subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
+            hint={s.hintUsed ? `Hint: ${current.continent}` : undefined}
           />
+
 
           <ChoiceGrid
             options={options}

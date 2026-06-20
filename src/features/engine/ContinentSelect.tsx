@@ -20,9 +20,8 @@ export function saveContinentPref(v: ContinentChoice) {
 }
 
 /**
- * Continent filter for Find / Name / Flags / Capitals HUDs. Sits directly
- * underneath SessionHud so the user can re-scope mid-flow. Persisted to
- * localStorage so the preference survives mode switches.
+ * Continent filter — strictly one horizontal row. On narrow viewports the
+ * row scrolls horizontally; it never wraps to multiple lines.
  */
 export function ContinentSelect({
   value,
@@ -36,7 +35,8 @@ export function ContinentSelect({
   return (
     <div
       className={cn(
-        "glass rounded-2xl px-2 py-1.5 flex flex-wrap gap-1 max-w-[260px]",
+        "glass rounded-full p-1 flex flex-nowrap items-center gap-0.5 overflow-x-auto",
+        "scrollbar-none whitespace-nowrap w-fit max-w-full",
         className,
       )}
       role="tablist"
@@ -53,7 +53,7 @@ export function ContinentSelect({
             onChange(c);
           }}
           className={cn(
-            "px-2.5 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors",
+            "shrink-0 px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-colors",
             value === c
               ? "bg-white/15 text-white"
               : "text-white/55 hover:text-white",

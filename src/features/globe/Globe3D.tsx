@@ -187,31 +187,50 @@ export default function Globe3D({
   // small or tricky countries a generous hit target without compromising
   // precision when the user zooms in.
   const hitboxPoints = useMemo(() => {
-    if (!features) return [] as Array<{ iso3: string; lat: number; lng: number; radius: number }>;
-    // Even at close zoom, tiny territories deserve adaptive targets. We only
-    // skip hitboxes at the tightest macro zoom (band 0) where polygons fill
-    // the viewport.
-    if (altBand <= 0) return [];
+    if (!features) return [] as Array<{ iso3: string; lat: number; lng: number; radius: number; micro: boolean }>;
     const scored = features
       .map((f) => {
         const iso3 = f.properties.iso3;
         const area = f.properties.area || 0.0001;
         const miss = missRates?.[iso3] ?? 0;
-        // Lower score = harder to hit → bigger boost.
         const score = area * (1 - Math.min(0.9, miss) * 0.7);
-        return { iso3, score, centroid: f.properties.centroid };
+        return { iso3, score, area, centroid: f.properties.centroid };
       })
-      .sort((a, b) => a.score - b.score)
-      .slice(0, 80);
+      .sort((a, b) => a.score - b.score);
+
+    // Microstates: visible always with a subtle glow marker. Threshold ~12k km²
+    // covers Vatican, Monaco, San Marino, Liechtenstein, Andorra, Malta,
+    // Luxembourg, Singapore, Bahrain, etc.
+    const MICRO_AREA = 12000;
+
+    const result: Array<{ iso3: string; lat: number; lng: number; radius: number; micro: boolean }> = [];
     const maxScore = scored[scored.length - 1]?.score || 1;
-    // Radius scales with zoom: more generous when far, tighter when close.
     const zoomGain = altBand >= 4 ? 1 : altBand >= 3 ? 0.7 : altBand >= 2 ? 0.45 : 0.3;
-    return scored.map(({ iso3, score, centroid }) => {
+
+    for (const { iso3, score, area, centroid } of scored) {
+      const isMicro = area <= MICRO_AREA;
+      if (isMicro) {
+        // Always present, slightly larger hit target than the marker.
+        const radius = altBand >= 4 ? 1.1 : altBand >= 3 ? 0.85 : altBand >= 2 ? 0.65 : 0.5;
+        result.push({ iso3, lat: centroid[1], lng: centroid[0], radius, micro: true });
+        continue;
+      }
+      // Adaptive hitboxes for the 80 hardest non-micro polygons, only when zoomed out.
+      if (altBand <= 0) continue;
+      if (result.length >= 80 + 1) {
+        // already collected enough non-micro hitboxes
+      }
       const ease = 1 - Math.min(1, score / maxScore);
-      const radius = (0.22 + ease * 0.9) * zoomGain; // 0.07 – 1.12 deg
-      return { iso3, lat: centroid[1], lng: centroid[0], radius };
-    });
+      const radius = (0.22 + ease * 0.9) * zoomGain;
+      result.push({ iso3, lat: centroid[1], lng: centroid[0], radius, micro: false });
+      if (result.filter((r) => !r.micro).length >= 80) break;
+    }
+    return result;
   }, [features, missRates, altBand]);
+
+
+
+
 
   // ---- Polygon styling accessors (memoised) ----------------------------
   const strokeOpacity = strokeOpacityFor(
@@ -234,6 +253,27 @@ export default function Globe3D({
   }, [dueSet, effectiveQuality]);
 
   const effHoverIso3 = disableHoverFeedback ? null : hoverIso3;
+
+  // Microstate marker styling — visible glow on tiny territories.
+  const pointColorFn = useCallback(
+    (d: object) => {
+      const p = d as { iso3: string; micro: boolean };
+      if (!p.micro) return "rgba(0,0,0,0)";
+      if (p.iso3 === revealIso3) return `rgba(${COLOR_REVEAL}, 0.95)`;
+      if (p.iso3 === highlightIso3) return `rgba(${COLOR_HIGHLIGHT}, 0.95)`;
+      if (p.iso3 === effHoverIso3) return `rgba(${COLOR_HOVER}, 0.95)`;
+      return `rgba(${COLOR_HIGHLIGHT}, 0.7)`;
+    },
+    [revealIso3, highlightIso3, effHoverIso3],
+  );
+  const pointRadiusFn = useCallback((d: object) => {
+    const p = d as { radius: number; micro: boolean };
+    return p.micro ? Math.max(0.18, p.radius * 0.35) : p.radius;
+  }, []);
+  const pointAltitudeFn = useCallback((d: object) => {
+    const p = d as { micro: boolean };
+    return p.micro ? 0.012 : 0;
+  }, []);
 
   // Clear stale hover when the active question/target changes so the previous
   // country doesn't keep glowing after auto-advance.
@@ -578,9 +618,9 @@ export default function Globe3D({
         pointsData={hitboxPoints}
         pointLat={(d: object) => (d as { lat: number }).lat}
         pointLng={(d: object) => (d as { lng: number }).lng}
-        pointColor={() => "rgba(0,0,0,0)"}
-        pointAltitude={0}
-        pointRadius={(d: object) => (d as { radius: number }).radius}
+        pointColor={pointColorFn}
+        pointAltitude={pointAltitudeFn}
+        pointRadius={pointRadiusFn}
         pointsMerge={false}
         onPointClick={handleHitboxClick}
         onPointHover={handleHitboxHover}

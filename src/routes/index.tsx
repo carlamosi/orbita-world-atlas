@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { motion, useScroll, useTransform, useSpring, useMotionValueEvent } from "framer-motion";
 import { useRef, useState } from "react";
 import { Card } from "@/components/ui/orbita-card";
@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { fadeUp, spring, stagger } from "@/lib/motion";
 import { COUNTRIES } from "@/lib/countries";
+import {
+  OnboardingOverlay,
+  hasSeenOnboarding,
+} from "@/features/onboarding/OnboardingOverlay";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,21 +71,44 @@ const MODES = [
 
 function Home() {
   const totalCountries = COUNTRIES.length;
+  const navigate = useNavigate();
+  const [onboarding, setOnboarding] = useState(false);
+
+  const beginOrbit = () => {
+    if (hasSeenOnboarding()) {
+      void navigate({ to: "/find" });
+    } else {
+      setOnboarding(true);
+    }
+  };
+
   return (
     <>
-      <CinematicScroll totalCountries={totalCountries} />
+      <CinematicScroll totalCountries={totalCountries} onBegin={beginOrbit} />
       <ModesSection />
-      <FinalCta />
+      <FinalCta onBegin={beginOrbit} />
       <Footer />
+      <OnboardingOverlay
+        open={onboarding}
+        onComplete={() => {
+          setOnboarding(false);
+          void navigate({ to: "/find" });
+        }}
+        onSkip={() => {
+          setOnboarding(false);
+          void navigate({ to: "/find" });
+        }}
+      />
     </>
   );
 }
+
 
 /* =========================================================
    Cinematic sticky scroll: 380vh viewport with parallax globe
    ========================================================= */
 
-function CinematicScroll({ totalCountries }: { totalCountries: number }) {
+function CinematicScroll({ totalCountries, onBegin }: { totalCountries: number; onBegin: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -126,9 +153,7 @@ function CinematicScroll({ totalCountries }: { totalCountries: number }) {
             through a living, atmospheric atlas.
           </p>
           <div className="mt-10 flex flex-wrap gap-3 justify-center">
-            <Link to="/find">
-              <Button size="lg">Begin orbit →</Button>
-            </Link>
+            <Button size="lg" onClick={onBegin}>Begin orbit →</Button>
             <Link to="/explorer">
               <Button variant="secondary" size="lg">
                 Explore the atlas
@@ -359,7 +384,7 @@ function ModesSection() {
 
 /* ============== Final CTA ============== */
 
-function FinalCta() {
+function FinalCta({ onBegin }: { onBegin: () => void }) {
   return (
     <section className="relative py-40 px-6 text-center">
       <div
@@ -389,11 +414,9 @@ function FinalCta() {
           Step into the orbit. The atlas is waiting.
         </p>
         <div className="mt-12">
-          <Link to="/find">
-            <Button size="lg" className="animate-pulse-glow">
-              Enter the orbit →
-            </Button>
-          </Link>
+          <Button size="lg" className="animate-pulse-glow" onClick={onBegin}>
+            Enter the orbit →
+          </Button>
         </div>
       </motion.div>
     </section>

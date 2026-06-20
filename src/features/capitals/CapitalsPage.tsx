@@ -12,6 +12,11 @@ import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
+import {
+  ContinentSelect,
+  useContinentPref,
+  type ContinentChoice,
+} from "@/features/engine/ContinentSelect";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
@@ -23,30 +28,25 @@ const useCapSession = createSessionStore({ mode: "capital", skill: "capital" });
 
 type SubMode = "countryToCap" | "capToCountry" | "locator";
 
-const CONTINENTS = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
-
 export default function CapitalsPage() {
   const s = useCapSession();
   const [sub, setSub] = useState<SubMode>("countryToCap");
-  const [continent, setContinent] = useState<string>("All");
+  const [continent, setContinent] = useContinentPref();
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
   useEffect(() => {
-    Promise.all([getPref("capitals.sub"), getPref("capitals.continent")]).then(([sb, ct]) => {
+    getPref("capitals.sub").then((sb) => {
       if (sb) setSub(sb as SubMode);
-      if (ct) setContinent(ct);
     });
   }, []);
   useEffect(() => {
     setPref("capitals.sub", sub);
   }, [sub]);
-  useEffect(() => {
-    setPref("capitals.continent", continent);
-  }, [continent]);
 
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) s.start({ continent });
+    if (s.queue.length === 0 && !s.loading)
+      s.start({ continent: continent === "All" ? undefined : continent });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -61,7 +61,14 @@ export default function CapitalsPage() {
   }, [finished, current, s]);
   useSkipHotkey(onSkip);
 
-  // Exclude countries without a capital from the queue effectively by skipping them.
+  const restartWithContinent = useCallback(
+    (c: ContinentChoice) => {
+      setContinent(c);
+      void s.start({ continent: c === "All" ? undefined : c });
+    },
+    [s, setContinent],
+  );
+
   const valid = current && current.capital;
 
   const options = useMemo(() => {
@@ -77,6 +84,21 @@ export default function CapitalsPage() {
       : undefined;
   }, [sub, s.answerState, current]);
 
+  /** Standard HUD column shown across both layouts. */
+  const HudColumn = (
+    <div className="flex flex-col gap-2 items-start min-w-0">
+      <SessionHud {...stats(s)} />
+      <ContinentSelect value={continent} onChange={restartWithContinent} />
+      <SubModeToggle
+        value={sub}
+        onChange={(v) => {
+          setSub(v);
+          void s.start({ continent: continent === "All" ? undefined : continent });
+        }}
+      />
+    </div>
+  );
+
   if (sub === "locator") {
     return (
       <div className="relative min-h-dvh pt-20">
@@ -88,7 +110,9 @@ export default function CapitalsPage() {
               revealIso3={
                 s.answerState === "wrong" || s.answerState === "revealed" ? current?.iso3 : null
               }
-              onCountryClick={(iso3) => current && s.answerState === "idle" && s.submit(iso3 === current.iso3)}
+              onCountryClick={(iso3) =>
+                current && s.answerState === "idle" && s.submit(iso3 === current.iso3)
+              }
               pointOfView={pov}
               disableHoverLabel
               questionKey={current?.iso3 ?? null}
@@ -102,16 +126,17 @@ export default function CapitalsPage() {
                 keyId={current.iso3}
                 index={s.index}
                 total={s.queue.length}
-                title={<>Find the country whose capital is <span className="text-glow-cyan">{current.capital}</span></>}
+                title={
+                  <>
+                    Find the country whose capital is{" "}
+                    <span className="text-glow-cyan">{current.capital}</span>
+                  </>
+                }
                 hint={s.hintUsed ? current.continent : undefined}
               />
             </div>
-            <div className="absolute top-24 left-4 md:left-6 z-20">
-              <SessionHud {...stats(s)} />
-            </div>
-            <div className="absolute top-24 right-4 md:right-6 z-20 flex flex-col gap-2 items-end">
-              <SubModeToggle value={sub} onChange={(v) => { setSub(v); s.start({ continent }); }} />
-              <ContinentToggle value={continent} onChange={(v) => { setContinent(v); s.start({ continent: v }); }} />
+            <div className="absolute top-24 left-4 md:left-6 z-20">{HudColumn}</div>
+            <div className="absolute top-24 right-4 md:right-6 z-20">
               <Button
                 size="sm"
                 variant="secondary"
@@ -126,7 +151,7 @@ export default function CapitalsPage() {
                 show={s.answerState !== "idle"}
                 state={s.answerState as "correct" | "wrong" | "revealed"}
                 title={`${current.name} — ${current.capital}`}
-                subtitle={current.continent}
+                subtitle={`Capital of ${current.name}`}
                 onNext={() => s.next()}
                 onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
                 hideNext
@@ -142,23 +167,18 @@ export default function CapitalsPage() {
           wrong={s.wrong}
           bestCombo={s.bestCombo}
           durationMs={(s.endedAt ?? 0) - s.startedAt}
-          onReplay={() => s.start({ continent })}
+          onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
         />
       </div>
     );
   }
 
-  // Choice modes
   return (
     <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">
       {!finished && current && valid && (
         <>
-          <div className="w-full max-w-4xl mb-6 flex items-center justify-between gap-3 flex-wrap">
-            <SessionHud {...stats(s)} />
-            <div className="flex flex-col gap-2 items-end">
-              <SubModeToggle value={sub} onChange={(v) => { setSub(v); s.start({ continent }); }} />
-              <ContinentToggle value={continent} onChange={(v) => { setContinent(v); s.start({ continent: v }); }} />
-            </div>
+          <div className="w-full max-w-4xl mb-6 flex items-start justify-between gap-3 flex-wrap">
+            {HudColumn}
             <Button
               size="sm"
               variant="secondary"
@@ -174,9 +194,15 @@ export default function CapitalsPage() {
             eyebrow={`Question ${s.index + 1} / ${s.queue.length}`}
             title={
               sub === "countryToCap" ? (
-                <>What's the capital of <span className="text-glow-cyan">{current.name}</span>?</>
+                <>
+                  What's the capital of{" "}
+                  <span className="text-glow-cyan">{current.name}</span>?
+                </>
               ) : (
-                <>Which country's capital is <span className="text-glow-cyan">{current.capital}</span>?</>
+                <>
+                  Which country's capital is{" "}
+                  <span className="text-glow-cyan">{current.capital}</span>?
+                </>
               )
             }
             subtitle={s.hintUsed ? `Hint: ${current.continent}` : undefined}
@@ -195,7 +221,7 @@ export default function CapitalsPage() {
               show={s.answerState !== "idle"}
               state={s.answerState as "correct" | "wrong" | "revealed"}
               title={`${current.name} — ${current.capital}`}
-              subtitle={current.continent}
+              subtitle={`Capital of ${current.name}`}
               onNext={() => s.next()}
               onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
               hideNext
@@ -208,7 +234,9 @@ export default function CapitalsPage() {
         <div className="mt-10">
           <Badge tone="muted">No capital on file — skipping</Badge>
           <div className="mt-3">
-            <Button size="sm" onClick={() => s.next()}>Skip</Button>
+            <Button size="sm" onClick={() => s.next()}>
+              Skip
+            </Button>
           </div>
         </div>
       )}
@@ -221,7 +249,7 @@ export default function CapitalsPage() {
         wrong={s.wrong}
         bestCombo={s.bestCombo}
         durationMs={(s.endedAt ?? 0) - s.startedAt}
-        onReplay={() => s.start({ continent })}
+        onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
     </div>
   );
@@ -267,10 +295,10 @@ function ChoiceGrid({
           )}
         >
           <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
-            {i + 1} · {o.continent}
+            {i + 1}
           </div>
           <div className="font-display text-lg text-white tracking-tight">
-            {sub === "countryToCap" ? (o.capital ?? "—") : o.name}
+            {sub === "countryToCap" ? o.capital ?? "—" : o.name}
           </div>
         </button>
       ))}
@@ -287,12 +315,12 @@ function SubModeToggle({
   onChange: (v: SubMode) => void;
 }) {
   return (
-    <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider">
+    <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider whitespace-nowrap">
       {(
         [
           ["countryToCap", "Country → Cap"],
           ["capToCountry", "Cap → Country"],
-          ["locator", "Globe locator"],
+          ["locator", "Globe Locator"],
         ] as const
       ).map(([k, label]) => (
         <button
@@ -300,35 +328,10 @@ function SubModeToggle({
           onClick={() => onChange(k)}
           className={cn(
             "px-3 py-1 rounded-full transition-colors whitespace-nowrap",
-            value === k ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
+            value === k ? "bg-white/15 text-white" : "text-white/55 hover:text-white",
           )}
         >
           {label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function ContinentToggle({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider flex-wrap">
-      {CONTINENTS.map((c) => (
-        <button
-          key={c}
-          onClick={() => onChange(c)}
-          className={cn(
-            "px-2.5 py-1 rounded-full transition-colors",
-            value === c ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
-          )}
-        >
-          {c}
         </button>
       ))}
     </div>

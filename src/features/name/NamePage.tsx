@@ -160,7 +160,7 @@ export default function NamePage() {
         wrong={s.wrong}
         bestCombo={s.bestCombo}
         durationMs={(s.endedAt ?? 0) - s.startedAt}
-        onReplay={() => s.start()}
+        onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
     </div>
   );

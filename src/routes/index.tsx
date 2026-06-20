@@ -140,12 +140,13 @@ function CinematicScroll({ totalCountries }: { totalCountries: number }) {
           </p>
         </motion.div>
 
-        {/* Stats section — appears while globe scales */}
+        {/* Stats section — appears while globe scales. Always pointer-events-none
+            so it never intercepts the hero CTAs underneath at scroll=0. */}
         <motion.div
           style={{ opacity: statsOpacity, y: statsY }}
-          className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none"
+          className="absolute inset-0 z-[5] flex items-center justify-center pointer-events-none"
         >
-          <div className="grid grid-cols-2 gap-4 md:gap-6 w-[min(92vw,820px)] pointer-events-auto">
+          <div className="grid grid-cols-2 gap-4 md:gap-6 w-[min(92vw,820px)]">
             <StatCard label="Countries" value={totalCountries} tone="violet" />
             <StatCard label="Continents" value={7} tone="cyan" />
             <StatCard label="Capitals" value={195} tone="neon" />

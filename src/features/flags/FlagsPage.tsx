@@ -85,20 +85,20 @@ export default function FlagsPage() {
     <div className="relative min-h-dvh pt-20 flex flex-col">
       {!finished && current && (
         <>
-          {/* Sticky HUD bar */}
+          {/* Sticky HUD bar — strict vertical hierarchy: HUD → Continent → SubMode */}
           <div className="sticky top-20 z-20 px-6">
-            <div className="w-full max-w-5xl mx-auto flex items-center justify-between gap-4 flex-wrap">
-              <div className="flex flex-col gap-2">
+            <div className="w-full max-w-5xl mx-auto flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex flex-col gap-2 items-start min-w-0">
                 <SessionHud {...stats(s)} />
                 <ContinentSelect value={continent} onChange={restartWithContinent} />
+                <SubModeToggle
+                  value={sub}
+                  onChange={(v) => {
+                    setSub(v);
+                    void s.start({ continent: continent === "All" ? undefined : continent });
+                  }}
+                />
               </div>
-              <SubModeToggle
-                value={sub}
-                onChange={(v) => {
-                  setSub(v);
-                  void s.start({ continent: continent === "All" ? undefined : continent });
-                }}
-              />
               <Button
                 size="sm"
                 variant="secondary"
@@ -168,6 +168,7 @@ export default function FlagsPage() {
           <ConfettiBurst show={s.answerState === "correct"} />
         </>
       )}
+
 
       <SessionEnd
         show={finished}

@@ -4,7 +4,6 @@ import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
-import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
@@ -89,7 +88,6 @@ export default function FlagsPage() {
           <div className="sticky top-20 z-20 px-6">
             <div className="w-full max-w-5xl mx-auto flex items-start justify-between gap-4 flex-wrap">
               <div className="flex flex-col gap-2 items-start min-w-0">
-                <SessionHud {...stats(s)} />
                 <ContinentSelect value={continent} onChange={restartWithContinent} />
                 <SubModeToggle
                   value={sub}

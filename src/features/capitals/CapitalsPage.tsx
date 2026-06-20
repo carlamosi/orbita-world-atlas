@@ -4,7 +4,6 @@ import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
-import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { Prompt } from "@/features/engine/Prompt";
 import { PromptPill } from "@/features/engine/PromptPill";
@@ -87,7 +86,6 @@ export default function CapitalsPage() {
   /** Standard HUD column shown across both layouts. */
   const HudColumn = (
     <div className="flex flex-col gap-2 items-start min-w-0">
-      <SessionHud {...stats(s)} />
       <ContinentSelect value={continent} onChange={restartWithContinent} />
       <SubModeToggle
         value={sub}

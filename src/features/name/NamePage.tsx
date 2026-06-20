@@ -3,7 +3,6 @@ import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
 import { useSkipHotkey } from "@/hooks/useSkipHotkey";
-import { SessionHud } from "@/features/engine/SessionHud";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
@@ -107,7 +106,6 @@ export default function NamePage() {
           </div>
 
           <div className="absolute top-24 left-4 md:left-6 z-20 flex flex-col gap-2">
-            <SessionHud {...stats(s)} />
             <ContinentSelect value={continent} onChange={restartWithContinent} />
           </div>
 

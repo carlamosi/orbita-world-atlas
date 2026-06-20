@@ -71,15 +71,38 @@ const MODES = [
 
 function Home() {
   const totalCountries = COUNTRIES.length;
+  const navigate = useNavigate();
+  const [onboarding, setOnboarding] = useState(false);
+
+  const beginOrbit = () => {
+    if (hasSeenOnboarding()) {
+      void navigate({ to: "/find" });
+    } else {
+      setOnboarding(true);
+    }
+  };
+
   return (
     <>
-      <CinematicScroll totalCountries={totalCountries} />
+      <CinematicScroll totalCountries={totalCountries} onBegin={beginOrbit} />
       <ModesSection />
-      <FinalCta />
+      <FinalCta onBegin={beginOrbit} />
       <Footer />
+      <OnboardingOverlay
+        open={onboarding}
+        onComplete={() => {
+          setOnboarding(false);
+          void navigate({ to: "/find" });
+        }}
+        onSkip={() => {
+          setOnboarding(false);
+          void navigate({ to: "/find" });
+        }}
+      />
     </>
   );
 }
+
 
 /* =========================================================
    Cinematic sticky scroll: 380vh viewport with parallax globe

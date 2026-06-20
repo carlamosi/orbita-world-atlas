@@ -384,7 +384,7 @@ function ModesSection() {
 
 /* ============== Final CTA ============== */
 
-function FinalCta() {
+function FinalCta({ onBegin }: { onBegin: () => void }) {
   return (
     <section className="relative py-40 px-6 text-center">
       <div

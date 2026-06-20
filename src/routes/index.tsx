@@ -108,7 +108,7 @@ function Home() {
    Cinematic sticky scroll: 380vh viewport with parallax globe
    ========================================================= */
 
-function CinematicScroll({ totalCountries }: { totalCountries: number }) {
+function CinematicScroll({ totalCountries, onBegin }: { totalCountries: number; onBegin: () => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,

@@ -197,7 +197,9 @@ export default function ExplorerPage() {
           )}
         </div>
 
-        {/* PANEL CELL — internally scrollable */}
+        {/* PANEL CELL — internally scrollable. The scroll container is stable
+            across country switches so scrollTop is preserved; only the inner
+            content swaps when the *layer* changes (not on every country). */}
         <aside className="min-h-0 lg:overflow-hidden">
           <div className="h-full lg:overflow-y-auto pr-1">
             <AnimatePresence mode="wait">
@@ -215,7 +217,7 @@ export default function ExplorerPage() {
                 />
               ) : layer === "country" && selected ? (
                 <CountryPanel
-                  key={selected.iso3}
+                  key="country-panel"
                   country={selected}
                   onSelect={setSelectedIso3}
                 />

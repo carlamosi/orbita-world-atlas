@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/orbita-button";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/useAuth";
 
 const STORAGE_KEY = "orbita.onboarding.done";
 
@@ -62,6 +64,7 @@ interface Props {
 
 export function OnboardingOverlay({ open, onComplete, onSkip }: Props) {
   const [step, setStep] = useState(0);
+  const { signedIn } = useAuth();
 
   useEffect(() => {
     if (!open) setStep(0);
@@ -165,26 +168,40 @@ export function OnboardingOverlay({ open, onComplete, onSkip }: Props) {
               ))}
             </div>
 
-            <div className="mt-8 flex justify-center gap-3">
-              {step > 0 && (
-                <Button size="md" variant="secondary" onClick={() => setStep(step - 1)}>
-                  Back
-                </Button>
-              )}
-              {!last ? (
-                <Button size="md" onClick={() => setStep(step + 1)}>
-                  Continue
-                </Button>
-              ) : (
-                <Button
-                  size="md"
-                  onClick={() => {
-                    markOnboardingSeen();
-                    onComplete();
-                  }}
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <div className="flex justify-center gap-3">
+                {step > 0 && (
+                  <Button size="md" variant="secondary" onClick={() => setStep(step - 1)}>
+                    Back
+                  </Button>
+                )}
+                {!last ? (
+                  <Button size="md" onClick={() => setStep(step + 1)}>
+                    Continue
+                  </Button>
+                ) : (
+                  <Button
+                    size="md"
+                    onClick={() => {
+                      markOnboardingSeen();
+                      onComplete();
+                    }}
+                  >
+                    Begin Your Journey →
+                  </Button>
+                )}
+              </div>
+              {/* Auth CTA — only shown on last step for guests */}
+              {last && !signedIn && (
+                <Link
+                  to="/auth"
+                  search={{ mode: "signup" }}
+                  onClick={() => { markOnboardingSeen(); onSkip(); }}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-mono uppercase tracking-[0.2em] transition-colors hover:opacity-100"
+                  style={{ color: accent, opacity: 0.85 }}
                 >
-                  Begin Your Journey →
-                </Button>
+                  <span style={{ fontSize: 14 }}>💾</span> Create an account to save your progress →
+                </Link>
               )}
             </div>
           </motion.div>

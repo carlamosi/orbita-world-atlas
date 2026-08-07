@@ -11,6 +11,9 @@ import { ensureUserProfile } from "@/lib/auth/profile";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    mode: search.mode === "signup" || search.mode === "signin" ? search.mode : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Sign in · Orbita" },
@@ -67,6 +70,7 @@ function friendlyAuthMessage(error: unknown) {
 
 function AuthPage() {
   const router = useRouter();
+  const { mode: urlMode } = Route.useSearch();
   const { user, loading: authLoading } = useAuth();
   const [mode, setMode] = useState<Mode>("signin");
   const [name, setName] = useState("");
@@ -78,6 +82,11 @@ function AuthPage() {
   const [errors, setErrors] = useState<{ name?: string; email?: string; password?: string }>({});
   const [notice, setNotice] = useState<Notice>(null);
   const [submittedEmail, setSubmittedEmail] = useState("");
+
+  useEffect(() => {
+    if (urlMode === "signup") setMode("signup");
+    else if (urlMode === "signin") setMode("signin");
+  }, [urlMode]);
 
   useEffect(() => {
     if (!authLoading && user) router.navigate({ to: "/" });
@@ -473,39 +482,54 @@ function AuthPage() {
           </button>
         </form>
 
-        <footer className="mt-6 flex flex-wrap items-center justify-between gap-2 text-xs text-muted-foreground">
-          {mode === "forgot" ? (
-            <button
-              type="button"
-              onClick={() => setMode("signin")}
-              className="hover:text-foreground transition-colors"
-            >
-              ← Back to sign in
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => {
-                setErrors({});
-                setNotice(null);
-                setMode(mode === "signin" ? "signup" : "signin");
-              }}
-              className="hover:text-foreground transition-colors"
-            >
-              {mode === "signin" ? (
-                <>
-                  New to Orbita? <span className="text-cyan">Create account</span>
-                </>
-              ) : (
-                <>
-                  Already have an account? <span className="text-cyan">Sign in</span>
-                </>
-              )}
-            </button>
+        <footer className="mt-6 space-y-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 text-xs text-muted-foreground">
+            {mode === "forgot" ? (
+              <button
+                type="button"
+                onClick={() => setMode("signin")}
+                className="hover:text-foreground transition-colors"
+              >
+                ← Back to sign in
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setErrors({});
+                  setNotice(null);
+                  setMode(mode === "signin" ? "signup" : "signin");
+                }}
+                className="hover:text-foreground transition-colors"
+              >
+                {mode === "signin" ? (
+                  <>
+                    New to Orbita? <span className="text-cyan">Create account</span>
+                  </>
+                ) : (
+                  <>
+                    Already have an account? <span className="text-cyan">Sign in</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+
+          {mode !== "forgot" && mode !== "check-email" && (
+            <>
+              <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60">
+                <span className="h-px flex-1 bg-white/10" />
+                or
+                <span className="h-px flex-1 bg-white/10" />
+              </div>
+              <Link
+                to="/"
+                className="flex w-full items-center justify-center rounded-xl border border-white/8 bg-white/[0.02] px-4 py-2.5 text-xs text-muted-foreground hover:border-white/15 hover:bg-white/[0.05] hover:text-foreground transition-all"
+              >
+                Continue as guest — progress stays on this device
+              </Link>
+            </>
           )}
-          <Link to="/" className="hover:text-foreground transition-colors">
-            Continue as guest
-          </Link>
         </footer>
 
         {mode === "signup" && (

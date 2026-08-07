@@ -7,7 +7,7 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -16,6 +16,7 @@ import { Starfield } from "@/components/atmosphere/Starfield";
 import { Toaster } from "@/components/ui/sonner";
 import { authDebug } from "@/lib/auth/debug";
 import { ensureUserProfile } from "@/lib/auth/profile";
+import { SaveProgressNudge } from "@/components/ui/SaveProgressNudge";
 
 function NotFoundComponent() {
   return (
@@ -139,6 +140,8 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  const migratedRef = useRef(false);
+
   useEffect(() => {
     let mounted = true;
     let unsubscribeAuth: (() => void) | null = null;
@@ -150,15 +153,40 @@ function RootComponent() {
       import("@/integrations/supabase/client"),
       import("@/lib/db/dbProvider"),
       import("@/lib/sync/useSyncStore"),
-    ]).then(([{ supabase }, { swap }, { useSyncStore }]) => {
+    ]).then(([{ supabase }, { swap, getCurrent }, { useSyncStore }]) => {
       if (!mounted) return;
+
+      const runMigration = async (uid: string) => {
+        if (migratedRef.current) return;
+        migratedRef.current = true;
+        const { handleSignedInSync } = await import("@/lib/sync/workers");
+        const { toast } = await import("sonner");
+        const userDb = getCurrent();
+        if (!userDb) return;
+        const result = await handleSignedInSync(userDb, uid);
+        if (result.migrated > 0) {
+          authDebug("root:migration_done", result);
+          toast.success(
+            `✨ Saved ${result.migrated} items from your guest session`,
+            { description: "Your progress has been merged into your account.", duration: 5000 },
+          );
+        }
+      };
+
       supabase.auth.getSession().then(({ data }) => {
         const uid = data.session?.user.id ?? null;
         authDebug("root session restore", { hasSession: !!data.session, userId: uid });
         useSyncStore.getState().setSignedIn(!!uid);
         void swap(uid);
-        if (data.session?.user) void ensureUserProfile(data.session.user).catch((error) => authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) }));
+        if (data.session?.user) {
+          void ensureUserProfile(data.session.user).catch((error) =>
+            authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) })
+          );
+          // If user was already signed in on page load, check for guest data to migrate
+          void swap(uid).then(() => runMigration(uid!));
+        }
       });
+
       const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
         if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED")
           return;
@@ -166,8 +194,17 @@ function RootComponent() {
         authDebug("root auth event", { event, hasSession: !!session, userId: uid });
         useSyncStore.getState().setSignedIn(!!uid);
         void swap(uid);
-        if (session?.user) void ensureUserProfile(session.user).catch((error) => authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) }));
+        if (session?.user) {
+          void ensureUserProfile(session.user).catch((error) =>
+            authDebug("root profile ensure failed", { error: error instanceof Error ? error.message : String(error) })
+          );
+          if (event === "SIGNED_IN") {
+            // Run migration after the DB swap completes
+            void swap(uid).then(() => runMigration(uid!));
+          }
+        }
         if (event !== "SIGNED_OUT") queryClient.invalidateQueries();
+        if (event === "SIGNED_OUT") migratedRef.current = false;
       });
       unsubscribeAuth = () => sub.subscription.unsubscribe();
     });
@@ -182,6 +219,7 @@ function RootComponent() {
       <AppShell>
         <Outlet />
       </AppShell>
+      <SaveProgressNudge />
       <Toaster position="top-center" richColors closeButton />
     </QueryClientProvider>
   );

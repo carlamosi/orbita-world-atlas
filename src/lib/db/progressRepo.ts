@@ -1,5 +1,13 @@
 import { db } from "./orbita-db";
 import type { ConceptProgressRow, QuestionHistoryRow } from "./orbita-db";
+import { currentDbName } from "./dbProvider";
+
+/** Extract Supabase user id from the active Dexie DB name (`orbita-${id}`). */
+function activeUserId(): string | null {
+  const name = currentDbName();
+  if (name === "orbita-local") return null;
+  return name.replace(/^orbita-/, "") || null;
+}
 
 /**
  * Retrieves a single concept's progress state from IndexedDB.
@@ -25,7 +33,9 @@ export async function recordConceptAttempt(
   historyRow: QuestionHistoryRow
 ): Promise<void> {
   await db().transaction("rw", db().concept_progress, db().question_history, db().outbox, async () => {
+    const userId = activeUserId();
     // 1. Write the updated FSRS state
+    progressRow.user_id = userId;
     progressRow.dirty = 1;
     progressRow.updated_at = Date.now();
     await db().concept_progress.put(progressRow);

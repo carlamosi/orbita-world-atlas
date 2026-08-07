@@ -371,4 +371,7 @@ function finalize() {
     createdAt: endedAt,
     meta: { speedMode: s.config.mode, continent: s.config.continent },
   });
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("orbita:session-end", { detail: { score: s.score } }));
+  }
 }

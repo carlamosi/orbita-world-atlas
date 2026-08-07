@@ -32,7 +32,7 @@ async function refreshQueued() {
   }
 }
 
-async function runPushOnce() {
+export async function runPushOnce() {
   if (pushing) return;
   if (!useSyncStore.getState().signedIn) return;
   if (typeof navigator !== "undefined" && !navigator.onLine) {
@@ -279,3 +279,19 @@ export async function forceFullResync() {
 }
 
 export { refreshQueued };
+
+/**
+ * Called on SIGNED_IN — merges guest IndexedDB into the user DB and
+ * immediately pushes dirty rows to Supabase.
+ */
+export async function handleSignedInSync(
+  userDb: import("@/lib/db/orbita-db").OrbitaDB,
+  userId: string,
+): Promise<{ migrated: number; skipped: number }> {
+  const { migrateGuestProgress } = await import("@/lib/auth/migrateGuestProgress");
+  const result = await migrateGuestProgress(userDb, userId);
+  if (result.migrated > 0) {
+    await runPushOnce();
+  }
+  return result;
+}

@@ -49,6 +49,8 @@ export interface ConceptProgressRow {
   conceptId: string; // PK: e.g., "FRA:location"
   iso3: string;
   skill: string;
+  /** null = guest/local; set after sign-in for cloud sync scoping */
+  user_id?: string | null;
   fsrs_state: FsrsStateStr;
   fsrs_stability: number | null;
   fsrs_difficulty: number | null;
@@ -233,6 +235,11 @@ export class OrbitaDB extends Dexie {
       concept_progress: "conceptId, fsrs_due, dirty, updated_at",
       question_history: "op_id, conceptId, answeredAt",
       daily_summary: "dateKey, dirty",
+    });
+
+    // v5: auth-aware concept_progress — user_id + composite index for per-user queries
+    this.version(5).stores({
+      concept_progress: "conceptId, [user_id+skill], fsrs_due, dirty, updated_at",
     });
   }
 }

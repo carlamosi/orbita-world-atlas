@@ -21,9 +21,11 @@ export function AccountMenu() {
     return (
       <Link
         to="/auth"
-        className="inline-flex items-center text-[12px] text-white/80 hover:text-white px-3 py-1.5 rounded-full border border-white/10 bg-white/5"
+        search={{ mode: "signup" }}
+        className="inline-flex items-center gap-1.5 text-[12px] text-white/90 hover:text-white px-3 py-1.5 rounded-full border border-neon/25 bg-neon/10 hover:bg-neon/15 transition-colors"
+        title="Create an account to sync your progress"
       >
-        Sign in
+        <span aria-hidden>💾</span> Save progress
       </Link>
     );
   }

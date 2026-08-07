@@ -268,6 +268,10 @@ export function createSessionStore({
           durationMs: endedAt - s.startedAt,
           createdAt: endedAt,
         });
+        // Signal the SaveProgressNudge for guest users
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new CustomEvent("orbita:session-end", { detail: { score: s.score, correct: s.correct } }));
+        }
         return;
       }
       set({

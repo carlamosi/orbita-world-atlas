@@ -20,7 +20,6 @@ export interface SessionState {
   correct: number;
   wrong: number;
   answerState: AnswerState;
-  hintUsed: boolean;
   startedAt: number;
   endedAt: number | null;
   loading: boolean;
@@ -28,10 +27,12 @@ export interface SessionState {
   questionStartedAt: number;
 
   current(): Country | null;
-  start(opts?: { continent?: string }): Promise<void>;
+  /** Start a session. Pass `allCountries` for Complete Continent mode
+   * (every country played exactly once in random order). Pass `continent`
+   * for Quick Practice (20 weighted questions). */
+  start(opts?: { continent?: string; allCountries?: Country[] }): Promise<void>;
   submit(isCorrect: boolean): void;
   reveal(): void;
-  useHint(): void;
   next(): void;
 }
 
@@ -61,7 +62,6 @@ export function createSessionStore({
     correct: 0,
     wrong: 0,
     answerState: "idle",
-    hintUsed: false,
     startedAt: 0,
     endedAt: null,
     loading: false,
@@ -83,14 +83,26 @@ export function createSessionStore({
         correct: 0,
         wrong: 0,
         answerState: "idle",
-        hintUsed: false,
         startedAt: 0,
         endedAt: null,
         questionStartedAt: 0,
       });
-      const q = await selectQuestions(skill, questions, {
-        continent: opts?.continent,
-      });
+
+      let q: Country[];
+      if (opts?.allCountries && opts.allCountries.length > 0) {
+        // Complete Continent mode: use the pre-built shuffled array directly.
+        // Fisher-Yates shuffle so each run is fresh.
+        q = [...opts.allCountries];
+        for (let i = q.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [q[i], q[j]] = [q[j]!, q[i]!];
+        }
+      } else {
+        q = await selectQuestions(skill, questions, {
+          continent: opts?.continent,
+        });
+      }
+
       const now = Date.now();
       set({
         queue: q,
@@ -101,7 +113,6 @@ export function createSessionStore({
         correct: 0,
         wrong: 0,
         answerState: "idle",
-        hintUsed: false,
         startedAt: now,
         endedAt: null,
         loading: false,
@@ -119,8 +130,7 @@ export function createSessionStore({
         const combo = s.combo + 1;
         const base = 100;
         const comboBonus = Math.min(combo - 1, 9) * 20;
-        const hintFactor = s.hintUsed ? 0.5 : 1;
-        const gained = Math.round((base + comboBonus) * hintFactor);
+        const gained = base + comboBonus;
         set({
           score: s.score + gained,
           combo,
@@ -132,7 +142,7 @@ export function createSessionStore({
         set({ combo: 0, wrong: s.wrong + 1, answerState: "wrong" });
       }
       updateSkillProgress(target.iso3, skill, (prev) =>
-        confidenceAfter(prev, isCorrect, s.hintUsed, Date.now(), responseMs),
+        confidenceAfter(prev, isCorrect, Date.now(), responseMs),
       );
     },
 
@@ -140,17 +150,12 @@ export function createSessionStore({
       set({ answerState: "revealed" });
     },
 
-    useHint() {
-      if (get().hintUsed) return;
-      set({ hintUsed: true });
-    },
-
     next() {
       const s = get();
       const nextIndex = s.index + 1;
       if (nextIndex >= s.queue.length) {
         const endedAt = Date.now();
-        set({ endedAt, answerState: "idle", hintUsed: false, combo: 0 });
+        set({ endedAt, answerState: "idle", combo: 0 });
         recordSessionEnd({
           mode,
           skill,
@@ -167,7 +172,6 @@ export function createSessionStore({
       set({
         index: nextIndex,
         answerState: "idle",
-        hintUsed: false,
         questionStartedAt: Date.now(),
       });
     },

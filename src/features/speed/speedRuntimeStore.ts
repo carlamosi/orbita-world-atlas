@@ -69,6 +69,9 @@ function startingLives(m: SpeedMode): number {
 // Module-level timer registry — survives store re-init, drained by reset().
 let tickHandle: ReturnType<typeof setInterval> | null = null;
 const pendingTimeouts = new Set<ReturnType<typeof setTimeout>>();
+// Monotonically-incrementing token: lets start()'s async continuation detect
+// whether reset() was called while the queue was being built.
+let currentStartToken = 0;
 
 function clearAllTimers() {
   if (tickHandle) {
@@ -77,6 +80,12 @@ function clearAllTimers() {
   }
   for (const t of pendingTimeouts) clearTimeout(t);
   pendingTimeouts.clear();
+}
+
+/** Call this when an external action (reset/setConfig) should abort any
+ * in-flight start() continuation. Do NOT call inside start() itself. */
+function invalidateStart() {
+  currentStartToken++;
 }
 
 function makeOptions(target: Country, all: readonly Country[]): Country[] {
@@ -117,6 +126,7 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     // pre-game previews and time rings reflect the new mode immediately.
     const next = { ...get().config, ...patch };
     clearAllTimers();
+    invalidateStart(); // abort any in-flight start() for the previous config
     set({
       config: next,
       ...INITIAL_STATE,
@@ -127,7 +137,11 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
 
   async start(modeOverride) {
     // Always hard-reset first — no in-place mutation, no stale closures.
+    // Invalidate before clearing timers, then capture our own fresh token.
+    invalidateStart();
     clearAllTimers();
+    const token = currentStartToken;  // our generation — valid until next invalidateStart()
+
     const config = modeOverride
       ? { ...get().config, mode: modeOverride }
       : get().config;
@@ -143,7 +157,7 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     const picks = await selectMixedQuestions(
       80,
       ["name", "flag", "capital", "location"],
-      { continent: config.continent },
+      { continent: config.continent === "All" ? undefined : config.continent },
     );
     const now = Date.now();
     const queue: SpeedItem[] = picks.map((p) => ({
@@ -153,8 +167,8 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
       shownAt: now,
     }));
 
-    // If reset() was called while building the queue, abort.
-    if (get().status !== "idle") return;
+    // If reset() was called while building the queue, abort cleanly.
+    if (token !== currentStartToken) return;
 
     set({
       status: "running",
@@ -199,7 +213,7 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     const responseMs = Math.max(0, Date.now() - item.shownAt);
 
     updateSkillProgress(item.country.iso3, item.skill, (prev) =>
-      confidenceAfter(prev, isCorrect, false, Date.now(), responseMs),
+      confidenceAfter(prev, isCorrect, Date.now(), responseMs),
     );
 
     if (isCorrect) {
@@ -257,6 +271,7 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
 
   reset() {
     clearAllTimers();
+    invalidateStart();
     const cfg = get().config;
     set({
       ...INITIAL_STATE,

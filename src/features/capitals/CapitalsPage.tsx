@@ -7,6 +7,8 @@ import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { SessionEnd } from "@/features/engine/SessionEnd";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
+import { ModeDropdown } from "@/features/engine/ModeDropdown";
+import { HardInput } from "@/features/engine/HardInput";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
@@ -25,28 +27,42 @@ const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 const useCapSession = createSessionStore({ mode: "capital", skill: "capital" });
 
 type SubMode = "countryToCap" | "capToCountry" | "locator";
+type Mode = "easy" | "hard";
+
+const SUB_MODE_OPTIONS = [
+  { value: "countryToCap" as const, label: "Country → Cap" },
+  { value: "capToCountry" as const, label: "Cap → Country" },
+  { value: "locator" as const, label: "Globe Locator" },
+];
+
+const MODE_OPTIONS = [
+  { value: "easy" as const, label: "Easy" },
+  { value: "hard" as const, label: "Hard" },
+];
 
 export default function CapitalsPage() {
   const s = useCapSession();
   const [sub, setSub] = useState<SubMode>("countryToCap");
+  const [mode, setMode] = useState<Mode>("easy");
   const [continent, setContinent] = useContinentPref();
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
+  // Persist preferences
   useEffect(() => {
-    getPref("capitals.sub").then((sb) => {
-      if (sb) setSub(sb as SubMode);
-    });
+    getPref("capitals.sub").then((sb) => sb && setSub(sb as SubMode));
+    getPref("capitals.mode").then((m) => m && setMode(m as Mode));
   }, []);
   useEffect(() => {
     setPref("capitals.sub", sub);
-  }, [sub]);
+    setPref("capitals.mode", mode);
+  }, [sub, mode]);
 
+  // Restart on format changes
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading)
-      s.start({ continent: continent === "All" ? undefined : continent });
+    void s.start({ continent: continent === "All" ? undefined : continent });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [continent, sub, mode]);
 
   useAutoAdvance({
     answerState: s.answerState,
@@ -62,9 +78,8 @@ export default function CapitalsPage() {
   const restartWithContinent = useCallback(
     (c: ContinentChoice) => {
       setContinent(c);
-      void s.start({ continent: c === "All" ? undefined : c });
     },
-    [s, setContinent],
+    [setContinent],
   );
 
   const valid = current && current.capital;
@@ -77,22 +92,22 @@ export default function CapitalsPage() {
 
   const pov = useMemo(() => {
     if (sub !== "locator" || !current) return undefined;
-    return s.answerState !== "idle"
-      ? { lat: current.coordinates[0], lng: current.coordinates[1], altitude: 1.4 }
-      : undefined;
-  }, [sub, s.answerState, current]);
+    if (s.answerState === "idle") {
+      return { lat: current.coordinates[0], lng: current.coordinates[1] };
+    }
+    return undefined;
+  }, [sub, s.answerState, current?.iso3, current?.coordinates]);
 
-  /** Standard HUD column shown across both layouts. */
-  const HudColumn = (
-    <div className="flex flex-col gap-2 items-start min-w-0">
+  /** Unified Top Toolbar (Responsive Left/Right Split) */
+  const Toolbar = (
+    <div className="w-full max-w-5xl mx-auto px-4 md:px-6 mb-4 z-20 flex flex-wrap items-center justify-between gap-4 pointer-events-auto">
       <ContinentSelect value={continent} onChange={restartWithContinent} />
-      <SubModeToggle
-        value={sub}
-        onChange={(v) => {
-          setSub(v);
-          void s.start({ continent: continent === "All" ? undefined : continent });
-        }}
-      />
+      <div className="flex items-center gap-2 flex-wrap">
+        <ModeDropdown options={SUB_MODE_OPTIONS} value={sub} onChange={setSub} />
+        {sub !== "locator" && (
+          <ModeDropdown options={MODE_OPTIONS} value={mode} onChange={setMode} />
+        )}
+      </div>
     </div>
   );
 
@@ -113,12 +128,14 @@ export default function CapitalsPage() {
               pointOfView={pov}
               disableHoverLabel
               questionKey={current?.iso3 ?? null}
+              activeContinent={continent === "All" ? null : continent}
             />
           </Suspense>
         </div>
         {!finished && current && (
           <>
-            <div className="absolute top-24 inset-x-0 z-20 flex justify-center">
+            <div className="absolute top-20 inset-x-0 z-20 pointer-events-none flex flex-col items-center">
+              {Toolbar}
               <PromptPill
                 keyId={current.iso3}
                 index={s.index}
@@ -129,30 +146,21 @@ export default function CapitalsPage() {
                     <span className="text-glow-cyan">{current.capital}</span>
                   </>
                 }
-                hint={s.hintUsed ? current.continent : undefined}
               />
             </div>
-            <div className="absolute top-24 left-4 md:left-6 z-20">{HudColumn}</div>
-            <div className="absolute top-24 right-4 md:right-6 z-20">
-              <Button
-                size="sm"
-                variant="secondary"
-                disabled={s.hintUsed || s.answerState !== "idle"}
-                onClick={() => s.useHint()}
-              >
-                {s.hintUsed ? "Hint used" : "Hint"}
-              </Button>
-            </div>
-            <div className="absolute bottom-8 inset-x-0 z-30">
-              <FeedbackBar
-                show={s.answerState !== "idle"}
-                state={s.answerState as "correct" | "wrong" | "revealed"}
-                title={`${current.name} — ${current.capital}`}
-                subtitle={`Capital of ${current.name}`}
-                onNext={() => s.next()}
-                onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
-                hideNext
-              />
+            
+            <div className="absolute bottom-8 inset-x-0 z-30 pointer-events-none">
+              <div className="pointer-events-auto">
+                <FeedbackBar
+                  show={s.answerState !== "idle"}
+                  state={s.answerState as "correct" | "wrong" | "revealed"}
+                  title={`${current.name} — ${current.capital}`}
+                  subtitle={`Capital of ${current.name}`}
+                  onNext={() => s.next()}
+                  onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+                  hideNext
+                />
+              </div>
             </div>
           </>
         )}
@@ -171,62 +179,67 @@ export default function CapitalsPage() {
   }
 
   return (
-    <div className="relative min-h-dvh pt-24 px-6 pb-12 flex flex-col items-center">
+    <div className="relative min-h-dvh pt-20 flex flex-col items-center">
       {!finished && current && valid && (
         <>
-          <div className="w-full max-w-4xl mb-6 flex items-start justify-between gap-3 flex-wrap">
-            {HudColumn}
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={s.hintUsed || s.answerState !== "idle"}
-              onClick={() => s.useHint()}
-            >
-              {s.hintUsed ? "Hint used" : "Hint"}
-            </Button>
+          {Toolbar}
+
+          <div className="flex-1 w-full flex flex-col items-center px-4 md:px-6 pb-32 max-w-5xl gap-6 md:gap-8">
+            <PromptPill
+              keyId={`${sub}-${current.iso3}`}
+              index={s.index}
+              total={s.queue.length}
+              title={
+                sub === "countryToCap" ? (
+                  <>What's the capital of <span className="text-glow-cyan">{current.name}</span>?</>
+                ) : (
+                  <>Which country's capital is <span className="text-glow-cyan">{current.capital}</span>?</>
+                )
+              }
+            />
+
+            <div className="w-full flex justify-center">
+              {mode === "easy" ? (
+                <ChoiceGrid
+                  options={options}
+                  sub={sub}
+                  target={current}
+                  disabled={s.answerState !== "idle"}
+                  onPick={(iso3) => s.submit(iso3 === current.iso3)}
+                />
+              ) : (
+                <div className="w-full max-w-md mx-auto">
+                  <HardInput
+                    target={current}
+                    matchTarget={sub === "countryToCap" ? (current.capital ?? undefined) : current.name}
+                    onSubmit={(ok) => s.submit(ok)}
+                    placeholder={sub === "countryToCap" ? "Type the capital…" : "Type the country…"}
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
-          <PromptPill
-            keyId={`${sub}-${current.iso3}`}
-            index={s.index}
-            total={s.queue.length}
-            title={
-              sub === "countryToCap" ? (
-                <>What's the capital of <span className="text-glow-cyan">{current.name}</span>?</>
-              ) : (
-                <>Which country's capital is <span className="text-glow-cyan">{current.capital}</span>?</>
-              )
-            }
-            hint={s.hintUsed ? `Hint: ${current.continent}` : undefined}
-          />
-
-
-          <ChoiceGrid
-            options={options}
-            sub={sub}
-            target={current}
-            disabled={s.answerState !== "idle"}
-            onPick={(iso3) => s.submit(iso3 === current.iso3)}
-          />
-
-          <div className="mt-8 w-full">
-            <FeedbackBar
-              show={s.answerState !== "idle"}
-              state={s.answerState as "correct" | "wrong" | "revealed"}
-              title={`${current.name} — ${current.capital}`}
-              subtitle={`Capital of ${current.name}`}
-              onNext={() => s.next()}
-              onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
-              hideNext
-            />
+          <div className="fixed bottom-0 inset-x-0 pb-6 px-4 md:px-6 z-30 pointer-events-none">
+            <div className="pointer-events-auto">
+              <FeedbackBar
+                show={s.answerState !== "idle"}
+                state={s.answerState as "correct" | "wrong" | "revealed"}
+                title={`${current.name} — ${current.capital}`}
+                subtitle={`Capital of ${current.name}`}
+                onNext={() => s.next()}
+                onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+                hideNext
+              />
+            </div>
           </div>
         </>
       )}
 
       {!valid && current && !finished && (
-        <div className="mt-10">
+        <div className="mt-20 flex flex-col items-center">
           <Badge tone="muted">No capital on file — skipping</Badge>
-          <div className="mt-3">
+          <div className="mt-4">
             <Button size="sm" onClick={() => s.next()}>
               Skip
             </Button>
@@ -273,7 +286,7 @@ function ChoiceGrid({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={spring.soft}
-      className="mt-8 grid grid-cols-2 gap-3 w-full max-w-2xl"
+      className="grid grid-cols-2 gap-3 w-full max-w-2xl mx-auto"
     >
       {options.map((o, i) => (
         <button
@@ -298,48 +311,6 @@ function ChoiceGrid({
       <input type="hidden" data-target={target.iso3} />
     </motion.div>
   );
-}
-
-function SubModeToggle({
-  value,
-  onChange,
-}: {
-  value: SubMode;
-  onChange: (v: SubMode) => void;
-}) {
-  return (
-    <div className="glass rounded-full p-1 flex text-[11px] font-mono uppercase tracking-wider whitespace-nowrap">
-      {(
-        [
-          ["countryToCap", "Country → Cap"],
-          ["capToCountry", "Cap → Country"],
-          ["locator", "Globe Locator"],
-        ] as const
-      ).map(([k, label]) => (
-        <button
-          key={k}
-          onClick={() => onChange(k)}
-          className={cn(
-            "px-3 py-1 rounded-full transition-colors whitespace-nowrap",
-            value === k ? "bg-white/15 text-white" : "text-white/55 hover:text-white",
-          )}
-        >
-          {label}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function stats(s: ReturnType<typeof useCapSession.getState>) {
-  return {
-    score: s.score,
-    combo: s.combo,
-    correct: s.correct,
-    wrong: s.wrong,
-    index: s.index,
-    total: s.queue.length,
-  };
 }
 
 function shuffle<T>(arr: T[]): T[] {

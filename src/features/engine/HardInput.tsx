@@ -6,24 +6,28 @@ import type { Country } from "@/types/country";
 
 interface Props {
   target: Country;
+  matchTarget?: string;
   onSubmit: (ok: boolean) => void;
   placeholder?: string;
 }
 
 /**
- * Shared typing surface for Name Hard, Flags Hard, and future typing modes.
+ * Shared typing surface for Name Hard, Flags Hard, Capitals Hard, and future typing modes.
  * - No Submit button.
  * - Instant validation on every keystroke via `exactMatch` (correct => submit).
  * - Enter still works as a fallback (uses `fuzzyMatch` to be forgiving).
  */
-export function HardInput({ target, onSubmit, placeholder = "Type the country…" }: Props) {
+export function HardInput({ target, matchTarget, onSubmit, placeholder = "Type the country…" }: Props) {
   const [val, setVal] = useState("");
   const ref = useRef<HTMLInputElement>(null);
 
+  // Re-focus and clear when target changes
   useEffect(() => {
     ref.current?.focus();
     setVal("");
   }, [target.iso3]);
+
+  const expectedText = matchTarget ?? target.name;
 
   return (
     <motion.div
@@ -38,12 +42,12 @@ export function HardInput({ target, onSubmit, placeholder = "Type the country…
         onChange={(e) => {
           const v = e.target.value;
           setVal(v);
-          if (exactMatch(v, target.name)) onSubmit(true);
+          if (exactMatch(v, expectedText)) onSubmit(true);
         }}
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             e.preventDefault();
-            if (val.trim()) onSubmit(fuzzyMatch(val, target.name));
+            if (val.trim()) onSubmit(fuzzyMatch(val, expectedText));
           }
         }}
         placeholder={placeholder}

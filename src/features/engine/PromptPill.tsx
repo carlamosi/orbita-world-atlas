@@ -7,7 +7,6 @@ interface Props {
   index: number;
   total: number;
   title: ReactNode;
-  hint?: ReactNode;
 }
 
 /**
@@ -15,7 +14,7 @@ interface Props {
  * Designed to sit at the top of an immersive view (globe, flag, etc.)
  * without ever covering the primary subject.
  */
-export function PromptPill({ keyId, index, total, title, hint }: Props) {
+export function PromptPill({ keyId, index, total, title }: Props) {
   return (
     <motion.div
       key={keyId}
@@ -32,12 +31,6 @@ export function PromptPill({ keyId, index, total, title, hint }: Props) {
         <span className="font-display text-sm md:text-base text-white tracking-tight truncate">
           {title}
         </span>
-        {hint && (
-          <>
-            <span className="h-3 w-px bg-white/15 shrink-0" />
-            <span className="text-[11px] text-white/55 whitespace-nowrap">{hint}</span>
-          </>
-        )}
       </div>
     </motion.div>
   );

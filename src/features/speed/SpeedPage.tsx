@@ -5,17 +5,42 @@ import { useSkipHotkey } from "@/hooks/useSkipHotkey";
 import { Button } from "@/components/ui/orbita-button";
 import { Badge } from "@/components/ui/orbita-badge";
 import { FlagImage } from "@/components/ui/FlagImage";
+import {
+  ContinentSelect,
+  useContinentPref,
+} from "@/features/engine/ContinentSelect";
 import { cn } from "@/lib/utils";
 import { spring } from "@/lib/motion";
 import type { Country } from "@/types/country";
+import { Zap, Timer, Skull, Flag, MapPin, Type, Globe } from "lucide-react";
 
-const CONTINENTS = ["All", "Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
-
-const MODE_LABELS: Record<SpeedMode, { name: string; sub: string }> = {
-  sprint60: { name: "Sprint", sub: "60 seconds" },
-  marathon120: { name: "Marathon", sub: "2 minutes" },
-  suddenDeath: { name: "Sudden Death", sub: "3 lives" },
+const MODE_META: Record<SpeedMode, { name: string; sub: string; desc: string; icon: React.ReactNode }> = {
+  sprint60: {
+    name: "Sprint",
+    sub: "60 seconds",
+    desc: "Pure speed against the clock.",
+    icon: <Zap className="w-5 h-5" />,
+  },
+  marathon120: {
+    name: "Marathon",
+    sub: "2 minutes",
+    desc: "Build massive combos over time.",
+    icon: <Timer className="w-5 h-5" />,
+  },
+  suddenDeath: {
+    name: "Sudden Death",
+    sub: "3 lives",
+    desc: "One wrong answer costs a life.",
+    icon: <Skull className="w-5 h-5" />,
+  },
 };
+
+const SKILL_PILLS = [
+  { icon: <Flag className="w-3.5 h-3.5" />, label: "Flags" },
+  { icon: <MapPin className="w-3.5 h-3.5" />, label: "Capitals" },
+  { icon: <Type className="w-3.5 h-3.5" />, label: "Name" },
+  { icon: <Globe className="w-3.5 h-3.5" />, label: "Find" },
+];
 
 export default function SpeedPage() {
   const status = useSpeedRuntime((s) => s.status);
@@ -31,85 +56,132 @@ function PreGame() {
   const config = useSpeedRuntime((s) => s.config);
   const setConfig = useSpeedRuntime((s) => s.setConfig);
   const start = useSpeedRuntime((s) => s.start);
+  // Re-use shared continent preference so selection persists across modes
+  const [continent, setContinent] = useContinentPref();
+
+  const handleContinentChange = (c: string) => {
+    setContinent(c as Parameters<typeof setContinent>[0]);
+    setConfig({ continent: c === "All" ? "All" : c });
+  };
 
   return (
-    <div className="min-h-dvh pt-28 px-6 pb-16 flex items-center justify-center">
+    <div className="relative min-h-dvh flex items-center justify-center px-4 py-16 overflow-hidden">
+      {/* Ambient radial glow — depth without noise */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 flex items-center justify-center"
+      >
+        <div className="w-[700px] h-[500px] rounded-full bg-[radial-gradient(ellipse_at_center,color-mix(in_oklab,var(--violet)_18%,transparent)_0%,transparent_70%)] blur-3xl" />
+      </div>
+
       <motion.div
-        initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+        initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
         animate={{ opacity: 1, y: 0, filter: "blur(0)" }}
         transition={spring.soft}
-        className="glass-strong rounded-3xl p-10 max-w-xl w-full"
+        className="relative glass-strong rounded-3xl p-8 md:p-10 max-w-lg w-full z-10 flex flex-col gap-7"
       >
-        <Badge tone="coral">Speed Round</Badge>
-        <h1 className="mt-5 font-display text-4xl text-white tracking-tight text-glow-violet">
-          Reflex over recall.
-        </h1>
-        <p className="mt-3 text-white/60 text-[15px]">
-          Rapid-fire mixed-skill questions. Build combos for multipliers up to ×5.
-        </p>
+        {/* ── Header ─────────────────────────────── */}
+        <div>
+          <Badge tone="coral">Speed Round</Badge>
+          <h1 className="mt-4 font-display text-3xl text-white tracking-tight text-glow-violet leading-tight">
+            Reflex over recall.
+          </h1>
+          <p className="mt-2 text-white/55 text-sm leading-relaxed">
+            Rapid-fire mixed-skill questions. Build combos for multipliers up to ×5.
+          </p>
 
-        <div className="mt-8 space-y-5">
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45 mb-2">
-              Mode
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-              {(Object.keys(MODE_LABELS) as SpeedMode[]).map((m) => {
-                const active = config.mode === m;
-                return (
-                  <button
-                    key={m}
-                    type="button"
-                    onClick={() => setConfig({ mode: m })}
-                    aria-pressed={active}
-                    className={cn(
-                      "relative rounded-2xl p-3 text-left transition-all duration-200 border",
-                      active
-                        ? "bg-[color-mix(in_oklab,var(--violet)_22%,transparent)] border-[color:var(--violet)]/70 shadow-[0_0_38px_-10px_color-mix(in_oklab,var(--violet)_75%,transparent)] scale-[1.02]"
-                        : "glass border-white/10 hover:border-white/25 hover:-translate-y-0.5",
-                    )}
-                  >
-                    <div className="font-display text-base text-white">{MODE_LABELS[m].name}</div>
-                    <div className="font-mono text-[10px] uppercase tracking-wider text-white/55 mt-1">
-                      {MODE_LABELS[m].sub}
-                    </div>
-                    {active && (
-                      <span className="absolute top-2 right-2 size-1.5 rounded-full bg-[color:var(--neon)] shadow-[0_0_10px_color-mix(in_oklab,var(--neon)_80%,transparent)]" />
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+          {/* Game includes pills */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {SKILL_PILLS.map(({ icon, label }) => (
+              <span
+                key={label}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full glass text-[11px] font-mono uppercase tracking-wider text-white/55 border border-white/10"
+              >
+                <span className="text-white/40">{icon}</span>
+                {label}
+              </span>
+            ))}
           </div>
+        </div>
 
-          <div>
-            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/45 mb-2">
-              Continent
-            </div>
-            <div className="flex flex-wrap gap-1.5">
-              {CONTINENTS.map((c) => (
+        {/* ── Mode selector ─────────────────────── */}
+        <div>
+          <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40 mb-3">
+            Mode
+          </div>
+          <div className="grid grid-cols-3 gap-2.5">
+            {(Object.keys(MODE_META) as SpeedMode[]).map((m) => {
+              const active = config.mode === m;
+              const meta = MODE_META[m];
+              return (
                 <button
-                  key={c}
-                  onClick={() => setConfig({ continent: c })}
+                  key={m}
+                  type="button"
+                  onClick={() => setConfig({ mode: m })}
+                  aria-pressed={active}
                   className={cn(
-                    "px-3 py-1.5 rounded-full text-[12px] font-mono uppercase tracking-wider transition-colors",
-                    config.continent === c
-                      ? "bg-white/10 text-white border border-white/15"
-                      : "text-white/55 hover:text-white border border-transparent",
+                    "relative flex flex-col gap-2 rounded-2xl p-4 text-left transition-all duration-200 border outline-none",
+                    "focus-visible:ring-2 focus-visible:ring-[color:var(--cyan)]/60",
+                    active
+                      ? [
+                          "border-[color:var(--violet)]/60",
+                          "bg-[color-mix(in_oklab,var(--violet)_18%,transparent)]",
+                          "shadow-[0_0_32px_-8px_color-mix(in_oklab,var(--violet)_65%,transparent)]",
+                          "scale-[1.02]",
+                        ]
+                      : [
+                          "glass border-white/10",
+                          "hover:border-white/22 hover:-translate-y-0.5",
+                          "hover:shadow-[0_12px_30px_-12px_rgba(0,0,0,0.5)]",
+                        ],
                   )}
                 >
-                  {c}
+                  {/* Active pulse dot */}
+                  {active && (
+                    <span className="absolute top-2.5 right-2.5 size-1.5 rounded-full bg-[color:var(--neon)] shadow-[0_0_8px_color-mix(in_oklab,var(--neon)_90%,transparent)] animate-pulse" />
+                  )}
+                  <span
+                    className={cn(
+                      "transition-colors",
+                      active ? "text-[color:var(--violet)]" : "text-white/40",
+                    )}
+                  >
+                    {meta.icon}
+                  </span>
+                  <div>
+                    <div className="font-display text-sm text-white leading-tight">{meta.name}</div>
+                    <div className="font-mono text-[10px] uppercase tracking-wider text-white/45 mt-0.5">
+                      {meta.sub}
+                    </div>
+                  </div>
                 </button>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
 
-        <div className="mt-10 flex justify-end gap-3">
-          <Button size="lg" onClick={() => start(config.mode)}>
-            Start →
-          </Button>
+        {/* ── Continent ─────────────────────────── */}
+        <div className="flex items-center justify-between gap-4">
+          <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+            Region
+          </div>
+          <ContinentSelect value={continent} onChange={handleContinentChange} />
         </div>
+
+        {/* ── CTA ───────────────────────────────── */}
+        <button
+          type="button"
+          onClick={() => start(config.mode)}
+          className={cn(
+            "w-full py-4 rounded-2xl font-display text-lg tracking-tight text-white transition-all duration-200 outline-none",
+            "bg-[color-mix(in_oklab,var(--violet)_40%,transparent)] border border-[color:var(--violet)]/50",
+            "hover:bg-[color-mix(in_oklab,var(--violet)_55%,transparent)] hover:border-[color:var(--violet)]/80",
+            "hover:shadow-[0_0_40px_-10px_color-mix(in_oklab,var(--violet)_60%,transparent)] hover:-translate-y-0.5",
+            "focus-visible:ring-2 focus-visible:ring-[color:var(--violet)]/60",
+          )}
+        >
+          Start Speed Round
+        </button>
       </motion.div>
     </div>
   );

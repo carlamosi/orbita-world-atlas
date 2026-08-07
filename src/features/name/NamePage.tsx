@@ -7,7 +7,7 @@ import { SessionEnd } from "@/features/engine/SessionEnd";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { HardInput } from "@/features/engine/HardInput";
-import { Button } from "@/components/ui/orbita-button";
+import { SubModeToggle } from "@/features/engine/SubModeToggle";
 import { FlagImage } from "@/components/ui/FlagImage";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import {
@@ -25,6 +25,10 @@ const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 const useNameSession = createSessionStore({ mode: "name", skill: "name" });
 
 type Mode = "easy" | "hard";
+const MODE_OPTIONS = [
+  { value: "easy" as const, label: "Easy" },
+  { value: "hard" as const, label: "Hard" },
+];
 
 export default function NamePage() {
   const s = useNameSession();
@@ -34,11 +38,9 @@ export default function NamePage() {
   const finished = s.endedAt !== null;
 
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) {
-      s.start({ continent: continent === "All" ? undefined : continent });
-    }
+    void s.start({ continent: continent === "All" ? undefined : continent });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [continent]);
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
 
@@ -50,16 +52,15 @@ export default function NamePage() {
   const restartWithContinent = useCallback(
     (c: ContinentChoice) => {
       setContinent(c);
-      void s.start({ continent: c === "All" ? undefined : c });
     },
-    [s, setContinent],
+    [setContinent],
   );
 
   // Tight POV on the mystery country — but never reveal its name in label form.
   const pov = useMemo(() => {
     if (!current) return undefined;
     return { lat: current.coordinates[0], lng: current.coordinates[1], altitude: 1.2 };
-  }, [current]);
+  }, [current?.iso3, current?.coordinates]);
 
   // 4 options for easy mode — stable per question
   const options = useMemo(() => {
@@ -83,6 +84,7 @@ export default function NamePage() {
               s.answerState === "wrong" || s.answerState === "revealed" ? current?.iso3 : null
             }
             pointOfView={pov}
+            activeContinent={continent === "All" ? null : continent}
           />
         </Suspense>
       </div>
@@ -95,13 +97,6 @@ export default function NamePage() {
               index={s.index}
               total={s.queue.length}
               title="Name this country"
-              hint={
-                s.hintUsed
-                  ? `Hint: ${current.continent}`
-                  : mode === "easy"
-                    ? "Pick 1–4"
-                    : "Type to answer"
-              }
             />
           </div>
 
@@ -110,15 +105,7 @@ export default function NamePage() {
           </div>
 
           <div className="absolute top-24 right-4 md:right-6 z-20 flex flex-col gap-2 items-end">
-            <ModeToggle value={mode} onChange={setMode} />
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={s.hintUsed || s.answerState !== "idle"}
-              onClick={() => s.useHint()}
-            >
-              {s.hintUsed ? "Hint used" : "Hint"}
-            </Button>
+            <SubModeToggle options={MODE_OPTIONS} value={mode} onChange={setMode} />
           </div>
 
 
@@ -160,36 +147,6 @@ export default function NamePage() {
         durationMs={(s.endedAt ?? 0) - s.startedAt}
         onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
-    </div>
-  );
-}
-
-function stats(s: ReturnType<typeof useNameSession.getState>) {
-  return {
-    score: s.score,
-    combo: s.combo,
-    correct: s.correct,
-    wrong: s.wrong,
-    index: s.index,
-    total: s.queue.length,
-  };
-}
-
-function ModeToggle({ value, onChange }: { value: Mode; onChange: (m: Mode) => void }) {
-  return (
-    <div className="glass rounded-full p-1 flex text-[12px] font-mono uppercase tracking-wider">
-      {(["easy", "hard"] as const).map((m) => (
-        <button
-          key={m}
-          onClick={() => onChange(m)}
-          className={cn(
-            "px-3 py-1 rounded-full transition-colors",
-            value === m ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
-          )}
-        >
-          {m}
-        </button>
-      ))}
     </div>
   );
 }

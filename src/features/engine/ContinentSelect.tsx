@@ -67,9 +67,6 @@ export function ContinentSelect({
 }
 
 export function useContinentPref(): [ContinentChoice, (v: ContinentChoice) => void] {
-  const [v, setV] = useState<ContinentChoice>("All");
-  useEffect(() => {
-    setV(loadContinentPref());
-  }, []);
+  const [v, setV] = useState<ContinentChoice>(() => loadContinentPref());
   return [v, setV];
 }

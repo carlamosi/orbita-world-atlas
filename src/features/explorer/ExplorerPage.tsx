@@ -11,7 +11,7 @@ import { spring } from "@/lib/motion";
 import { Link } from "@tanstack/react-router";
 import type { Country } from "@/types/country";
 import { EXPEDITIONS, findExpedition } from "./expeditions";
-import { ExpeditionsPanel } from "./Expeditions";
+import { ExpeditionsPanel } from "./Expeditions.tsx";
 
 const Globe3D = lazy(() => import("@/features/globe/Globe3D"));
 
@@ -167,6 +167,7 @@ export default function ExplorerPage() {
               onCountryClick={handleGlobeClick}
               pointOfView={pov}
               quality="medium"
+              activeContinent={continent === "All" ? null : continent}
             />
           </Suspense>
 

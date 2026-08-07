@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { COUNTRIES, pickRandomCountries } from "@/lib/countries";
 import { createSessionStore } from "@/features/engine/useSession";
 import { useAutoAdvance } from "@/features/engine/useAutoAdvance";
@@ -8,8 +8,8 @@ import { SessionEnd } from "@/features/engine/SessionEnd";
 import { PromptPill } from "@/features/engine/PromptPill";
 import { FeedbackBar } from "@/features/engine/FeedbackBar";
 import { HardInput } from "@/features/engine/HardInput";
+import { ModeDropdown } from "@/features/engine/ModeDropdown";
 import { FlagImage } from "@/components/ui/FlagImage";
-import { Button } from "@/components/ui/orbita-button";
 import { useAnswerHotkeys } from "@/hooks/useAnswerHotkeys";
 import {
   ContinentSelect,
@@ -25,6 +25,12 @@ const useFlagSession = createSessionStore({ mode: "flag", skill: "flag" });
 
 type SubMode = "flagToCountry" | "countryToFlag" | "flagToType";
 
+const SUB_MODE_OPTIONS = [
+  { value: "flagToCountry" as const, label: "Flag → Country" },
+  { value: "countryToFlag" as const, label: "Country → Flag" },
+  { value: "flagToType" as const, label: "Flag → Type" },
+];
+
 export default function FlagsPage() {
   const s = useFlagSession();
   const [sub, setSub] = useState<SubMode>("flagToCountry");
@@ -32,6 +38,7 @@ export default function FlagsPage() {
   const current = s.queue[s.index] ?? null;
   const finished = s.endedAt !== null;
 
+  // Persist sub-mode preference
   useEffect(() => {
     getPref("flags.sub").then((v) => v && setSub(v as SubMode));
   }, []);
@@ -39,12 +46,11 @@ export default function FlagsPage() {
     setPref("flags.sub", sub);
   }, [sub]);
 
+  // Restart session whenever continent or sub-mode changes
   useEffect(() => {
-    if (s.queue.length === 0 && !s.loading) {
-      s.start({ continent: continent === "All" ? undefined : continent });
-    }
+    void s.start({ continent: continent === "All" ? undefined : continent });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [continent, sub]);
 
   useAutoAdvance({ answerState: s.answerState, finished, next: s.next });
 
@@ -56,9 +62,8 @@ export default function FlagsPage() {
   const restartWithContinent = useCallback(
     (c: ContinentChoice) => {
       setContinent(c);
-      void s.start({ continent: c === "All" ? undefined : c });
     },
-    [s, setContinent],
+    [setContinent],
   );
 
   const options = useMemo(() => {
@@ -81,36 +86,21 @@ export default function FlagsPage() {
   useAnswerHotkeys(hotkeyItems, onHotkey);
 
   return (
-    <div className="relative min-h-dvh pt-20 flex flex-col">
+    <div className="relative min-h-dvh pt-20 flex flex-col items-center">
       {!finished && current && (
         <>
-          {/* Sticky HUD bar — strict vertical hierarchy: HUD → Continent → SubMode */}
-          <div className="sticky top-20 z-20 px-6">
-            <div className="w-full max-w-5xl mx-auto flex items-start justify-between gap-4 flex-wrap">
-              <div className="flex flex-col gap-2 items-start min-w-0">
-                <ContinentSelect value={continent} onChange={restartWithContinent} />
-                <SubModeToggle
-                  value={sub}
-                  onChange={(v) => {
-                    setSub(v);
-                    void s.start({ continent: continent === "All" ? undefined : continent });
-                  }}
-                />
-              </div>
-              <Button
-                size="sm"
-                variant="secondary"
-                disabled={s.hintUsed || s.answerState !== "idle"}
-                onClick={() => s.useHint()}
-              >
-                {s.hintUsed ? "Hint used" : "Hint"}
-              </Button>
-            </div>
+          {/* Minimized HUD Toolbar */}
+          <div className="w-full max-w-5xl mx-auto px-4 md:px-6 mb-4 z-20 flex items-center justify-between gap-4">
+            <ContinentSelect value={continent} onChange={restartWithContinent} />
+            <ModeDropdown
+              options={SUB_MODE_OPTIONS}
+              value={sub}
+              onChange={setSub}
+            />
           </div>
 
-
-          {/* Centered gameplay region */}
-          <div className="flex-1 flex flex-col items-center justify-center px-6 py-6 gap-6">
+          {/* Gameplay Content Area */}
+          <div className="flex-1 w-full flex flex-col items-center px-4 md:px-6 pb-32 max-w-5xl gap-6 md:gap-8">
             <PromptPill
               keyId={`${sub}-${current.iso3}`}
               index={s.index}
@@ -124,11 +114,9 @@ export default function FlagsPage() {
                   "Name this flag"
                 )
               }
-              hint={s.hintUsed ? `Hint: ${current.continent}` : undefined}
             />
 
-
-            <div className="w-full max-w-4xl">
+            <div className="w-full flex justify-center">
               {sub === "flagToCountry" ? (
                 <FlagToCountry
                   target={current}
@@ -153,22 +141,21 @@ export default function FlagsPage() {
           </div>
 
           {/* Feedback bar */}
-          <div className="pb-6 px-6">
-            <FeedbackBar
-              show={s.answerState !== "idle"}
-              state={s.answerState as "correct" | "wrong" | "revealed"}
-              title={current.name}
-              subtitle={`Capital: ${current.capital ?? "—"}`}
-              onNext={() => s.next()}
-              onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
-              hideNext
-            />
+          <div className="fixed bottom-0 inset-x-0 pb-6 px-4 md:px-6 z-30 pointer-events-none">
+            <div className="pointer-events-auto">
+              <FeedbackBar
+                show={s.answerState !== "idle"}
+                state={s.answerState as "correct" | "wrong" | "revealed"}
+                title={current.name}
+                subtitle={`Capital: ${current.capital ?? "—"}`}
+                onNext={() => s.next()}
+                onSkip={s.answerState === "wrong" ? () => s.reveal() : undefined}
+                hideNext
+              />
+            </div>
           </div>
-
-          <ConfettiBurst show={s.answerState === "correct"} />
         </>
       )}
-
 
       <SessionEnd
         show={finished}
@@ -178,50 +165,8 @@ export default function FlagsPage() {
         wrong={s.wrong}
         bestCombo={s.bestCombo}
         durationMs={(s.endedAt ?? 0) - s.startedAt}
-        onReplay={() => s.start()}
+        onReplay={() => s.start({ continent: continent === "All" ? undefined : continent })}
       />
-    </div>
-  );
-}
-
-function stats(s: ReturnType<typeof useFlagSession.getState>) {
-  return {
-    score: s.score,
-    combo: s.combo,
-    correct: s.correct,
-    wrong: s.wrong,
-    index: s.index,
-    total: s.queue.length,
-  };
-}
-
-function SubModeToggle({
-  value,
-  onChange,
-}: {
-  value: SubMode;
-  onChange: (v: SubMode) => void;
-}) {
-  return (
-    <div className="glass rounded-full p-1 flex text-[12px] font-mono uppercase tracking-wider">
-      {(
-        [
-          ["flagToCountry", "Flag → Country"],
-          ["countryToFlag", "Country → Flag"],
-          ["flagToType", "Flag → Type"],
-        ] as const
-      ).map(([k, label]) => (
-        <button
-          key={k}
-          onClick={() => onChange(k)}
-          className={cn(
-            "px-3 py-1 rounded-full transition-colors whitespace-nowrap",
-            value === k ? "bg-white/10 text-white" : "text-white/55 hover:text-white",
-          )}
-        >
-          {label}
-        </button>
-      ))}
     </div>
   );
 }
@@ -238,37 +183,45 @@ function FlagToCountry({
   onPick: (iso3: string) => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-8">
+    <div className="w-full grid grid-cols-1 lg:grid-cols-[1.3fr_1fr] gap-6 lg:gap-8 items-stretch">
+      {/* Left: Floating Flag */}
       <motion.div
         key={target.iso3}
         initial={{ opacity: 0, scale: 0.92, y: 16 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={spring.soft}
+        className="flex items-center justify-center"
       >
         <FlagImage
           iso2={target.iso2}
           alt="Mystery flag"
           size={640}
-          className="w-[min(58vw,340px)] lg:w-[min(34vw,400px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+          className="w-full max-w-[480px] h-auto aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] rounded-2xl overflow-hidden"
         />
       </motion.div>
-      <div className="grid grid-cols-2 gap-3 w-full max-w-2xl">
+
+      {/* Right: Answer Stack */}
+      <div className="flex flex-col justify-center gap-3 w-full">
         {options.map((o, i) => (
           <button
             key={o.iso3}
             onClick={() => onPick(o.iso3)}
             disabled={disabled}
             className={cn(
-              "glass rounded-2xl px-5 py-4 text-left transition-all duration-200",
-              "hover:border-white/25 hover:-translate-y-0.5",
-              "disabled:opacity-60 disabled:hover:translate-y-0",
+              "group relative flex items-center gap-4 w-full px-4 py-3.5 rounded-2xl glass text-left transition-all duration-200",
+              "hover:border-white/20 hover:bg-white/10 hover:-translate-y-0.5 hover:shadow-[0_20px_40px_-20px_rgba(0,0,0,0.5)]",
+              "disabled:opacity-60 disabled:hover:translate-y-0 disabled:hover:bg-white/5 disabled:hover:border-white/10",
               "outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--cyan)]/60",
             )}
           >
-            <div className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/40">
+            {/* Integrated Number Badge */}
+            <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-xl bg-white/5 border border-white/10 text-white/50 font-mono text-xs group-hover:text-white/90 group-hover:border-white/20 transition-colors">
               {i + 1}
             </div>
-            <div className="font-display text-lg text-white tracking-tight">{o.name}</div>
+            
+            <div className="font-display text-lg md:text-xl text-white tracking-tight truncate pr-2">
+              {o.name}
+            </div>
           </button>
         ))}
       </div>
@@ -288,7 +241,7 @@ function CountryToFlag({
   onPick: (iso3: string) => void;
 }) {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-3xl mx-auto w-full">
       {options.map((o) => (
         <button
           key={o.iso3}
@@ -302,7 +255,7 @@ function CountryToFlag({
             o.iso3 === target.iso3 && "ring-2 ring-transparent",
           )}
         >
-          <FlagImage iso2={o.iso2} alt={o.name} className="absolute inset-0 rounded-none" />
+          <FlagImage iso2={o.iso2} alt={o.name} className="absolute inset-0 rounded-2xl overflow-hidden" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
         </button>
       ))}
@@ -318,7 +271,7 @@ function FlagToType({
   onSubmit: (ok: boolean) => void;
 }) {
   return (
-    <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col items-center gap-6 w-full">
       <motion.div
         key={target.iso3}
         initial={{ opacity: 0, scale: 0.92, y: 16 }}
@@ -329,49 +282,13 @@ function FlagToType({
           iso2={target.iso2}
           alt="Mystery flag"
           size={640}
-          className="w-[min(58vw,340px)] lg:w-[min(34vw,400px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]"
+          className="w-[min(58vw,340px)] lg:w-[min(34vw,400px)] aspect-[3/2] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] rounded-2xl overflow-hidden"
         />
       </motion.div>
-      <HardInput target={target} onSubmit={onSubmit} placeholder="Type the country…" />
+      <div className="w-full max-w-md mx-auto">
+        <HardInput target={target} onSubmit={onSubmit} placeholder="Type the country…" />
+      </div>
     </div>
-  );
-}
-
-
-
-function ConfettiBurst({ show }: { show: boolean }) {
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 18 }, (_, i) => ({
-        id: i,
-        x: (Math.random() - 0.5) * 320,
-        y: -Math.random() * 260 - 60,
-        rot: Math.random() * 360,
-        color: ["#6C63FF", "#00D4FF", "#00FFB2", "#FF6B6B"][i % 4]!,
-      })),
-    [],
-  );
-  return (
-    <AnimatePresence>
-      {show && (
-        <div
-          aria-hidden
-          className="pointer-events-none fixed inset-0 z-40 grid place-items-center motion-reduce:hidden"
-        >
-          {particles.map((p) => (
-            <motion.span
-              key={p.id}
-              initial={{ x: 0, y: 0, opacity: 1, rotate: 0 }}
-              animate={{ x: p.x, y: p.y, opacity: 0, rotate: p.rot }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-              className="absolute size-2 rounded-sm"
-              style={{ background: p.color, boxShadow: `0 0 12px ${p.color}` }}
-            />
-          ))}
-        </div>
-      )}
-    </AnimatePresence>
   );
 }
 

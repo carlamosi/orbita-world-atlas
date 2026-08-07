@@ -28,7 +28,6 @@ export interface SrsState {
 export interface SrsInput {
   correct: boolean;
   responseMs: number;
-  hintUsed: boolean;
 }
 
 export function initSrs(now = Date.now()): SrsState {
@@ -41,9 +40,8 @@ export function initSrs(now = Date.now()): SrsState {
   };
 }
 
-function quality({ correct, responseMs, hintUsed }: SrsInput): number {
+function quality({ correct, responseMs }: SrsInput): number {
   if (!correct) return 1;
-  if (hintUsed) return 3;
   if (responseMs <= FAST_MS) return 5;
   if (responseMs <= NORMAL_MS) return 4;
   return 3;

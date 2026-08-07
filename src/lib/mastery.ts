@@ -26,11 +26,10 @@ export function decay(prev: number, lastSeenAt: number, now = Date.now()): numbe
 export function confidenceAfter(
   prev: SkillStat | undefined,
   correct: boolean,
-  hintUsed: boolean,
   now = Date.now(),
   responseMs = 8_000,
 ): SkillStat {
-  const srs: SrsState = updateSrs(prev?.srs, { correct, hintUsed, responseMs }, now);
+  const srs: SrsState = updateSrs(prev?.srs, { correct, responseMs }, now);
   // Confidence mirrors retention right after review (≈1.0 if correct), but is
   // clamped to keep legacy thresholds (≥0.8 = mastered) reasonable.
   const confidence = correct
@@ -65,6 +64,26 @@ export async function selectQuestions(
   const progress = await getSkillStatMap(skill);
   return selectFromPool(COUNTRIES, n, progress, opts);
 }
+
+/**
+ * Complete Continent mode: returns every country in the given continent
+ * (or all countries when continent is "All") in a fresh random order.
+ * Each country is asked exactly once per session.
+ */
+export function selectAllForContinent(continent: string | null | undefined): Country[] {
+  const pool =
+    !continent || continent === "All"
+      ? [...COUNTRIES]
+      : COUNTRIES.filter((c) => c.continent === continent);
+  // Fisher-Yates shuffle
+  const arr = [...pool];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j]!, arr[i]!];
+  }
+  return arr;
+}
+
 
 /**
  * Mixed-skill selection used by Speed Round + Daily Challenges.

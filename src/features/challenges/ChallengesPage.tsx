@@ -241,7 +241,7 @@ function ChallengeRunner({
       if (!current || active.answerState !== "idle") return;
       const correctPick = iso3 === current.country.iso3;
       updateSkillProgress(current.country.iso3, current.skill as Skill, (prev) =>
-        confidenceAfter(prev, correctPick, false),
+        confidenceAfter(prev, correctPick),
       );
       const combo = correctPick ? active.combo + 1 : 0;
       const gained = correctPick ? 100 + Math.min(combo - 1, 9) * 20 : 0;

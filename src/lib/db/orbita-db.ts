@@ -1,5 +1,6 @@
 import Dexie, { type Table } from "dexie";
 import { ensureDb, getDbSync } from "./dbProvider";
+import type { FsrsStateStr, Grade } from "../fsrs/engine";
 
 /**
  * ORBITA local-first store (Dexie v3 with sync support).
@@ -42,6 +43,41 @@ export interface CountryProgressRow {
   lastSeenAt: number;
   updated_at?: number;
   dirty?: 0 | 1;
+}
+
+export interface ConceptProgressRow {
+  conceptId: string; // PK: e.g., "FRA:location"
+  iso3: string;
+  skill: string;
+  fsrs_state: FsrsStateStr;
+  fsrs_stability: number | null;
+  fsrs_difficulty: number | null;
+  fsrs_due: number;
+  fsrs_reps: number;
+  fsrs_lapses: number;
+  fsrs_last_review: number;
+  updated_at: number;
+  version: number;
+  dirty: 0 | 1;
+}
+
+export interface QuestionHistoryRow {
+  op_id: string; // PK
+  conceptId: string;
+  sessionId: string;
+  grade: Grade;
+  responseMs: number;
+  correct: boolean;
+  answeredAt: number;
+}
+
+export interface DailySummaryRow {
+  dateKey: string; // PK: "YYYY-MM-DD"
+  reviewsCount: number;
+  correctCount: number;
+  timeSpentMs: number;
+  updated_at: number;
+  dirty: 0 | 1;
 }
 
 export type GameMode =
@@ -105,7 +141,10 @@ export interface OutboxRow {
     | "challenge_attempts"
     | "unlocks"
     | "daily_streak"
-    | "profiles";
+    | "profiles"
+    | "concept_progress"
+    | "question_history"
+    | "daily_summary";
   op: "insert" | "upsert";
   payload: Record<string, unknown>;
   created_at: number;
@@ -128,6 +167,9 @@ export class OrbitaDB extends Dexie {
   meta!: Table<MetaRow, "meta">;
   outbox!: Table<OutboxRow, number>;
   sync_meta!: Table<SyncMetaRow, string>;
+  concept_progress!: Table<ConceptProgressRow, string>;
+  question_history!: Table<QuestionHistoryRow, string>;
+  daily_summary!: Table<DailySummaryRow, string>;
 
   constructor(name: string) {
     super(name);
@@ -184,6 +226,13 @@ export class OrbitaDB extends Dexie {
       meta: "id",
       outbox: "++id, &op_id, entity, status, next_attempt_at, created_at",
       sync_meta: "&key",
+    });
+
+    // v4: add FSRS tables
+    this.version(4).stores({
+      concept_progress: "conceptId, fsrs_due, dirty, updated_at",
+      question_history: "op_id, conceptId, answeredAt",
+      daily_summary: "dateKey, dirty",
     });
   }
 }

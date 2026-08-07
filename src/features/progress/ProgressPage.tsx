@@ -14,7 +14,7 @@ import { retention, isDue, isOverdue } from "@/lib/spacedRepetition";
 const CONTINENTS = ["Africa", "Americas", "Asia", "Europe", "Oceania"] as const;
 
 export default function ProgressPage() {
-  const progress = useLiveQuery(() => db().countryProgress.toArray(), []) ?? [];
+  const conceptProgress = useLiveQuery(() => db().concept_progress.toArray(), []) ?? [];
   const sessions = useLiveQuery(() => db().gameSessions.toArray(), []) ?? [];
   const unlocks = useLiveQuery(() => db().unlocks.toArray(), []) ?? [];
 
@@ -26,14 +26,25 @@ export default function ProgressPage() {
   const totalAnswered = sessions.reduce((a, s) => a + s.totalQuestions, 0);
   const minutes = Math.round(sessions.reduce((a, s) => a + s.durationMs, 0) / 60_000);
 
-  const mastered = useMemo(
-    () =>
-      progress.filter((p) => {
-        const vs = Object.values(p.skills);
-        return vs.length > 0 && vs.every((s) => s && s.confidence >= 0.8);
-      }).length,
-    [progress],
-  );
+  const mastered = useMemo(() => {
+    const byIso = new Map<string, number>();
+    const byIsoMastered = new Map<string, number>();
+    for (const p of conceptProgress) {
+      if (p.fsrs_state === "new") continue;
+      byIso.set(p.iso3, (byIso.get(p.iso3) ?? 0) + 1);
+      
+      const elapsedDays = Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000);
+      const r = p.fsrs_stability ? retention(p.fsrs_stability, elapsedDays) : 0;
+      if (r >= 0.8) {
+        byIsoMastered.set(p.iso3, (byIsoMastered.get(p.iso3) ?? 0) + 1);
+      }
+    }
+    let count = 0;
+    for (const [iso, total] of byIso.entries()) {
+      if (total >= 3 && byIsoMastered.get(iso) === total) count++;
+    }
+    return count;
+  }, [conceptProgress]);
 
   const cs = currentStreak(activeDays);
   const ls = longestStreak(activeDays);
@@ -65,18 +76,18 @@ export default function ProgressPage() {
         </div>
 
         <section className="mt-10">
-          <MasteryStability progress={progress} />
+          <MasteryStability progress={conceptProgress} />
         </section>
 
         <section className="mt-10">
           <SectionTitle>Confidence map</SectionTitle>
-          <ConfidenceMap progress={progress} />
+          <ConfidenceMap progress={conceptProgress} />
         </section>
 
 
         <section className="mt-10 grid lg:grid-cols-2 gap-4">
           {ALL_SKILLS.map((skill) => (
-            <SkillPanel key={skill} skill={skill} progress={progress} />
+            <SkillPanel key={skill} skill={skill} progress={conceptProgress} />
           ))}
         </section>
 
@@ -169,18 +180,31 @@ export default function ProgressPage() {
           <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
             {CONTINENTS.map((cont) => {
               const list = COUNTRIES.filter((c) => c.continent === cont);
-              const byIso = new Map(progress.map((p) => [p.iso3, p]));
-              const mastered = list.filter((c) =>
-                Object.values(byIso.get(c.iso3)?.skills ?? {}).some(
-                  (s) => s && s.confidence >= 0.8,
-                ),
-              ).length;
-              const pct = list.length > 0 ? mastered / list.length : 0;
+              const byIsoMastered = new Map<string, boolean>();
+              const grouped = new Map<string, number[]>();
+              
+              for (const p of conceptProgress) {
+                if (p.fsrs_state === "new") continue;
+                const arr = grouped.get(p.iso3) || [];
+                const r = p.fsrs_stability ? retention(p.fsrs_stability, Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000)) : 0;
+                arr.push(r);
+                grouped.set(p.iso3, arr);
+              }
+              
+              let masteredCount = 0;
+              for (const c of list) {
+                const rs = grouped.get(c.iso3) || [];
+                if (rs.length >= 3 && rs.every(r => r >= 0.8)) {
+                  masteredCount++;
+                }
+              }
+              
+              const pct = list.length > 0 ? masteredCount / list.length : 0;
               return (
                 <div key={cont} className="glass rounded-2xl p-4">
                   <div className="font-display text-white">{cont}</div>
                   <div className="font-mono text-[11px] text-white/45 mt-1">
-                    {mastered}/{list.length}
+                    {masteredCount}/{list.length}
                   </div>
                   <div className="mt-2 h-1.5 rounded-full bg-white/8 overflow-hidden">
                     <div
@@ -202,13 +226,13 @@ export default function ProgressPage() {
   );
 }
 
+import type { ConceptProgressRow } from "@/lib/db/orbita-db";
+import { retrievability } from "@/lib/fsrs/engine";
+
 function MasteryStability({
   progress,
 }: {
-  progress: Array<{
-    iso3: string;
-    skills: Record<string, { confidence: number; srs?: { reps: number; interval: number; nextReviewAt: number; lastReviewedAt: number; ef: number } } | undefined>;
-  }>;
+  progress: ConceptProgressRow[];
 }) {
   const now = Date.now();
   const metrics = useMemo(() => {
@@ -234,36 +258,45 @@ function MasteryStability({
       });
 
     for (const row of progress) {
-      for (const sk of ALL_SKILLS) {
-        const stat = row.skills[sk];
-        if (!stat) continue;
-        totalSeen++;
-        const p = perSkill.get(sk)!;
-        p.seen++;
-        const srs = stat.srs;
-        if (srs) {
-          const r = retention(srs, now);
-          retentionSum += r;
-          retentionCount++;
-          p.retSum += r;
-          p.retCount++;
-          p.intervalSum += srs.interval;
-          p.intervalCount++;
-          if (srs.reps >= 2 && srs.nextReviewAt > now) active++;
-          if (isDue(srs, now)) {
-            dueToday++;
-            p.due++;
-          }
-          if (isOverdue(srs, now)) {
+      if (row.fsrs_state === "new") continue;
+      
+      const sk = row.skill as Skill;
+      const p = perSkill.get(sk);
+      if (!p) continue;
+      
+      totalSeen++;
+      p.seen++;
+      
+      let r = 0;
+      if (row.fsrs_state === "review" && row.fsrs_stability) {
+        const elapsedDays = Math.max(0, (now - row.fsrs_last_review) / 86400000);
+        r = retrievability(row.fsrs_stability, elapsedDays);
+        
+        p.intervalSum += row.fsrs_stability;
+        p.intervalCount++;
+        
+        if (row.fsrs_reps >= 2 && row.fsrs_due > now) active++;
+        
+        if (row.fsrs_due <= now) {
+          dueToday++;
+          p.due++;
+          if (now - row.fsrs_due > 86400000) {
             overdue++;
             p.overdue++;
           }
-        } else {
-          // Pre-SRS legacy rows: count by confidence.
-          retentionSum += stat.confidence;
-          retentionCount++;
+        }
+      } else {
+        r = 0.1;
+        if (row.fsrs_due <= now) {
+          dueToday++;
+          p.due++;
         }
       }
+      
+      retentionSum += r;
+      retentionCount++;
+      p.retSum += r;
+      p.retCount++;
     }
 
     return {
@@ -426,12 +459,19 @@ function HeroStat({
   );
 }
 
-function ConfidenceMap({ progress }: { progress: Array<{ iso3: string; skills: Record<string, { confidence: number } | undefined> }> }) {
-  const byIso = new Map(progress.map((p) => [p.iso3, p]));
+function ConfidenceMap({ progress }: { progress: ConceptProgressRow[] }) {
+  const grouped = new Map<string, number[]>();
+  for (const p of progress) {
+    if (p.fsrs_state === "new") continue;
+    const r = p.fsrs_stability ? retrievability(p.fsrs_stability, Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000)) : 0.1;
+    const arr = grouped.get(p.iso3) || [];
+    arr.push(r);
+    grouped.set(p.iso3, arr);
+  }
+  
   const cells = COUNTRIES.map((c) => {
-    const p = byIso.get(c.iso3);
-    const vs = p ? Object.values(p.skills).filter(Boolean) as { confidence: number }[] : [];
-    const avg = vs.length > 0 ? vs.reduce((a, s) => a + s.confidence, 0) / vs.length : 0;
+    const rs = grouped.get(c.iso3) || [];
+    const avg = rs.length > 0 ? rs.reduce((a, b) => a + b, 0) / rs.length : 0;
     return { c, avg };
   }).sort((a, b) => {
     if (a.c.continent !== b.c.continent) return a.c.continent.localeCompare(b.c.continent);
@@ -475,12 +515,16 @@ function SkillPanel({
   progress,
 }: {
   skill: Skill;
-  progress: Array<{ iso3: string; skills: Record<string, { confidence: number; lastSeenAt?: number } | undefined> }>;
+  progress: ConceptProgressRow[];
 }) {
   const rows = progress
-    .map((p) => ({ iso3: p.iso3, stat: p.skills[skill] }))
-    .filter((r) => r.stat);
-  const sorted = rows.slice().sort((a, b) => a.stat!.confidence - b.stat!.confidence);
+    .filter((p) => p.skill === skill && p.fsrs_state !== "new")
+    .map((p) => {
+      const r = p.fsrs_stability ? retrievability(p.fsrs_stability, Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000)) : 0.1;
+      return { iso3: p.iso3, r };
+    });
+    
+  const sorted = rows.slice().sort((a, b) => a.r - b.r);
   const weakest = sorted.slice(0, 5);
   const strongest = sorted.slice(-5).reverse();
 
@@ -497,7 +541,7 @@ function SkillPanel({
           </div>
           {strongest.length === 0 && <div className="text-white/45 text-sm">—</div>}
           {strongest.map((r) => (
-            <CountryRow key={r.iso3} iso3={r.iso3} pct={Math.round(r.stat!.confidence * 100)} />
+            <CountryRow key={r.iso3} iso3={r.iso3} pct={Math.round(r.r * 100)} />
           ))}
         </div>
         <div>
@@ -506,7 +550,7 @@ function SkillPanel({
           </div>
           {weakest.length === 0 && <div className="text-white/45 text-sm">—</div>}
           {weakest.map((r) => (
-            <CountryRow key={r.iso3} iso3={r.iso3} pct={Math.round(r.stat!.confidence * 100)} />
+            <CountryRow key={r.iso3} iso3={r.iso3} pct={Math.round(r.r * 100)} />
           ))}
         </div>
       </div>

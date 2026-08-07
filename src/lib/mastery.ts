@@ -3,6 +3,8 @@ import type { Country } from "@/types/country";
 import type { Skill, SkillStat } from "@/lib/db/orbita-db";
 import { getSkillStatMap } from "@/lib/db/repo";
 import { updateSrs, retention, type SrsState } from "@/lib/spacedRepetition";
+import { db } from "@/lib/db/orbita-db";
+import { retrievability } from "@/lib/fsrs/engine";
 
 const DAY_MS = 86_400_000;
 
@@ -94,18 +96,60 @@ export async function selectMixedQuestions(
   skills: readonly Skill[],
   opts: SelectOpts = {},
 ): Promise<Array<{ country: Country; skill: Skill }>> {
-  // Aggregate confidence across requested skills for weighting.
-  const maps = await Promise.all(skills.map((s) => getSkillStatMap(s)));
-  const merged = new Map<string, SkillStat>();
-  for (const m of maps) {
-    for (const [iso, stat] of m.entries()) {
-      const cur = merged.get(iso);
-      if (!cur || stat.confidence < cur.confidence) merged.set(iso, stat);
+  const concepts = await db().concept_progress.where("skill").anyOf(skills as string[]).toArray();
+  const now = Date.now();
+  
+  const merged = new Map<string, { r: number; lastSeenAt: number }>();
+  for (const c of concepts) {
+    let r = 0.05;
+    if (c.fsrs_state !== "new" && c.fsrs_stability) {
+      r = retrievability(c.fsrs_stability, Math.max(0, (now - c.fsrs_last_review) / 86400000));
+    }
+    const cur = merged.get(c.iso3);
+    if (!cur || r < cur.r) {
+      merged.set(c.iso3, { r, lastSeenAt: c.fsrs_last_review || 0 });
     }
   }
-  const picks = selectFromPool(COUNTRIES, n, merged, opts);
+
+  const exclude = opts.excludeIso3 ?? new Set();
+  const continent = opts.continent && opts.continent !== "All" ? opts.continent : null;
   const rng = opts.rng ?? Math.random;
-  return picks.map((c) => ({
+
+  const pool = COUNTRIES.filter((c) => {
+    if (exclude.has(c.iso3)) return false;
+    if (continent && c.continent !== continent) return false;
+    if (opts.difficulty && c.difficulty !== opts.difficulty) return false;
+    return true;
+  });
+
+  const weighted = pool.map((c) => {
+    const p = merged.get(c.iso3);
+    const r = p ? decay(p.r, p.lastSeenAt, now) : 0.05;
+    const daysUnseen = p ? (now - p.lastSeenAt) / DAY_MS : 365;
+    const weight = (1 - r) * 2 + Math.min(daysUnseen / 14, 1) * 0.6 + 0.1;
+    return { c, weight };
+  });
+
+  const picked: Country[] = [];
+  const used = new Set<string>();
+  while (picked.length < n && picked.length < weighted.length) {
+    const candidates = weighted.filter((w) => !used.has(w.c.iso3));
+    if (candidates.length === 0) break;
+    const total = candidates.reduce((s, w) => s + w.weight, 0);
+    let r = rng() * total;
+    let chosen = candidates[0]!;
+    for (const w of candidates) {
+      r -= w.weight;
+      if (r <= 0) {
+        chosen = w;
+        break;
+      }
+    }
+    picked.push(chosen.c);
+    used.add(chosen.c.iso3);
+  }
+
+  return picked.map((c) => ({
     country: c,
     skill: skills[Math.floor(rng() * skills.length)]!,
   }));

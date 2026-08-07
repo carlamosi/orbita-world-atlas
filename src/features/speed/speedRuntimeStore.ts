@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import type { Country } from "@/types/country";
 import type { Skill } from "@/lib/db/orbita-db";
-import { confidenceAfter, selectMixedQuestions } from "@/lib/mastery";
-import { recordSessionEnd, updateSkillProgress } from "@/lib/db/repo";
+import { selectMixedQuestions } from "@/lib/mastery";
+import { recordSessionEnd } from "@/lib/db/repo";
+import { assess } from "@/lib/fsrs/assessment";
+import { updateFsrs } from "@/lib/fsrs/engine";
+import { recordConceptAttempt, getConceptProgress } from "@/lib/db/progressRepo";
 
 /**
  * Speed Runtime — decoupled from the turn-based session engine.
@@ -211,10 +214,57 @@ export const useSpeedRuntime = create<SpeedState>((set, get) => ({
     if (!item) return;
     const isCorrect = item.country.iso3 === iso3;
     const responseMs = Math.max(0, Date.now() - item.shownAt);
-
-    updateSkillProgress(item.country.iso3, item.skill, (prev) =>
-      confidenceAfter(prev, isCorrect, Date.now(), responseMs),
-    );
+    const now = Date.now();
+    
+    getConceptProgress(`${item.country.iso3}:${item.skill}`).then((targetConcept) => {
+      if (!targetConcept) return;
+      const overdueMs = Math.max(0, now - targetConcept.fsrs_due);
+      const grade = assess({
+        validationResult: { correct: isCorrect, softCorrect: false },
+        responseMs,
+        attemptNumber: 1,
+        hintsUsed: 0,
+        questionType: item.skill,
+        memoryState: null,
+        overdueMs
+      });
+      
+      const currentFsrs = {
+        state: targetConcept.fsrs_state,
+        stability: targetConcept.fsrs_stability,
+        difficulty: targetConcept.fsrs_difficulty,
+        due: targetConcept.fsrs_due,
+        lastReviewAt: targetConcept.fsrs_last_review,
+        reps: targetConcept.fsrs_reps,
+        lapses: targetConcept.fsrs_lapses,
+        learningStep: 0,
+        lastGrade: null,
+      };
+      
+      const nextFsrs = updateFsrs(currentFsrs, grade, now);
+      
+      recordConceptAttempt({
+        ...targetConcept,
+        fsrs_state: nextFsrs.state,
+        fsrs_stability: nextFsrs.stability,
+        fsrs_difficulty: nextFsrs.difficulty,
+        fsrs_due: nextFsrs.due,
+        fsrs_last_review: nextFsrs.lastReviewAt,
+        fsrs_reps: nextFsrs.reps,
+        fsrs_lapses: nextFsrs.lapses,
+        version: targetConcept.version + 1,
+        dirty: 1,
+        updated_at: now
+      }, {
+        op_id: crypto.randomUUID(),
+        conceptId: targetConcept.conceptId,
+        sessionId: "speed-" + s.startedAt,
+        grade,
+        responseMs,
+        correct: isCorrect,
+        answeredAt: now
+      }).catch(console.error);
+    });
 
     if (isCorrect) {
       const combo = s.combo + 1;

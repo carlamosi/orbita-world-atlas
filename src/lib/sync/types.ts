@@ -1,6 +1,9 @@
 export type SyncEntity =
   | "sessions_log"
   | "country_progress"
+  | "concept_progress"
+  | "question_history"
+  | "daily_summary"
   | "challenge_attempts"
   | "unlocks"
   | "daily_streak"

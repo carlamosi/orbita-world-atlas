@@ -141,6 +141,9 @@ async function runPushOnce() {
 
 const CURSOR_KEYS: SyncEntity[] = [
   "country_progress",
+  "concept_progress",
+  "question_history",
+  "daily_summary",
   "sessions_log",
   "unlocks",
   "challenge_attempts",

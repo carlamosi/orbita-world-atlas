@@ -34,7 +34,7 @@ export default function ProgressPage() {
       byIso.set(p.iso3, (byIso.get(p.iso3) ?? 0) + 1);
       
       const elapsedDays = Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000);
-      const r = p.fsrs_stability ? retention(p.fsrs_stability, elapsedDays) : 0;
+      const r = p.fsrs_stability ? retrievability(p.fsrs_stability, elapsedDays) : 0;
       if (r >= 0.8) {
         byIsoMastered.set(p.iso3, (byIsoMastered.get(p.iso3) ?? 0) + 1);
       }
@@ -186,7 +186,7 @@ export default function ProgressPage() {
               for (const p of conceptProgress) {
                 if (p.fsrs_state === "new") continue;
                 const arr = grouped.get(p.iso3) || [];
-                const r = p.fsrs_stability ? retention(p.fsrs_stability, Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000)) : 0;
+                const r = p.fsrs_stability ? retrievability(p.fsrs_stability, Math.max(0, (Date.now() - p.fsrs_last_review) / 86400000)) : 0;
                 arr.push(r);
                 grouped.set(p.iso3, arr);
               }
